@@ -19,7 +19,6 @@ public class ConnectionManager {
 			Class.forName("com.mysql.jdbc.Driver");
 			conn = (Connection) DriverManager.getConnection("jdbc:mysql://localhost/qbryx?user=root&password=password");
 			
-			System.out.println("success");
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			System.out.println(e.getMessage());

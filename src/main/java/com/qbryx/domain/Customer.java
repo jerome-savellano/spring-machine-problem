@@ -1,12 +1,18 @@
 package com.qbryx.domain;
 
-import javax.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
+@Component("customer")
+@Scope("session")
 public class Customer extends User{
 	
+	@Autowired
 	private User user;
-	private String cartId;
 	
+	private String cartId;
+		
 	public Customer(User user) {
 		super(user.getUserId(), user.getUser_type(), user.getUsername(), user.getPassword());
 		// TODO Auto-generated constructor stub
@@ -20,14 +26,11 @@ public class Customer extends User{
 		this.cartId = cartId;
 	}
 	
-	public static Customer customer(HttpServletRequest request){
-		return (Customer) request.getSession().getAttribute("customer");
-	}
-
 	public User getUser() {
 		return user;
 	}
 
+	@Autowired
 	public void setUser(User user) {
 		this.user = user;
 	}

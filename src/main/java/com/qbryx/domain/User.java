@@ -1,16 +1,21 @@
 package com.qbryx.domain;
 
+import org.springframework.stereotype.Component;
+
+@Component("user")
 public class User {
 	
 	private int userId;
-	private int user_type;
+	private int userType;
 	private String username;
 	private String password;
 	
+	public User(){}
+			
 	public User(int id, int user_type, String username, String password) {
 		super();
 		this.userId = id;
-		this.user_type = user_type;
+		this.userType = user_type;
 		this.username = username;
 		this.password = password;
 	}
@@ -23,11 +28,11 @@ public class User {
 	}
 
 	public int getUser_type() {
-		return user_type;
+		return userType;
 	}
 
 	public void setUser_type(int user_type) {
-		this.user_type = user_type;
+		this.userType = user_type;
 	}
 
 	public String getUsername() {
