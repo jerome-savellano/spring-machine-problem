@@ -23,4 +23,5 @@ public class DAOQuery {
 	
 	//CartDAO queries
 	public static final String HQL_ADD_PRODUCT_IN_CART = "insert into cart (user_id, upc, quantity, is_purchased) values(:user_id,:upc,:quantity,0)";
+	public static final String HQL_GET_PRODUCTS_IN_CART = "from Cart where userId = :userId";
 }

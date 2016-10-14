@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.qbryx.domain.CartProduct;
+import com.qbryx.domain.Product;
 import com.qbryx.util.DAOQuery;
 import com.qbryx.util.HibernateUtil;
 
@@ -56,6 +57,14 @@ public class CartDaoHQLImpl implements CartDao{
 	@Override
 	public void updateProductQuantityInCart(long cartId, CartProduct cartProduct) {
 		
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Product> getProductsInCarts(long cartId) {
+		return (List<Product>) hibernateUtil.setUpQuery(DAOQuery.HQL_GET_PRODUCTS_IN_CART)
+										    .setParameter("userId", cartId)
+										    .getResultList();
 	}
 
 }

@@ -13,6 +13,7 @@ import com.qbryx.dao.UserDao;
 import com.qbryx.domain.Cart;
 import com.qbryx.domain.CartProduct;
 import com.qbryx.domain.InventoryProduct;
+import com.qbryx.domain.Product;
 import com.qbryx.exception.InsufficientStockException;
 
 @Service("customerService")
@@ -100,5 +101,10 @@ public class CustomerServiceImpl implements CustomerService {
 		Cart cart = new Cart(cartId, cartProducts);
 		
 		return cart;
+	}
+
+	@Override
+	public List<Product> getProductsInCarts(long cartId) {
+		return cartDaoHQL.getProductsInCarts(cartId);
 	}
 }

@@ -9,6 +9,7 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 import com.qbryx.domain.CartProduct;
+import com.qbryx.domain.Product;
 import com.qbryx.managers.ConnectionManager;
 import com.qbryx.util.DAOQuery;
 
@@ -179,6 +180,11 @@ public class CartDaoImpl implements CartDao {
 				throw new RuntimeException();
 			}
 		}
+	}
+
+	@Override
+	public List<Product> getProductsInCarts(long cartId) {
+		return null;
 	}
 
 }
