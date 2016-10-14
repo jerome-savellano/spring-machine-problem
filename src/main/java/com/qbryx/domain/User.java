@@ -1,18 +1,26 @@
 package com.qbryx.domain;
 
-import org.springframework.stereotype.Component;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-@Component("user")
+@Entity
+@Table(name = "USER")
 public class User {
 	
-	private int userId;
-	private int userType;
+	private long userId;
+	
+	private String userType;
+	
 	private String username;
+	
 	private String password;
 	
 	public User(){}
 			
-	public User(int id, int user_type, String username, String password) {
+	public User(long id, String user_type, String username, String password) {
 		super();
 		this.userId = id;
 		this.userType = user_type;
@@ -20,21 +28,25 @@ public class User {
 		this.password = password;
 	}
 	
-	public int getUserId() {
+	@Id @GeneratedValue
+	@Column(name = "id")
+	public long getUserId() {
 		return userId;
 	}
-	public void setUserId(int userId) {
+	public void setUserId(long userId) {
 		this.userId = userId;
 	}
 
-	public int getUser_type() {
+	@Column(name = "user_type")
+	public String getUser_type() {
 		return userType;
 	}
 
-	public void setUser_type(int user_type) {
+	public void setUser_type(String user_type) {
 		this.userType = user_type;
 	}
 
+	@Column(name = "username")
 	public String getUsername() {
 		return username;
 	}
@@ -43,6 +55,7 @@ public class User {
 		this.username = username;
 	}
 
+	@Column(name = "password")
 	public String getPassword() {
 		return password;
 	}
@@ -50,5 +63,4 @@ public class User {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
 }

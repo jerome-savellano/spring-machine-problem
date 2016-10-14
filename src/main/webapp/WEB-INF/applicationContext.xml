@@ -1,17 +1,45 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
-xmlns:context="http://www.springframework.org/schema/context"
-     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-     xmlns:aop="http://www.springframework.org/schema/aop"
-     xsi:schemaLocation="http://www.springframework.org/schema/beans
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
          http://www.springframework.org/schema/aop
          http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
          http://www.springframework.org/schema/context
 		 http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
-	<context:component-scan base-package="com.qbryx" >
+	<context:component-scan base-package="com.qbryx">
 		<context:exclude-filter type="annotation"
 			expression="org.springframework.stereotype.Controller" />
-	</context:component-scan>	
+	</context:component-scan>
 
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://localhost/qbryx" />
+		<property name="username" value="root" />
+		<property name="password" value="password" />
+	</bean>
+
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+				<prop key="hibernate.show_sql">true</prop>
+			</props>
+		</property>
+
+		<!-- <property name="annotatedClasses">
+			<list>
+				<value>com.qbryx.domain.User</value>
+			</list>
+		</property> -->
+		<property name="packagesToScan" value="com.qbryx.domain" />
+	</bean>
 </beans>

@@ -10,7 +10,7 @@ import com.qbryx.domain.User;
 @Service("userService")
 public class UserServiceImpl implements UserService {
 	
-	@Resource(name="userDao")
+	@Resource(name="userDaoHQL")
 	private UserDao userDao;
 	
 	public User getUser(String username) {

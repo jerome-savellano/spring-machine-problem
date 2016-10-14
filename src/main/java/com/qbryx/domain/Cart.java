@@ -5,42 +5,38 @@ import java.util.List;
 
 public class Cart {
 	
-	private String cartId;
+	private long userId;
 	private List<CartProduct> cartProducts;
 	
-	public Cart(String cartId){
+	public Cart(long cartId){
 		super();
-		this.cartId = cartId;
+		this.userId = cartId;
 	}
 	
-	public Cart(String cartId, List<CartProduct> cartProducts) {
+	public Cart(long cartId, List<CartProduct> cartProducts) {
 		super();
-		this.cartId = cartId;
+		this.userId = cartId;
 		this.cartProducts = cartProducts;
 	}
 
-	public String getCartId() {
-		return cartId;
+	public long getUserId() {
+		return userId;
 	}
 
-	public void setCartId(String cartId) {
-		this.cartId = cartId;
+	public void setCartId(long cartId) {
+		this.userId = cartId;
 	}
-
+	
 	public List<CartProduct> getCartProducts() {
 		return cartProducts;
-	}
-
-	public void setCartProducts(List<CartProduct> cartProducts) {
-		this.cartProducts = cartProducts;
 	}
 	
 	public BigDecimal getTotal(){
 		
 		BigDecimal total = BigDecimal.ZERO;
 		
-		for(CartProduct cartProduct : getCartProducts()){
-			total = total.add(cartProduct.getTotal());
+		for(Product cartProduct : getCartProducts()){
+			total = total.add(cartProduct.getPrice());
 		}
 
 		return total;

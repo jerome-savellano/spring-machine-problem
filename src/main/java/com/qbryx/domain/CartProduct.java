@@ -5,7 +5,6 @@ import java.math.BigDecimal;
 public class CartProduct extends Product{
 
 	private Product product;
-	private String cartId;
 	private int quantity;
 	private int isPurchased;
 	
@@ -15,15 +14,6 @@ public class CartProduct extends Product{
 
 	public CartProduct(Product product) {
 		super(product.getUpc(), product.getCategory(), product.getName(), product.getDescription(), product.getPrice());
-		// TODO Auto-generated constructor stub
-	}
-
-	public String getCartId() {
-		return cartId;
-	}
-
-	public void setCartId(String cartId) {
-		this.cartId = cartId;
 	}
 
 	public int getQuantity() {

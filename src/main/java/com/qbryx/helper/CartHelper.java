@@ -9,10 +9,10 @@ import com.qbryx.service.CustomerService;
 @Component("cartHelper")
 public class CartHelper {
 		
-	public void populateCartInLayout(CustomerService customerService, String cartId, Model model){
+	public void populateCartInLayout(CustomerService customerService, long cartId, Model model){
 		
 		Cart cart = customerService.getCart(cartId);
-		
+
 		model.addAttribute("productsInCart", cart.getCartProducts());
 		model.addAttribute("totalAmount", cart.getTotal());
 	}

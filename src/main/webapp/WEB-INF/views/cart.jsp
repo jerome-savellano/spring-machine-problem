@@ -16,7 +16,7 @@
 		<h3 class="text-success">Products in cart</h3>
 		<form class="form-inline" action="${pageContext.request.contextPath}/customer/checkout" method="post">
 			<div class="form-group">
-				<input type="hidden" name="cartId" value="${customer.getCartId()}">
+				<input type="hidden" name="cartId" value="${customer.getUserId()}">
 				<label for="email"><h4>Total Amount:</h4></label> <input type="text"
 					class="form-control" name="totalAmount"
 					value="&#8369; ${totalAmount}" disabled>

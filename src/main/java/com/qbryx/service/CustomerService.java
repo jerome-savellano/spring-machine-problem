@@ -8,13 +8,12 @@ import com.qbryx.exception.InsufficientStockException;
 
 public interface CustomerService {
 
-	List<CartProduct> getProductsInCart(String cartId);
-	String getCartId(int userId);
-	int getQuantityOfProductInCart(String cartId, String upc);
-	List<CartProduct> checkout(String cartId) throws InsufficientStockException;
-	Cart getCart(String cartId);
+	List<CartProduct> getProductsInCart(long cartId);
+	int getQuantityOfProductInCart(long cartId, String upc);
+	List<CartProduct> checkout(long cartId) throws InsufficientStockException;
+	Cart getCart(long cartId);
 	
-	void addProductInCart(CartProduct cartProduct, String cartId) throws InsufficientStockException;
-	void removeProductInCart(String cartId, String upc);
-	void updateProductInCart(String cartId);
+	void addProductInCart(CartProduct cartProduct, long cartId) throws InsufficientStockException;
+	void removeProductInCart(long cartId, String upc);
+	void updateProductInCart(long cartId);
 }

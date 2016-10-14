@@ -24,14 +24,13 @@ public class CustomerServiceImpl implements CustomerService {
 	@Resource(name="cartDao")
 	private CartDao cartDao;
 	
+	@Resource(name="cartDaoHQL")
+	private CartDao cartDaoHQL;
+	
 	@Resource(name="productDao")
 	private ProductDao productDao;
 
-	public String getCartId(int userId) {
-		return userDao.getCartId(userId);
-	}
-
-	public void addProductInCart(CartProduct cartProduct, String cartId) throws InsufficientStockException {
+	public void addProductInCart(CartProduct cartProduct, long cartId) throws InsufficientStockException {
 		int stockOnHand = productDao.getStock(cartProduct.getUpc());
 		CartProduct product = cartDao.checkProductInCart(cartId, cartProduct.getUpc());
 
@@ -39,7 +38,7 @@ public class CustomerServiceImpl implements CustomerService {
 			if ((product.getQuantity() + cartProduct.getQuantity()) <= stockOnHand) {
 				product.setQuantity(product.getQuantity() + cartProduct.getQuantity());
 
-				cartDao.updateProductQuantityInCart(product);
+				cartDaoHQL.updateProductQuantityInCart(cartId, product);
 			}else{
 				
 				throw new InsufficientStockException();
@@ -47,7 +46,7 @@ public class CustomerServiceImpl implements CustomerService {
 		} else {
 			if (cartProduct.getQuantity() <= stockOnHand) {
 				
-				cartDao.addProductInCart(cartProduct, cartId);
+				cartDaoHQL.addProductInCart(cartProduct, cartId);
 			}else{
 				
 				throw new InsufficientStockException();
@@ -55,23 +54,23 @@ public class CustomerServiceImpl implements CustomerService {
 		}
 	}
 
-	public List<CartProduct> getProductsInCart(String cartId) {
+	public List<CartProduct> getProductsInCart(long cartId) {
 		return cartDao.getProductsInCart(cartId);
 	}
 
-	public void removeProductInCart(String cartId, String upc){
+	public void removeProductInCart(long cartId, String upc){
 		cartDao.removeProductInCart(cartId, upc);
 	}
 
-	public void updateProductInCart(String cartId) {
+	public void updateProductInCart(long cartId) {
 		cartDao.updateProductStatusInCart(cartId);
 	}
 
-	public int getQuantityOfProductInCart(String cartId, String upc) {
+	public int getQuantityOfProductInCart(long cartId, String upc) {
 		return cartDao.getQuantity(cartId, upc);
 	}
 
-	public List<CartProduct> checkout(String cartId) throws InsufficientStockException{
+	public List<CartProduct> checkout(long cartId) throws InsufficientStockException{
 		List<CartProduct> invalidProduct = new ArrayList<CartProduct>();
 
 		List<CartProduct> cartProducts = getProductsInCart(cartId);
@@ -94,7 +93,7 @@ public class CustomerServiceImpl implements CustomerService {
 		return invalidProduct;
 	}
 
-	public Cart getCart(String cartId) {
+	public Cart getCart(long cartId) {
 		// TODO Auto-generated method stub
 		List<CartProduct> cartProducts = getProductsInCart(cartId);
 				

@@ -33,6 +33,9 @@
 		$(".alert-success").fadeTo(500, 0).slideUp(500, function() {
 			$(this).remove();
 		});
+		$(".alert-danger").fadeTo(500, 0).slideUp(500, function() {
+			$(this).remove();
+		});
 	}, 3000);
 </script>
 </head>
@@ -151,13 +154,13 @@
 			</div>
 			<div id="menu2"
 				class="tab-pane fade <c:if test="${viewFlag == 2}">in active</c:if>">
-				<div class="container-fluid">
+				<div class="container-fluid" style="padding: 2%;">
 					<c:if test="${invalidCategorySelected}">
 						<div class="alert alert-danger">
 							<strong>Oops!</strong> Please select a category.
 						</div>
 					</c:if>
-					<form method="post" action="${pageContext.request.contextPath}/management/viewProd">
+					<form method="post" action="${pageContext.request.contextPath}/management/productByCategory">
 						<div class="row" style="padding: 2%;">
 							<c:if test="${productUpdated}">
 								<div class="alert alert-success fade in">
@@ -180,9 +183,9 @@
 						</div>
 						<c:if test="${categorySelected}">
 							<div class="list-group">
-								<c:forEach items="${productsByCategory}" var="item"
+								<c:forEach items="${products}" var="item"
 									varStatus="status">
-									<a href="viewProd?upc=${item.getUpc()}" class="list-group-item">${item.getName()}</a>
+									<a href="${pageContext.request.contextPath}/management/viewProduct?upc=${item.getUpc()}" class="list-group-item">${item.getName()}</a>
 								</c:forEach>
 							</div>
 						</c:if>
@@ -203,7 +206,7 @@
 									Product has been created!
 								</div>
 							</c:if>
-							<form action="createProduct" method="post">
+							<form action="${pageContext.request.contextPath}/management/createProduct" method="post">
 								<div class="form-group">
 									<label for="Name">Name </label> <input type="text" name="name"
 										class="form-control" required />

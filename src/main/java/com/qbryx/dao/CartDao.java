@@ -6,12 +6,12 @@ import com.qbryx.domain.CartProduct;
 
 public interface CartDao {
 	
-	CartProduct checkProductInCart(String cartId, String upc);
-	List<CartProduct> getProductsInCart(String cartId);
-	int getQuantity(String cartId, String upc);
+	CartProduct checkProductInCart(long cartId, String upc);
+	List<CartProduct> getProductsInCart(long cartId);
+	int getQuantity(long cartId, String upc);
 	
-	void addProductInCart(CartProduct product, String cartId);
-	void removeProductInCart(String cartId, String upc);
-	void updateProductStatusInCart(String cartId);
-	void updateProductQuantityInCart(CartProduct cartProduct);
+	void addProductInCart(CartProduct product, long cartId);
+	void removeProductInCart(long cartId, String upc);
+	void updateProductStatusInCart(long cartId);
+	void updateProductQuantityInCart(long userId, CartProduct cartProduct);
 }

@@ -2,12 +2,28 @@ package com.qbryx.domain;
 
 import java.math.BigDecimal;
 
-public class Product {
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
+@Entity
+@Table(name = "PRODUCT")
+public class Product {
+ 
+	private long id;
+	
 	private String upc;
+	
 	private Category category;
+	
 	private String name;
+	
 	private String description;
+
 	private BigDecimal price;
 	
 	public Product(){
@@ -22,7 +38,18 @@ public class Product {
 		this.description = description;
 		this.price = price;
 	}
+	
+	public void setId(long id) {
+		this.id = id;
+	}
+	
+	@Id @GeneratedValue
+	@Column(name = "id")
+	public long getId() {
+		return id;
+	}
 
+	@Column(name = "upc")
 	public String getUpc() {
 		return upc;
 	}
@@ -31,6 +58,8 @@ public class Product {
 		this.upc = upc;
 	}
 
+	@OneToOne
+	@JoinColumn(name = "category_id")
 	public Category getCategory() {
 		return category;
 	}
@@ -39,6 +68,7 @@ public class Product {
 		this.category = category;
 	}
 
+	@Column(name = "name")
 	public String getName() {
 		return name;
 	}
@@ -47,6 +77,7 @@ public class Product {
 		this.name = name;
 	}
 
+	@Column(name = "description")
 	public String getDescription() {
 		return description;
 	}
@@ -55,6 +86,7 @@ public class Product {
 		this.description = description;
 	}
 
+	@Column(name = "price")
 	public BigDecimal getPrice() {
 		return price;
 	}

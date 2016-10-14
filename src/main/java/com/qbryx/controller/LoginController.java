@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.qbryx.domain.Customer;
 import com.qbryx.domain.User;
 import com.qbryx.service.CustomerService;
 import com.qbryx.service.ProductService;
 import com.qbryx.service.UserService;
+import com.qbryx.util.UserType;
 
 @Controller
 public class LoginController{
@@ -45,11 +45,9 @@ public class LoginController{
 		User user = userService.getUser(username);
 	
 		if(user != null && user.getPassword().equals(password)){
-			if(user.getUser_type() == 1){
-				Customer customer = new Customer(user);
-				customer.setCartId(customerService.getCartId(customer.getUserId()));
+			if(user.getUser_type().equals(UserType.CUSTOMER)){
 				
-				request.getSession().setAttribute("customer", customer);
+				request.getSession().setAttribute("customer", user);
 				request.getSession().setAttribute("categories", productService.getCategories());
 				return "redirect:/customer";
 			}else{

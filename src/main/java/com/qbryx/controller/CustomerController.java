@@ -6,12 +6,13 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.qbryx.domain.CartProduct;
 import com.qbryx.exception.InsufficientStockException;
 import com.qbryx.helper.CartHelper;
-import com.qbryx.helper.CustomerHelper;
+import com.qbryx.helper.UserUtil;
 import com.qbryx.service.CustomerService;
 import com.qbryx.service.ProductService;
 
@@ -26,13 +27,11 @@ public class CustomerController {
 	
 	@Resource(name = "cartHelper")
 	private CartHelper cartHelper;
-	
-	@Resource(name = "customerHelper")
-	private CustomerHelper customer;
-	
+		
 	@RequestMapping("/customer")
 	public String home(Model model, HttpServletRequest request) {
-		cartHelper.populateCartInLayout(customerService, customer.getCustomer(request).getCartId(), model);
+					
+		cartHelper.populateCartInLayout(customerService, UserUtil.getCustomer(request).getUserId(), model);
 		return "customer_home";
 	}
 
@@ -40,9 +39,9 @@ public class CustomerController {
 	public String viewProduct(@RequestParam(value = "category", required = false) String category, Model model,
 			HttpServletRequest request) {
 
+		cartHelper.populateCartInLayout(customerService, UserUtil.getCustomer(request).getUserId(), model);
 		
 		if (category != null) {
-			cartHelper.populateCartInLayout(customerService, customer.getCustomer(request).getCartId(), model);
 			model.addAttribute("category", category);
 			model.addAttribute("categorySelected", true);
 			model.addAttribute("products", productService.getProductsByCategory(category));
@@ -58,10 +57,10 @@ public class CustomerController {
 	public String processProduct(@RequestParam(value = "upc") String upc,
 			@RequestParam(value = "category") String category, Model model, HttpServletRequest request) {
 
-		cartHelper.populateCartInLayout(customerService, customer.getCustomer(request).getCartId(), model);
+		cartHelper.populateCartInLayout(customerService, UserUtil.getCustomer(request).getUserId(), model);
 		model.addAttribute("product", productService.getProductByUpc(upc));
 		model.addAttribute("category", category);
-		model.addAttribute("quantity", customerService.getQuantityOfProductInCart(customer.getCustomer(request).getCartId(), upc));
+		model.addAttribute("quantity", customerService.getQuantityOfProductInCart(UserUtil.getCustomer(request).getUserId(), upc));
 
 		return "product";
 	}
@@ -73,7 +72,7 @@ public class CustomerController {
 		CartProduct product = new CartProduct(productService.getProductByUpc(upc));
 		product.setQuantity(quantity);
 
-		String cartId = customer.getCustomer(request).getCartId();
+		long cartId = UserUtil.getCustomer(request).getUserId();
 
 		try {
 
@@ -87,7 +86,7 @@ public class CustomerController {
 	@RequestMapping("/customer/checkout")
 	public String checkout(HttpServletRequest request, Model model){
 		
-		String cartId = customer.getCustomer(request).getCartId();
+		long cartId = UserUtil.getCustomer(request).getUserId();
 		
 		try {
 			customerService.checkout(cartId);
@@ -99,11 +98,10 @@ public class CustomerController {
 		}
 	}
 	
-	@RequestMapping("/customer/removeProduct")
+	@RequestMapping(value="/customer/removeProduct", method=RequestMethod.POST)
 	public String removeProduct(@RequestParam(value = "upc") String upc, HttpServletRequest request){
 		
-		customerService.removeProductInCart(customer.getCustomer(request).getCartId(), upc);
-		
+		System.out.println(upc);		
 		return "customer_home";
 	}
 }
