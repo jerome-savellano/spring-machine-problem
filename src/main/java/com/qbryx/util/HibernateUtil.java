@@ -12,15 +12,6 @@ public class HibernateUtil {
 	
 	@Resource(name = "sessionFactory")
 	private SessionFactory session;
-
-	public Query setUpQuery(String hqlQuery){	
-		return session.getCurrentSession().createQuery(hqlQuery);
-	}
-	
-	@SuppressWarnings("deprecation")
-	public Query setUpSQLQuery(String hqlQuery){	
-		return session.getCurrentSession().createSQLQuery(hqlQuery);
-	}
 	
 	public SessionFactory getSessionFactory() {
         return session;
@@ -28,5 +19,24 @@ public class HibernateUtil {
 	
 	public Session getSession(){
 		return session.getCurrentSession();
+	}
+	
+	public void setUp(){
+		getSessionFactory().openSession();
+		getSession().beginTransaction();
+	}
+	
+	public void commit(){
+		getSession().getTransaction().commit();
+		getSession().close();
+	}
+	
+	public Query setUpQuery(String hqlQuery){	
+		return session.getCurrentSession().createQuery(hqlQuery);
+	}
+	
+	@SuppressWarnings("deprecation")
+	public Query setUpSQLQuery(String hqlQuery){	
+		return session.getCurrentSession().createSQLQuery(hqlQuery);
 	}
 }

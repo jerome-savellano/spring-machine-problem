@@ -6,8 +6,9 @@ import com.qbryx.domain.User;
 
 public class UserUtil {
 	
-	public static User getCustomer(HttpServletRequest request){
-		return (User) request.getSession().getAttribute("customer");
+	public static long getUserId(HttpServletRequest request){
+		User user = (User) request.getSession().getAttribute("customer");
+		return user.getUserId();
 	}
 
 	public static User getManager(HttpServletRequest request){

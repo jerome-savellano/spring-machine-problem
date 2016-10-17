@@ -29,6 +29,16 @@ public class Product {
 	public Product(){
 		
 	}
+	
+	public Product(String upc){
+		this.upc = upc;
+	}
+	
+	public Product(String upc, String name, BigDecimal price){
+		this.upc = upc;
+		this.name = name;
+		this.price = price;
+	}
 
 	public Product(String upc, Category category, String name, String description, BigDecimal price) {
 		super();

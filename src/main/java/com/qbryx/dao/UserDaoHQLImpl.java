@@ -15,9 +15,15 @@ public class UserDaoHQLImpl implements UserDao{
 	
 	public User getUser(String username) {
 		
-		return (User) hibernateUtil.setUpQuery(DAOQuery.HQL_GET_USER)
-							   .setParameter("username", username)
-							   .getSingleResult();
+		User user = null;
+		
+		hibernateUtil.setUp();
+		user = (User) hibernateUtil.setUpQuery(DAOQuery.HQL_GET_USER)
+				   				   .setParameter("username", username)
+				   				   .getSingleResult();
+		hibernateUtil.commit();
+		
+		return user;
 	}
 }
  

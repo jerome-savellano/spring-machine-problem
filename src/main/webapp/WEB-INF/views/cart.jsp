@@ -38,11 +38,11 @@
 					<c:forEach items="${productsInCart}" var="product"
 						varStatus="status">
 						<input type="hidden" class="form-control" name="upc"
-								value="${product.getUpc()}">
+								value="${product.getProduct().getUpc()}">
 						<tr class="warning">
-							<td>${product.getName()}</td>
+							<td>${product.getProduct().getName()}</td>
 							<td>${product.getQuantity()}</td>
-							<td style="color: green;">&#8369; ${product.getTotal()}</td>
+							<td style="color: green;">&#8369; ${product.totalPrice()}</td>
 							<td><input type="submit" class="btn btn-warning btn-xs"
 								value="Remove from cart"></td>
 						</tr>
