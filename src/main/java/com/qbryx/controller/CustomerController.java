@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.qbryx.domain.CartProduct;
-import com.qbryx.domain.Product;
 import com.qbryx.exception.InsufficientStockException;
 import com.qbryx.helper.CartHelper;
 import com.qbryx.helper.UserUtil;

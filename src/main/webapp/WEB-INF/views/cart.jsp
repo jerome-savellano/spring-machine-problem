@@ -17,7 +17,7 @@
 		<form class="form-inline" action="${pageContext.request.contextPath}/customer/checkout" method="post">
 			<div class="form-group">
 				<input type="hidden" name="cartId" value="${customer.getUserId()}">
-				<label for="email"><h4>Total Amount:</h4></label> <input type="text"
+				<label for="email">Total Amount:</label><input type="text"
 					class="form-control" name="totalAmount"
 					value="&#8369; ${totalAmount}" disabled>
 			</div>
