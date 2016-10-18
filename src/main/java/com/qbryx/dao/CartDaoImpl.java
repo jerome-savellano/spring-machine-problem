@@ -132,7 +132,7 @@ public class CartDaoImpl implements CartDao {
 		return quantity;
 	}
 
-	public CartProduct checkProductInCart(CartProduct product) {
+	public CartProduct getProductInCart(CartProduct product) {
 
 		CartProduct cartProduct = null;
 

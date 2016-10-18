@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.qbryx.domain.CartProduct;
-import com.qbryx.domain.Product;
 import com.qbryx.exception.InsufficientStockException;
 import com.qbryx.helper.CartHelper;
 import com.qbryx.helper.UserUtil;
@@ -61,10 +60,10 @@ public class CustomerController {
 	@RequestMapping("/customer/processProduct")
 	public String processProduct(@RequestParam(value = "upc") String upc,
 			@RequestParam(value = "category") String category, Model model, HttpServletRequest request) {
-
+		
 		CartProduct cartProduct = new CartProduct();
 		cartProduct.setUserId(UserUtil.getUserId(request));
-		cartProduct.setProduct(new Product(upc));
+		cartProduct.setProduct(productService.getProductByUpc(upc));
 		
 		cartHelper.populateCartInLayout(customerService, UserUtil.getUserId(request), model);
 		model.addAttribute("product", productService.getProductByUpc(upc));

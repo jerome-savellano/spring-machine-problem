@@ -2,10 +2,8 @@ package com.qbryx.domain;
 
 import java.math.BigDecimal;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -57,8 +55,8 @@ public class CartProduct {
 		this.userId = userId;
 	}
 
-	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
-	@JoinColumn(name = "upc", insertable=false, updatable=false)
+	@OneToOne
+	@JoinColumn(name="upc", referencedColumnName = "upc")
 	public Product getProduct() {
 		return product;
 	}

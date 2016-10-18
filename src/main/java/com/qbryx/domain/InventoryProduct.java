@@ -2,6 +2,11 @@ package com.qbryx.domain;
 
 public class InventoryProduct extends Product {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	private Product product;
 	private int stock;
 

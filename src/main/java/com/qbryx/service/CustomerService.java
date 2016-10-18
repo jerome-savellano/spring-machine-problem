@@ -8,8 +8,8 @@ import com.qbryx.exception.InsufficientStockException;
 public interface CustomerService {
 
 	List<CartProduct> getProductsInCart(long cartId);
-	int getQuantityOfProductInCart(CartProduct cartProduct);
 	List<CartProduct> checkout(long cartId) throws InsufficientStockException;
+	int getQuantityOfProductInCart(CartProduct cartProduct);
 	
 	void addProductInCart(CartProduct cartProduct) throws InsufficientStockException;
 	void removeProductInCart(long cartId, String upc);

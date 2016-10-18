@@ -12,8 +12,13 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "PRODUCT")
-public class Product {
+public class Product implements java.io.Serializable {
  
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private long id;
 	
 	private String upc;
@@ -69,7 +74,7 @@ public class Product {
 	}
 
 	@OneToOne
-	@JoinColumn(name = "category_id")
+	@JoinColumn(name = "category_id", referencedColumnName = "category_id")
 	public Category getCategory() {
 		return category;
 	}

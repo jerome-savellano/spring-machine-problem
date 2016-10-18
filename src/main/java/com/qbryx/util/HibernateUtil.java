@@ -28,6 +28,7 @@ public class HibernateUtil {
 	
 	public void commit(){
 		getSession().getTransaction().commit();
+//		getSession().flush();
 		getSession().close();
 	}
 	

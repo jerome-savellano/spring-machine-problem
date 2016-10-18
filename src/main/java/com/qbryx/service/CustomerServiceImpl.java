@@ -17,47 +17,66 @@ import com.qbryx.exception.InsufficientStockException;
 @Service("customerService")
 public class CustomerServiceImpl implements CustomerService {
 
-	@Resource(name="userDao")
+	@Resource(name = "userDao")
 	private UserDao userDao;
-	
-	@Resource(name="cartDao")
-	private CartDao cartDao;
-	
-	@Resource(name="cartDaoHQL")
-	private CartDao cartDaoHQL;
-	
-	@Resource(name="productDao")
-	private ProductDao productDao;
 
+	@Resource(name = "cartDao")
+	private CartDao cartDao;
+
+	@Resource(name = "cartDaoHQL")
+	private CartDao cartDaoHQL;
+
+	@Resource(name = "productDao")
+	private ProductDao productDao;
+	
 	public void addProductInCart(CartProduct cartProduct) throws InsufficientStockException {
+		
+		// Get product in cart
+		CartProduct product = cartDaoHQL.getProductInCart(cartProduct);
+		
+		// Check if product is already in cart
+		boolean productInCart = product != null;
+		
+		// Get product stock
 		int stockOnHand = productDao.getStock(cartProduct.getProduct().getUpc());
-		CartProduct product = cartDaoHQL.checkProductInCart(cartProduct);		
-		if (product != null) {			
-			if ((product.getQuantity() + cartProduct.getQuantity()) <= stockOnHand) {
+
+		if (productInCart) {
+			
+			boolean stockForProductInCartAvailable = (product.getQuantity() + cartProduct.getQuantity()) <= stockOnHand;
+
+			if (stockForProductInCartAvailable) {
+				
 				int updatedQuantity = product.getQuantity() + cartProduct.getQuantity();
-				
 				product.setQuantity(updatedQuantity);
-				
+
 				cartDaoHQL.updateProductQuantityInCart(product);
-			}else{	
-				throw new InsufficientStockException();
-			}
-		} else {
-			if (cartProduct.getQuantity() <= stockOnHand) {
 				
-				cartDaoHQL.addProductInCart(cartProduct);
 			}else{
 				
 				throw new InsufficientStockException();
+				
+			}
+		} else {
+			
+			boolean stockForNewProductAvailable = cartProduct.getQuantity() <= stockOnHand;
+			
+			if (stockForNewProductAvailable) {
+				
+				cartDaoHQL.addProductInCart(cartProduct);
+				
+			}else{
+				
+				throw new InsufficientStockException();
+				
 			}
 		}
 	}
 
 	public List<CartProduct> getProductsInCart(long cartId) {
-		return cartDao.getProductsInCart(cartId);
+		return cartDaoHQL.getProductsInCart(cartId);
 	}
 
-	public void removeProductInCart(long cartId, String upc){
+	public void removeProductInCart(long cartId, String upc) {
 		cartDao.removeProductInCart(cartId, upc);
 	}
 
@@ -65,11 +84,9 @@ public class CustomerServiceImpl implements CustomerService {
 		cartDao.updateProductStatusInCart(cartId);
 	}
 
-	public int getQuantityOfProductInCart(CartProduct cartProduct) {
-		return cartDao.getQuantity(cartProduct);
-	}
 
-	public List<CartProduct> checkout(long cartId) throws InsufficientStockException{
+
+	public List<CartProduct> checkout(long cartId) throws InsufficientStockException {
 		List<CartProduct> invalidProduct = new ArrayList<CartProduct>();
 
 		List<CartProduct> cartProducts = getProductsInCart(cartId);
@@ -90,5 +107,11 @@ public class CustomerServiceImpl implements CustomerService {
 		}
 
 		return invalidProduct;
+	}
+
+	@Override
+	public int getQuantityOfProductInCart(CartProduct cartProduct) {
+		// TODO Auto-generated method stub
+		return cartDaoHQL.getQuantity(cartProduct);
 	}
 }

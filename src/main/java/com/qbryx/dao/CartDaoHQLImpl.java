@@ -3,6 +3,9 @@ package com.qbryx.dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Resource;
+
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -15,17 +18,22 @@ public class CartDaoHQLImpl implements CartDao {
 
 	@Autowired
 	private HibernateUtil hibernateUtil;
+	
+	@Resource(name = "sessionFactory")
+	private SessionFactory session;
 
 	@Override
-	public CartProduct checkProductInCart(CartProduct cartProduct) {
-		
+	public CartProduct getProductInCart(CartProduct cartProduct) {
+
 		CartProduct product = null;
 		
+		hibernateUtil.setUp();
 		product = (CartProduct) hibernateUtil.setUpQuery(DAOQuery.HQL_CHECK_PRODUCT_IN_CART)
 											 .setParameter("userId", cartProduct.getUserId())
-											 .setParameter("product", cartProduct.getProduct())
+											 .setParameter("upc", cartProduct.getProduct().getUpc())
 											 .getSingleResult();
-
+		hibernateUtil.commit();
+		
 		return product;
 	}
 
@@ -41,11 +49,6 @@ public class CartDaoHQLImpl implements CartDao {
 		hibernateUtil.commit();
 
 		return cartProducts;
-	}
-
-	@Override
-	public int getQuantity(CartProduct cartProduct) {
-		return 0;
 	}
 
 	@Override
@@ -71,13 +74,27 @@ public class CartDaoHQLImpl implements CartDao {
 	@Override
 	public void updateProductQuantityInCart(CartProduct cartProduct) {
 		hibernateUtil.setUp();
-
 		hibernateUtil.setUpQuery(DAOQuery.HQL_UPDATE_PRODUCT_QUANTITY_IN_CART)
 					 .setParameter("quantity", cartProduct.getQuantity())
 					 .setParameter("userId", cartProduct.getUserId())
 					 .setParameter("upc", cartProduct.getProduct().getUpc())
 					 .executeUpdate();
-
 		hibernateUtil.commit();
+	}
+
+	@Override
+	public int getQuantity(CartProduct cartProduct) {
+		// TODO Auto-generated method stub
+		int quantity = 0;
+		
+		hibernateUtil.setUp();
+		CartProduct product = getProductInCart(cartProduct);
+		hibernateUtil.commit();
+		
+		if(product != null){
+			quantity = product.getQuantity();
+		}
+		
+		return quantity;
 	}
 }
