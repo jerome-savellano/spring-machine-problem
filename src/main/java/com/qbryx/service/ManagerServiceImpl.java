@@ -23,11 +23,11 @@ public class ManagerServiceImpl implements ManagerService {
 
 	public void addProduct(InventoryProduct inventoryProduct) {
 		productDaoHQL.addProduct(inventoryProduct); 
-		productDao.addProductStock(inventoryProduct);
+		productDaoHQL.addProductStock(inventoryProduct);
 	}
 
 	public void updateProduct(InventoryProduct inventoryProduct) {
-		productDao.updateProduct(inventoryProduct);
-		productDao.updateProductStock(inventoryProduct);
+		productDaoHQL.updateProduct(inventoryProduct);
+		productDaoHQL.updateProductStock(inventoryProduct);
 	}
 }

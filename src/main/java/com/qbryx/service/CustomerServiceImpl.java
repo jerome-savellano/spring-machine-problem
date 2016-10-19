@@ -28,45 +28,48 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Resource(name = "productDao")
 	private ProductDao productDao;
-	
+
+	@Resource(name = "productDaoHQL")
+	private ProductDao productDaoHQL;
+
 	public void addProductInCart(CartProduct cartProduct) throws InsufficientStockException {
-		
+
 		// Get product in cart
 		CartProduct product = cartDaoHQL.getProductInCart(cartProduct.getUserId(), cartProduct.getProduct().getUpc());
-		
+
 		// Check if product is already in cart
 		boolean productInCart = product != null;
-		
+
 		// Get product stock
-		int stockOnHand = productDao.getStock(cartProduct.getProduct().getUpc());
+		int stockOnHand = productDaoHQL.getInventoryProductByUpc(cartProduct.getProduct().getUpc()).getStock();
 
 		if (productInCart) {
-			
+
 			boolean stockForProductInCartAvailable = (product.getQuantity() + cartProduct.getQuantity()) <= stockOnHand;
 
 			if (stockForProductInCartAvailable) {
-				
+
 				int updatedQuantity = product.getQuantity() + cartProduct.getQuantity();
 				product.setQuantity(updatedQuantity);
 
 				cartDaoHQL.updateProductQuantityInCart(product);
-			}else{
-				
+			} else {
+
 				throw new InsufficientStockException();
-				
+
 			}
 		} else {
-			
+
 			boolean stockForNewProductAvailable = cartProduct.getQuantity() <= stockOnHand;
-			
+
 			if (stockForNewProductAvailable) {
-				
+
 				cartDaoHQL.addProductInCart(cartProduct);
-				
-			}else{
-				
+
+			} else {
+
 				throw new InsufficientStockException();
-				
+
 			}
 		}
 	}
@@ -85,8 +88,9 @@ public class CustomerServiceImpl implements CustomerService {
 		List<CartProduct> cartProducts = getProductsInCart(userId);
 
 		for (CartProduct cartProduct : cartProducts) {
+
 			InventoryProduct inventoryProduct = new InventoryProduct(cartProduct.getProduct().getUpc(),
-					productDao.getStock(cartProduct.getProduct().getUpc()));
+					productDao.getInventoryProductByUpc(cartProduct.getProduct().getUpc()).getStock());
 
 			if (inventoryProduct.getStock() >= cartProduct.getQuantity()) {
 				int newStock = inventoryProduct.getStock() - cartProduct.getQuantity();

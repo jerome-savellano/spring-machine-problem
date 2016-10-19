@@ -35,7 +35,12 @@ public class DAOQuery {
 	
 	//ProductDAO queries
 	public static final String HQL_GET_PRODUCTS_BY_CATEGORY = "from Product where category.name = :category";
+	public static final String HQL_ADD_PRODUCT ="insert into Product (upc, category_id, name, description, price) values(:upc,:category,:name,:description,:price)";
 	public static final String HQL_GET_PRODUCT_BY_UPC = "from Product where upc = :upc";
+	public static final String HQL_GET_INVENTORY_PRODUCT = "from InventoryProduct ip inner join Product p where ip.upc = p.upc and ip.upc = :upc";
+	public static final String HQL_ADD_PRODUCT_STOCK = "insert into product_inventory (upc, stock) values (:upc,:stock);";
+	public static final String HQL_UPDATE_PRODUCT = "update Product set name = :name, description = :description, price = :price where upc = :upc";
+	public static final String HQL_UPDATE_INVENTORY = "update InventoryProduct set stock = :stock where upc = :upc";
 	
 	//CartDAO queries
 	public static final String HQL_ADD_PRODUCT_IN_CART = "insert into cart (user_id, upc, quantity, is_purchased) values(:user_id,:upc,:quantity,0)";

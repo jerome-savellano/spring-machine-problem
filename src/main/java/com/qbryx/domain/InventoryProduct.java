@@ -9,13 +9,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.PolymorphismType;
+import org.hibernate.annotations.Polymorphism;
 
 @Entity
 @Table(name = "PRODUCT_INVENTORY")
+@Polymorphism(type = PolymorphismType.EXPLICIT)
 public class InventoryProduct extends Product {
 	
 	/**
@@ -28,6 +27,10 @@ public class InventoryProduct extends Product {
 	private Product product;
 	
 	private int stock;
+	
+	public InventoryProduct(){
+		
+	}
 
 	public InventoryProduct(Product product) {
 		super(product.getUpc(), product.getCategory(), product.getName(), product.getDescription(), product.getPrice());

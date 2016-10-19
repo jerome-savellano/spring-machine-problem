@@ -231,31 +231,4 @@ public class ProductDaoImpl implements ProductDao {
 			}
 		}
 	}
-
-	public List<InventoryProduct> getProductInventory(String cartId) {
-		
-		List<InventoryProduct> inventoryProducts = new ArrayList<InventoryProduct>();
-		
-		if(ConnectionManager.getConnection() != null){
-			PreparedStatement stmt;
-			
-			
-			try {
-				stmt = ConnectionManager.prepareStatement(DAOQuery.SQL_GET_INVENTORY_PRODUCT);
-				ResultSet rs = stmt.executeQuery();
-				
-				while(rs.next()){
-					inventoryProducts.add(new InventoryProduct(rs.getString("upc"), rs.getInt("stock")));
-				}
-				
-				ConnectionManager.close();
-			} catch (SQLException e) {
-				throw new RuntimeException();
-			}
-		}
-		
-		
-		return inventoryProducts;
-	}
-
 }
