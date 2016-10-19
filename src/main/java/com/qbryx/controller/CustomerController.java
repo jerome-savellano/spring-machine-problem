@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.qbryx.domain.CartProduct;
+import com.qbryx.domain.Product;
 import com.qbryx.exception.InsufficientStockException;
 import com.qbryx.helper.CartHelper;
 import com.qbryx.helper.UserUtil;
@@ -30,10 +31,6 @@ public class CustomerController {
 		
 	@RequestMapping("/customer")
 	public String home(Model model, HttpServletRequest request) {
-		
-//		for(Product product : customerService.getProductsInCart(UserUtil.getCustomer(request).getUserId())){
-//			System.out.println(product.getName());
-//		}
 					
 		cartHelper.populateCartInLayout(customerService, UserUtil.getUserId(request), model);
 		return "customer_home";
@@ -42,7 +39,7 @@ public class CustomerController {
 	@RequestMapping("/customer/viewProduct")
 	public String viewProduct(@RequestParam(value = "category", required = false) String category, Model model,
 			HttpServletRequest request) {
-
+		
 		cartHelper.populateCartInLayout(customerService, UserUtil.getUserId(request), model);
 		
 		if (category != null) {
@@ -61,19 +58,26 @@ public class CustomerController {
 	public String processProduct(@RequestParam(value = "upc") String upc,
 			@RequestParam(value = "category") String category, Model model, HttpServletRequest request) {
 		
-		CartProduct cartProduct = new CartProduct();
-		cartProduct.setUserId(UserUtil.getUserId(request));
-		cartProduct.setProduct(productService.getProductByUpc(upc));
+		Product product = productService.getProductByUpc(upc);
+		
+		CartProduct cartProduct = customerService.getProductInCart(UserUtil.getUserId(request), upc);
+				
+		int quantityInCart = 0;
+		
+		if(cartProduct != null){
+			quantityInCart = cartProduct.getQuantity();
+		}
 		
 		cartHelper.populateCartInLayout(customerService, UserUtil.getUserId(request), model);
-		model.addAttribute("product", productService.getProductByUpc(upc));
+		
+		model.addAttribute("product", product);
 		model.addAttribute("category", category);
-		model.addAttribute("quantity", customerService.getQuantityOfProductInCart(cartProduct));
+		model.addAttribute("quantity", quantityInCart);
 
 		return "product";
 	}
 
-	@RequestMapping("/customer/productCart")
+	@RequestMapping("/customer/addProductToCart")
 	public String productCart(@RequestParam(value = "upc") String upc, @RequestParam(value = "quantity") int quantity,
 			Model model, HttpServletRequest request) {
 
@@ -82,7 +86,6 @@ public class CustomerController {
 		cartProduct.setProduct(productService.getProductByUpc(upc));
 		cartProduct.setQuantity(quantity);
 		
-
 		try {
 
 			customerService.addProductInCart(cartProduct);
@@ -98,6 +101,7 @@ public class CustomerController {
 		long cartId = UserUtil.getUserId(request);
 		
 		try {
+			
 			customerService.checkout(cartId);
 			model.addAttribute("checkoutSuccess", true);
 			

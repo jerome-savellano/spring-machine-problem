@@ -38,7 +38,7 @@
 			<div class="col-md-8">
 				<form action="${pageContext.request.contextPath}/logout">
 					<h1 class="page-header">
-						Hi,  ${customer.getUsername()}! <input type="submit"
+						Hi, ${customer.getUsername()}! <input type="submit"
 							class="btn btn-warning btn-xs" value="Logout">
 					</h1>
 				</form>
@@ -51,7 +51,9 @@
 						<strong>Oops!</strong> Please select a category.
 					</div>
 				</c:if>
-				<form method="post" action="${pageContext.request.contextPath}/customer/viewProduct" class="form-inline">
+				<form method="post"
+					action="${pageContext.request.contextPath}/customer/viewProduct"
+					class="form-inline">
 					<div class="form-group" style="padding: 0;">
 						<select class="form-control" name="category">
 							<option selected disabled>SELECT CATEGORY</option>
@@ -67,7 +69,7 @@
 							</div>
 							<c:forEach items="${products}" var="item" varStatus="status">
 								<a
-									href="${pageContext.request.contextPath}/customer/processProduct?upc=${item.getUpc()}&category=${category}"
+									href="${pageContext.request.contextPath}/customer/processProduct?upc=${item.getUpc()}&category=${item.getCategory().getCategoryId()}"
 									class="list-group-item">${item.getName()}</a>
 							</c:forEach>
 						</div>

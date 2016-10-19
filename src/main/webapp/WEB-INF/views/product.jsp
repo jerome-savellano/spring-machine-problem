@@ -88,7 +88,7 @@
 						</h4>
 					</dd>
 				</dl>
-				<form class="form-inline" action="productCart" method="post">
+				<form class="form-inline" action="addProductToCart" method="post">
 					<input type="hidden" name="upc" value="${product.getUpc()}">
 					<div class="form-group">
 						<label for="quantity">Qty:</label> <input type="number"

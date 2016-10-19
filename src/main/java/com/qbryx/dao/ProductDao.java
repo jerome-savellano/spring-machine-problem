@@ -8,7 +8,7 @@ import com.qbryx.domain.Product;
 public interface ProductDao {
 
 	List<Product> getAllProducts();
-	List<Product> getProductsByCategory(String categoryName);
+	List<Product> getProductsByCategory(String categoryId);
 	List<InventoryProduct> getProductInventory(String upc);
 	Product getProductByUpc(String upc); //method signature change to getProduct(String upc)
 	InventoryProduct getInventoryProductByUpc(String upc); //separate DAO

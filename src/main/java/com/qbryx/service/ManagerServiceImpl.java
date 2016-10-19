@@ -13,13 +13,16 @@ public class ManagerServiceImpl implements ManagerService {
 
 	@Resource(name="productDao")
 	private ProductDao productDao;
+	
+	@Resource(name="productDaoHQL")
+	private ProductDao productDaoHQL;
 
 	public Product getProductByUpc(String upc) {
 		return productDao.getInventoryProductByUpc(upc);
 	}
 
 	public void addProduct(InventoryProduct inventoryProduct) {
-		productDao.addProduct(inventoryProduct); 
+		productDaoHQL.addProduct(inventoryProduct); 
 		productDao.addProductStock(inventoryProduct);
 	}
 

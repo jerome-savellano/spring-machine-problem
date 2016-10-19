@@ -20,12 +20,15 @@ public class ProductServiceImpl implements ProductService{
 	@Resource(name="productDao")
 	private ProductDao productDao;
 	
+	@Resource(name="productDaoHQL")
+	private ProductDao productDaoHQL;
+	
 	public List<Category> getCategories() {
 		return categoryDao.getCategories();
 	}
 
 	public List<Product> getProductsByCategory(String categoryName) {
-		return productDao.getProductsByCategory(categoryName);
+		return productDaoHQL.getProductsByCategory(categoryName);
 	}
 
 	public Product getProductByUpc(String upc) {

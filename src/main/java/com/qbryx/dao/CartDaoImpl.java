@@ -70,15 +70,15 @@ public class CartDaoImpl implements CartDao {
 		return cartProducts;
 	}
 
-	public void removeProductInCart(long cartId, String upc) {
+	public void removeProductInCart(CartProduct cartProduct) {
 		
 		if (ConnectionManager.getConnection() != null) {
 			PreparedStatement stmt;
 
 			try {
-				stmt = ConnectionManager.prepareStatement(DAOQuery.SQL_REMOVE_IN_CART);
-				stmt.setLong(1, cartId);
-				stmt.setString(2, upc);
+				stmt = ConnectionManager.prepareStatement(DAOQuery.SQL_REMOVE_PRODUCT_IN_CART);
+				stmt.setLong(1, cartProduct.getUserId());
+				stmt.setString(2, cartProduct.getProduct().getUpc());
 
 				stmt.executeUpdate();
 
@@ -89,7 +89,7 @@ public class CartDaoImpl implements CartDao {
 		}
 	}
 
-	public void updateProductStatusInCart(long cartId) {
+	public void checkout(long cartId) {
 		
 		if (ConnectionManager.getConnection() != null) {
 			PreparedStatement stmt;
@@ -107,32 +107,7 @@ public class CartDaoImpl implements CartDao {
 		}
 	}
 
-	public int getQuantity(CartProduct cartProduct) {
-		// TODO Auto-generated method stub
-		int quantity = 0;
-
-		if (ConnectionManager.getConnection() != null) {
-			PreparedStatement stmt;
-
-			try {
-				stmt = ConnectionManager.prepareStatement(DAOQuery.SQL_GET_QUANTITY);
-				stmt.setLong(1, cartProduct.getUserId());
-				stmt.setString(2, cartProduct.getProduct().getUpc());
-
-				ResultSet rs = stmt.executeQuery();
-
-				if (rs.next()) {
-					quantity = rs.getInt("quantity");
-				}
-			} catch (SQLException e) {
-				throw new RuntimeException();
-			}
-		}
-
-		return quantity;
-	}
-
-	public CartProduct getProductInCart(CartProduct product) {
+	public CartProduct getProductInCart(long userId, String upc) {
 
 		CartProduct cartProduct = null;
 
@@ -141,12 +116,13 @@ public class CartDaoImpl implements CartDao {
 
 			try {
 				stmt = ConnectionManager.prepareStatement(DAOQuery.SQL_CHECK_PRODUCT_IN_CART);
-				stmt.setLong(1, product.getUserId());
-				stmt.setString(2, product.getProduct().getUpc());
+				stmt.setLong(1, userId);
+				stmt.setString(2, upc);
 
 				ResultSet rs = stmt.executeQuery();
 
 				if (rs.next()) {
+					
 					cartProduct = new CartProduct();
 					cartProduct.setUserId(rs.getLong("user_id"));
 					cartProduct.setProduct(new Product(rs.getString("upc")));

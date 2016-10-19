@@ -12,25 +12,16 @@ import com.qbryx.domain.Category;
 import com.qbryx.domain.InventoryProduct;
 import com.qbryx.domain.Product;
 import com.qbryx.managers.ConnectionManager;
+import com.qbryx.util.DAOQuery;
 
 @Repository("productDao")
 public class ProductDaoImpl implements ProductDao {
 
-	private static final String GET_PRODUCTS_BY_CATEGORY = "select product.upc, product.name, product.category_id, category.name from product inner join category on product.category_id = category.category_id where category.name = ?";
-	private static final String GET_PRODUCT_BY_UPC_P = "select upc, name, category_id, description, price from product where upc = ?";
-	private static final String GET_PRODUCT_BY_UPC_M = "select p.name, p.price, p.upc, c.category_id, c.name as cname, p.description, pi.stock from product p inner join category c on p.category_id = c.category_id inner join product_inventory pi on p.upc = pi.upc  where p.upc = ?";
-	private static final String GET_PRODUCT_QUANTITY_ON_HAND = "select stock, upc from product_inventory where upc = ?";
-	private static final String GET_INVENTORY_PRODUCT = "select p.upc, p.stock from product_inventory p inner join customer_product_in_cart c on p.upc = c.upc where c.cart_id = 'jersav'";
-	private static final String ADD_PRODUCT = "insert into product (category_id, upc, name, description, price) values (?,?,?,?,?);";
-	private static final String ADD_PRODUCT_STOCK = "insert into product_inventory (upc, stock) values (?,?);";
-	private static final String UPDATE_PRODUCT = "UPDATE `qbryx`.`product` SET `name` = ?, `description` = ?, `price` = ? WHERE `upc` = ?;";
-	private static final String UPDATE_PRODUCT_INVENTORY = "UPDATE `qbryx`.`product_inventory` SET `stock` = ? WHERE `upc` = ?;";
-	
 	public List<Product> getAllProducts() {
 		throw new UnsupportedOperationException();
 	}
 
-	public List<Product> getProductsByCategory(String categoryName) {
+	public List<Product> getProductsByCategory(String categoryId) {
 		
 		List<Product> products = new ArrayList<Product>();
 			
@@ -38,8 +29,8 @@ public class ProductDaoImpl implements ProductDao {
 			PreparedStatement stmt;
 			
 			try {
-				stmt = ConnectionManager.prepareStatement(GET_PRODUCTS_BY_CATEGORY);
-				stmt.setString(1, categoryName);
+				stmt = ConnectionManager.prepareStatement(DAOQuery.SQL_GET_PRODUCTS_BY_CATEGORY);
+				stmt.setString(1, categoryId);
 				
 				ResultSet rs = stmt.executeQuery();
 				
@@ -72,7 +63,7 @@ public class ProductDaoImpl implements ProductDao {
 			
 			
 			try {
-				stmt = ConnectionManager.prepareStatement(GET_PRODUCT_BY_UPC_P);
+				stmt = ConnectionManager.prepareStatement(DAOQuery.SQL_GET_PRODUCT_BY_UPC_P);
 				stmt.setString(1,  upc);
 				
 				ResultSet rs = stmt.executeQuery();
@@ -105,7 +96,7 @@ public class ProductDaoImpl implements ProductDao {
 			
 			
 			try {
-				stmt = ConnectionManager.prepareStatement(GET_PRODUCT_QUANTITY_ON_HAND);
+			stmt = ConnectionManager.prepareStatement(DAOQuery.SQL_GET_PRODUCT_QUANTITY_ON_HAND);
 				stmt.setString(1, upc);
 				
 				ResultSet rs = stmt.executeQuery();
@@ -133,7 +124,7 @@ public class ProductDaoImpl implements ProductDao {
 			PreparedStatement stmt;
 			
 			try {
-				stmt = ConnectionManager.prepareStatement(GET_PRODUCT_BY_UPC_M);
+				stmt = ConnectionManager.prepareStatement(DAOQuery.SQL_GET_PRODUCT_BY_UPC_M);
 				stmt.setString(1, upc);
 				
 				ResultSet rs = stmt.executeQuery();
@@ -165,7 +156,7 @@ public class ProductDaoImpl implements ProductDao {
 			PreparedStatement stmt;
 			
 			try {
-				stmt = ConnectionManager.prepareStatement(ADD_PRODUCT);
+				stmt = ConnectionManager.prepareStatement(DAOQuery.SQL_ADD_PRODUCT);
 				stmt.setString(1, product.getCategory().getCategoryId());
 				stmt.setString(2, product.getUpc());
 				stmt.setString(3, product.getName());
@@ -187,7 +178,7 @@ public class ProductDaoImpl implements ProductDao {
 			PreparedStatement stmt;
 			
 			try {
-				stmt = ConnectionManager.prepareStatement(ADD_PRODUCT_STOCK);
+				stmt = ConnectionManager.prepareStatement(DAOQuery.SQL_ADD_PRODUCT_STOCK);
 				stmt.setString(1, inventoryProduct.getUpc());
 				stmt.setInt(2, inventoryProduct.getStock());
 				
@@ -207,7 +198,7 @@ public class ProductDaoImpl implements ProductDao {
 			
 			
 			try {
-				stmt = ConnectionManager.prepareStatement(UPDATE_PRODUCT);		
+				stmt = ConnectionManager.prepareStatement(DAOQuery.SQL_UPDATE_PRODUCT);		
 				stmt.setString(1, product.getName());
 				stmt.setString(2, product.getDescription());
 				stmt.setBigDecimal(3, product.getPrice());
@@ -228,7 +219,7 @@ public class ProductDaoImpl implements ProductDao {
 			PreparedStatement stmt;
 			
 			try {
-				stmt = ConnectionManager.prepareStatement(UPDATE_PRODUCT_INVENTORY);
+				stmt = ConnectionManager.prepareStatement(DAOQuery.SQL_UPDATE_PRODUCT_INVENTORY);
 				stmt.setInt(1, inventoryProduct.getStock());
 				stmt.setString(2, inventoryProduct.getUpc());
 				
@@ -250,7 +241,7 @@ public class ProductDaoImpl implements ProductDao {
 			
 			
 			try {
-				stmt = ConnectionManager.prepareStatement(GET_INVENTORY_PRODUCT);
+				stmt = ConnectionManager.prepareStatement(DAOQuery.SQL_GET_INVENTORY_PRODUCT);
 				ResultSet rs = stmt.executeQuery();
 				
 				while(rs.next()){

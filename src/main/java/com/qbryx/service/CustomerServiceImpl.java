@@ -32,7 +32,7 @@ public class CustomerServiceImpl implements CustomerService {
 	public void addProductInCart(CartProduct cartProduct) throws InsufficientStockException {
 		
 		// Get product in cart
-		CartProduct product = cartDaoHQL.getProductInCart(cartProduct);
+		CartProduct product = cartDaoHQL.getProductInCart(cartProduct.getUserId(), cartProduct.getProduct().getUpc());
 		
 		// Check if product is already in cart
 		boolean productInCart = product != null;
@@ -50,7 +50,6 @@ public class CustomerServiceImpl implements CustomerService {
 				product.setQuantity(updatedQuantity);
 
 				cartDaoHQL.updateProductQuantityInCart(product);
-				
 			}else{
 				
 				throw new InsufficientStockException();
@@ -76,20 +75,14 @@ public class CustomerServiceImpl implements CustomerService {
 		return cartDaoHQL.getProductsInCart(cartId);
 	}
 
-	public void removeProductInCart(long cartId, String upc) {
-		cartDao.removeProductInCart(cartId, upc);
+	public void removeProductInCart(CartProduct cartProduct) {
+		cartDaoHQL.removeProductInCart(cartProduct);
 	}
 
-	public void updateProductInCart(long cartId) {
-		cartDao.updateProductStatusInCart(cartId);
-	}
-
-
-
-	public List<CartProduct> checkout(long cartId) throws InsufficientStockException {
+	public List<CartProduct> checkout(long userId) throws InsufficientStockException {
 		List<CartProduct> invalidProduct = new ArrayList<CartProduct>();
 
-		List<CartProduct> cartProducts = getProductsInCart(cartId);
+		List<CartProduct> cartProducts = getProductsInCart(userId);
 
 		for (CartProduct cartProduct : cartProducts) {
 			InventoryProduct inventoryProduct = new InventoryProduct(cartProduct.getProduct().getUpc(),
@@ -100,7 +93,7 @@ public class CustomerServiceImpl implements CustomerService {
 
 				inventoryProduct.setStock(newStock);
 				productDao.updateProductStock(inventoryProduct);
-				cartDao.updateProductStatusInCart(cartId);
+				cartDaoHQL.checkout(userId);
 			} else {
 				invalidProduct.add(cartProduct);
 			}
@@ -110,8 +103,7 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public int getQuantityOfProductInCart(CartProduct cartProduct) {
-		// TODO Auto-generated method stub
-		return cartDaoHQL.getQuantity(cartProduct);
+	public CartProduct getProductInCart(long userId, String upc) {
+		return cartDaoHQL.getProductInCart(userId, upc);
 	}
 }

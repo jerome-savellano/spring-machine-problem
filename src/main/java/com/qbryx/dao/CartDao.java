@@ -7,12 +7,11 @@ import com.qbryx.exception.InsufficientStockException;
 
 public interface CartDao {
 	
-	CartProduct getProductInCart(CartProduct cartProduct);
-	List<CartProduct> getProductsInCart(long cartId);
-	int getQuantity(CartProduct cartProduct);
+	CartProduct getProductInCart(long userId, String upc);
+	List<CartProduct> getProductsInCart(long userId);
 	
 	void addProductInCart(CartProduct product) throws InsufficientStockException;
-	void removeProductInCart(long cartId, String upc);
-	void updateProductStatusInCart(long cartId);
+	void removeProductInCart(CartProduct cartProduct);
+	void checkout(long userId);
 	void updateProductQuantityInCart(CartProduct cartProduct) throws InsufficientStockException;
 }

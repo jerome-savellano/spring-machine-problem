@@ -1,5 +1,21 @@
 package com.qbryx.domain;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
+@Entity
+@Table(name = "PRODUCT_INVENTORY")
 public class InventoryProduct extends Product {
 	
 	/**
@@ -7,7 +23,10 @@ public class InventoryProduct extends Product {
 	 */
 	private static final long serialVersionUID = 1L;
 	
+	private long id;
+	
 	private Product product;
+	
 	private int stock;
 
 	public InventoryProduct(Product product) {
@@ -25,6 +44,17 @@ public class InventoryProduct extends Product {
 		this.stock = stock;
 	}
 
+	@Id @GeneratedValue
+	@Column(name = "id")
+	public long getId() {
+		return id;
+	}
+	
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	@Column(name = "stock")
 	public int getStock() {
 		return stock;
 	}
@@ -32,7 +62,9 @@ public class InventoryProduct extends Product {
 	public void setStock(int stock) {
 		this.stock = stock;
 	}
-	
+
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="upc", referencedColumnName = "upc")
 	public Product getProduct() {
 		return product;
 	}
