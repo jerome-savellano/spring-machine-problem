@@ -1,20 +1,17 @@
 package com.qbryx.domain;
 
 import java.math.BigDecimal;
-import javax.persistence.InheritanceType;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.Inheritance;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "PRODUCT")
-@Inheritance(strategy = InheritanceType.JOINED)
 public class Product implements java.io.Serializable {
  
 	/**
@@ -67,7 +64,7 @@ public class Product implements java.io.Serializable {
 		return id;
 	}
 
-	@Column(name = "upc")
+	@Column(name = "upc", nullable = false)
 	public String getUpc() {
 		return upc;
 	}
@@ -76,8 +73,8 @@ public class Product implements java.io.Serializable {
 		this.upc = upc;
 	}
 
-	@OneToOne
-	@JoinColumn(name = "category_id", referencedColumnName = "category_id", insertable = false, updatable = false)
+	@ManyToOne
+	@JoinColumn(name = "category_id", referencedColumnName = "category_id")
 	public Category getCategory() {
 		return category;
 	}

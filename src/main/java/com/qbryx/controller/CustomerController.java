@@ -58,7 +58,7 @@ public class CustomerController {
 	public String processProduct(@RequestParam(value = "upc") String upc,
 			@RequestParam(value = "category") String category, Model model, HttpServletRequest request) {
 		
-		Product product = productService.getProductByUpc(upc);
+		Product product = productService.getProduct(upc);
 		
 		CartProduct cartProduct = customerService.getProductInCart(UserUtil.getUserId(request), upc);
 				
@@ -83,7 +83,7 @@ public class CustomerController {
 
 		CartProduct cartProduct = new CartProduct();
 		cartProduct.setUserId(UserUtil.getUserId(request));
-		cartProduct.setProduct(productService.getProductByUpc(upc));
+		cartProduct.setProduct(productService.getProduct(upc));
 		cartProduct.setQuantity(quantity);
 		
 		try {

@@ -36,7 +36,7 @@ public class ManagementController {
 	public String search(@RequestParam(value = "upc") String upc, Model model) {
 
 		boolean productNotFound = false;
-		Product product = managerService.getProductByUpc(upc);
+		InventoryProduct product = managerService.getProduct(upc);
 
 		if (product == null) {
 			productNotFound = true;
@@ -85,7 +85,7 @@ public class ManagementController {
 
 	@RequestMapping(Path.MANAGEMENT_ROOT_PATH + "/viewProduct")
 	public String viewProduct(Model model, @RequestParam(value = "upc") String upc) {
-		Product product = managerService.getProductByUpc(upc);
+		InventoryProduct product = managerService.getProduct(upc);
 		
 		model.addAttribute("product", product);
 		return "update_product";

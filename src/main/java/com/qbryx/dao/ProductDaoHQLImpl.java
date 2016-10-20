@@ -87,8 +87,8 @@ public class ProductDaoHQLImpl implements ProductDao {
 	}
 
 	@Override
-	public InventoryProduct getInventoryProductByUpc(String upc) {
-
+	public InventoryProduct getInventoryProductByUpc(final String upc) {
+		
 		InventoryProduct product = null;
 
 		Session session = sessionFactory.openSession();
@@ -98,11 +98,11 @@ public class ProductDaoHQLImpl implements ProductDao {
 		try {
 			transaction = session.beginTransaction();
 
-			Query query = session.createSQLQuery(DAOQuery.HQL_GET_INVENTORY_PRODUCT)
+			Query query = session.createQuery(DAOQuery.HQL_GET_INVENTORY_PRODUCT)
 								 .setParameter("upc", upc);
-
-			product = (InventoryProduct) query.getSingleResult();
 			
+			product = (InventoryProduct) query.getSingleResult();
+						
 			transaction.commit();
 		} catch (HibernateException e) {
 			if (transaction != null)
@@ -120,6 +120,8 @@ public class ProductDaoHQLImpl implements ProductDao {
 	@Override
 	public void addProduct(Product product) {
 
+		System.out.println(product.getCategory().getCategoryId());
+		
 		Session session = sessionFactory.openSession();
 
 		Transaction transaction = null;
@@ -127,12 +129,13 @@ public class ProductDaoHQLImpl implements ProductDao {
 		try {
 			transaction = session.beginTransaction();
 
-			Query query = session.createSQLQuery(DAOQuery.HQL_ADD_PRODUCT).setParameter("upc", product.getUpc())
-								 .setParameter("category", product.getCategory().getCategoryId())
-								 .setParameter("name", product.getName()).setParameter("description", product.getDescription())
-								 .setParameter("price", product.getPrice());
-
-			query.executeUpdate();
+//			Query query = session.createSQLQuery(DAOQuery.HQL_ADD_PRODUCT).setParameter("upc", product.getUpc())
+//								 .setParameter("category", product.getCategory().getCategoryId())
+//								 .setParameter("name", product.getName()).setParameter("description", product.getDescription())
+//								 .setParameter("price", product.getPrice());
+//
+//			query.executeUpdate();
+			session.save(product);
 
 			transaction.commit();
 		} catch (HibernateException e) {
@@ -157,11 +160,12 @@ public class ProductDaoHQLImpl implements ProductDao {
 
 			@SuppressWarnings("deprecation")
 			Query query = session.createSQLQuery(DAOQuery.HQL_ADD_PRODUCT_STOCK)
-								 .setParameter("upc", inventoryProduct.getUpc())
+								 .setParameter("upc", inventoryProduct.getProduct().getUpc())
 								 .setParameter("stock", inventoryProduct.getStock());
 
 			query.executeUpdate();
-
+//			session.save(inventoryProduct);
+			
 			transaction.commit();
 		} catch (HibernateException e) {
 
@@ -212,7 +216,7 @@ public class ProductDaoHQLImpl implements ProductDao {
 			
 			Query query = session.createQuery(DAOQuery.HQL_UPDATE_INVENTORY)
 								 .setParameter("stock", inventoryProduct.getStock())
-								 .setParameter("upc", inventoryProduct.getUpc());
+								 .setParameter("upc", inventoryProduct.getProduct().getUpc());
 			
 			query.executeUpdate();
 			

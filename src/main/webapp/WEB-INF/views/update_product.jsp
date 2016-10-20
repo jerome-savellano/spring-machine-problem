@@ -17,7 +17,7 @@
 	integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
 	crossorigin="anonymous"></script>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>${product.getName()}</title>
+<title>${product.getProduct().getName()}</title>
 </head>
 <body>
 	<div class="container-fluid" style="padding: 2%;">
@@ -39,25 +39,25 @@
 				<form action="updateProduct" method="post">
 					<div class="form-group">
 						<label for="Name">Name </label> <input type="text" name="name"
-							class="form-control" value="${product.getName()}" required />
+							class="form-control" value="${product.getProduct().getName()}" required />
 					</div>
 					<div class="form-group">
 						<label for="UPC">UPC </label> <input type="number" name="upc"
-							class="form-control" value="${product.getUpc()}"
+							class="form-control" value="${product.getProduct().getUpc()}"
 							readonly="readonly" />
 					</div>
 					<div class="form-group">
 						<label for="category">Category</label><input type="text" name="category"
-							class="form-control" value="${product.getCategory().getName()}"
+							class="form-control" value="${product.getProduct().getCategory().getName()}"
 							readonly="readonly" />
 					</div>
 					<div class="form-group">
 						<label for="description">Description</label>
-						<textarea class="form-control" rows="5" name="description">${product.getDescription()}</textarea>
+						<textarea class="form-control" rows="5" name="description">${product.getProduct().getDescription()}</textarea>
 					</div>
 					<div class="form-group">
 						<label for="price">Price </label> <input type="number" step="any"
-							name="price" class="form-control" value="${product.getPrice()}"
+							name="price" class="form-control" value="${product.getProduct().getPrice()}"
 							required />
 					</div>
 					<div class="form-group">

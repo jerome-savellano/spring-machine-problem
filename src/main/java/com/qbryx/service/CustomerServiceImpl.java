@@ -25,23 +25,29 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Resource(name = "cartDaoHQL")
 	private CartDao cartDaoHQL;
-
+	
+	@Resource(name = "cartDaoCriteria")
+	private CartDao cartDaoCriteria;
+	
 	@Resource(name = "productDao")
 	private ProductDao productDao;
 
 	@Resource(name = "productDaoHQL")
 	private ProductDao productDaoHQL;
+	
+	@Resource(name = "productDaoCriteria")
+	private ProductDao productDaoCriteria;
 
 	public void addProductInCart(CartProduct cartProduct) throws InsufficientStockException {
-
+				
 		// Get product in cart
-		CartProduct product = cartDaoHQL.getProductInCart(cartProduct.getUserId(), cartProduct.getProduct().getUpc());
+		CartProduct product = cartDaoCriteria.getProductInCart(cartProduct.getUserId(), cartProduct.getProduct().getUpc());
 
 		// Check if product is already in cart
 		boolean productInCart = product != null;
 
 		// Get product stock
-		int stockOnHand = productDaoHQL.getInventoryProductByUpc(cartProduct.getProduct().getUpc()).getStock();
+		int stockOnHand = productDaoCriteria.getInventoryProductByUpc(cartProduct.getProduct().getUpc()).getStock();
 
 		if (productInCart) {
 
@@ -65,7 +71,6 @@ public class CustomerServiceImpl implements CustomerService {
 			if (stockForNewProductAvailable) {
 
 				cartDaoHQL.addProductInCart(cartProduct);
-
 			} else {
 
 				throw new InsufficientStockException();
@@ -75,7 +80,7 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	public List<CartProduct> getProductsInCart(long cartId) {
-		return cartDaoHQL.getProductsInCart(cartId);
+		return cartDaoCriteria.getProductsInCart(cartId);
 	}
 
 	public void removeProductInCart(CartProduct cartProduct) {
@@ -88,15 +93,16 @@ public class CustomerServiceImpl implements CustomerService {
 		List<CartProduct> cartProducts = getProductsInCart(userId);
 
 		for (CartProduct cartProduct : cartProducts) {
-
-			InventoryProduct inventoryProduct = new InventoryProduct(cartProduct.getProduct().getUpc(),
-					productDao.getInventoryProductByUpc(cartProduct.getProduct().getUpc()).getStock());
+			
+			int stock = productDaoCriteria.getInventoryProductByUpc(cartProduct.getProduct().getUpc()).getStock();
+		
+			InventoryProduct inventoryProduct = new InventoryProduct(cartProduct.getProduct(), stock);
 
 			if (inventoryProduct.getStock() >= cartProduct.getQuantity()) {
 				int newStock = inventoryProduct.getStock() - cartProduct.getQuantity();
 
 				inventoryProduct.setStock(newStock);
-				productDao.updateProductStock(inventoryProduct);
+				productDaoHQL.updateProductStock(inventoryProduct);
 				cartDaoHQL.checkout(userId);
 			} else {
 				invalidProduct.add(cartProduct);

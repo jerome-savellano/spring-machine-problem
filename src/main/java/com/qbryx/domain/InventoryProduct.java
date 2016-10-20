@@ -2,26 +2,16 @@ package com.qbryx.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.PolymorphismType;
-import org.hibernate.annotations.Polymorphism;
-
 @Entity
 @Table(name = "PRODUCT_INVENTORY")
-@Polymorphism(type = PolymorphismType.EXPLICIT)
-public class InventoryProduct extends Product {
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	
+public class InventoryProduct {
+		
 	private long id;
 	
 	private Product product;
@@ -31,22 +21,12 @@ public class InventoryProduct extends Product {
 	public InventoryProduct(){
 		
 	}
-
-	public InventoryProduct(Product product) {
-		super(product.getUpc(), product.getCategory(), product.getName(), product.getDescription(), product.getPrice());
-		// TODO Auto-generated constructor stub
-	}
 	
-	public InventoryProduct(Product product, int stock) {
-		super(product.getUpc(), product.getCategory(), product.getName(), product.getDescription(), product.getPrice());
+	public InventoryProduct(Product product, int stock){
+		this.product = product;
 		this.stock = stock;
 	}
 	
-	public InventoryProduct(String upc, int stock){
-		setUpc(upc);
-		this.stock = stock;
-	}
-
 	@Id @GeneratedValue
 	@Column(name = "id")
 	public long getId() {
@@ -66,7 +46,7 @@ public class InventoryProduct extends Product {
 		this.stock = stock;
 	}
 
-	@OneToOne(fetch = FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name="upc", referencedColumnName = "upc")
 	public Product getProduct() {
 		return product;

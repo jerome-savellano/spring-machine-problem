@@ -22,7 +22,7 @@ public class CartProduct {
 	private Product product;
 	
 	private int quantity;
-	
+
 	private int isPurchased;
 		
 	public CartProduct(){}
@@ -73,16 +73,16 @@ public class CartProduct {
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
-
+		
 	@Column(name = "is_purchased")
-	public int isPurchased() {
+	public int getIsPurchased() {
 		return isPurchased;
 	}
 
-	public void setPurchased(int isPurchased) {
+	public void setIsPurchased(int isPurchased) {
 		this.isPurchased = isPurchased;
 	}
-	
+
 	@Transient
 	public BigDecimal totalPrice(){
 		BigDecimal totalPrice = BigDecimal.ZERO;

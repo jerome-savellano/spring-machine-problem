@@ -83,21 +83,15 @@ public class CartDaoHQLImpl implements CartDao {
 
 	@Override
 	public void addProductInCart(CartProduct product) {
-
+			
 		Session session = sessionFactory.openSession();
 
 		Transaction transaction = null;
 
 		try {
 			transaction = session.beginTransaction();
-
-			@SuppressWarnings("deprecation")
-			Query query = session.createSQLQuery(DAOQuery.HQL_ADD_PRODUCT_IN_CART)
-								 .setParameter("user_id", product.getUserId())
-								 .setParameter("upc", product.getProduct().getUpc())
-								 .setParameter("quantity", product.getQuantity());
-
-			query.executeUpdate();
+			
+			session.save(product);
 
 			transaction.commit();
 		} catch (HibernateException e) {

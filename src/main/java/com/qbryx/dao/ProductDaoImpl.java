@@ -137,8 +137,7 @@ public class ProductDaoImpl implements ProductDao {
 					mProduct.setCategory(new Category(rs.getString("category_id"), rs.getString("cname")));
 					mProduct.setDescription(rs.getString("description"));
 					
-					product = new InventoryProduct(mProduct);
-					product.setStock(rs.getInt("stock"));
+					product = new InventoryProduct(mProduct, rs.getInt("stock"));
 				}
 				
 				ConnectionManager.close();
@@ -179,7 +178,7 @@ public class ProductDaoImpl implements ProductDao {
 			
 			try {
 				stmt = ConnectionManager.prepareStatement(DAOQuery.SQL_ADD_PRODUCT_STOCK);
-				stmt.setString(1, inventoryProduct.getUpc());
+				stmt.setString(1, inventoryProduct.getProduct().getUpc());
 				stmt.setInt(2, inventoryProduct.getStock());
 				
 				stmt.executeUpdate();
@@ -221,7 +220,7 @@ public class ProductDaoImpl implements ProductDao {
 			try {
 				stmt = ConnectionManager.prepareStatement(DAOQuery.SQL_UPDATE_PRODUCT_INVENTORY);
 				stmt.setInt(1, inventoryProduct.getStock());
-				stmt.setString(2, inventoryProduct.getUpc());
+				stmt.setString(2, inventoryProduct.getProduct().getUpc());
 				
 				stmt.executeUpdate();
 				

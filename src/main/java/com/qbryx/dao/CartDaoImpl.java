@@ -26,7 +26,7 @@ public class CartDaoImpl implements CartDao {
 				stmt.setLong(1, product.getUserId());
 				stmt.setString(2, product.getProduct().getUpc());
 				stmt.setInt(3, product.getQuantity());
-				stmt.setInt(4, product.isPurchased());
+				stmt.setInt(4, product.getIsPurchased());
 
 				stmt.executeUpdate();
 

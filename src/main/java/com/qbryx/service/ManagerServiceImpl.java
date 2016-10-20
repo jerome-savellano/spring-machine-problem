@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 
 import com.qbryx.dao.ProductDao;
 import com.qbryx.domain.InventoryProduct;
-import com.qbryx.domain.Product;
 
 @Service("managerService")
 public class ManagerServiceImpl implements ManagerService {
@@ -17,17 +16,17 @@ public class ManagerServiceImpl implements ManagerService {
 	@Resource(name="productDaoHQL")
 	private ProductDao productDaoHQL;
 
-	public Product getProductByUpc(String upc) {
-		return productDao.getInventoryProductByUpc(upc);
+	public InventoryProduct getProduct(String upc) {		
+		return productDaoHQL.getInventoryProductByUpc(upc);
 	}
 
 	public void addProduct(InventoryProduct inventoryProduct) {
-		productDaoHQL.addProduct(inventoryProduct); 
+		productDaoHQL.addProduct(inventoryProduct.getProduct()); 
 		productDaoHQL.addProductStock(inventoryProduct);
 	}
 
 	public void updateProduct(InventoryProduct inventoryProduct) {
-		productDaoHQL.updateProduct(inventoryProduct);
+		productDaoHQL.updateProduct(inventoryProduct.getProduct());
 		productDaoHQL.updateProductStock(inventoryProduct);
 	}
 }

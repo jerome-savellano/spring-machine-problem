@@ -1,5 +1,6 @@
 package com.qbryx.dao;
 
+import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -8,18 +9,43 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
+import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
 import com.qbryx.domain.User;
 
-@Repository("userDaoCriteriaQuery")
-public class UserDaoCriteriaQueryImpl implements UserDao {
-		
+@Repository("userDaoCriteria")
+public class UserDaoCriteriaImpl implements UserDao {
+	
+	@Resource(name = "sessionFactory")
+	private SessionFactory sessionFactory;
+
+//	@SuppressWarnings("deprecation")
 	public User getUser(String username) {
-		/*Criteria criteria = sessionFactory.getCurrentSession().createCriteria(User.class);
-		criteria.add(Restrictions.eq("username", username));
 		
-		return (User) criteria.uniqueResult();*/
+//		User user = null;
+//		
+//		Session session = sessionFactory.openSession();
+//		
+//		Transaction transaction = null;
+//		
+//		try{
+//			transaction = session.beginTransaction();
+//			
+//			Criteria criteria = session.createCriteria(User.class)
+//									   .add(Restrictions.eq("username", username));
+//			
+//			user = (User) criteria.uniqueResult();
+//			
+//			transaction.commit();
+//		}catch(HibernateException e){
+//			if(transaction != null) transaction.rollback();
+//			
+//			e.printStackTrace();
+//		}finally{
+//			session.close();
+//		}
+		
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("UserService");
 		EntityManager em = emf.createEntityManager();
 		

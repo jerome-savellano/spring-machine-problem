@@ -60,7 +60,7 @@ public class Category implements Serializable{
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	@OneToMany
 	@JoinColumn(name = "category_id", insertable = false, updatable = false)
 	public Set<Product> getProducts() {
