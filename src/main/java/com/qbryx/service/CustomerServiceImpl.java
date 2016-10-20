@@ -41,13 +41,13 @@ public class CustomerServiceImpl implements CustomerService {
 	public void addProductInCart(CartProduct cartProduct) throws InsufficientStockException {
 				
 		// Get product in cart
-		CartProduct product = cartDaoCriteria.getProductInCart(cartProduct.getUserId(), cartProduct.getProduct().getUpc());
+		CartProduct product = cartDaoHQL.getProductInCart(cartProduct.getUserId(), cartProduct.getProduct().getUpc());
 
 		// Check if product is already in cart
 		boolean productInCart = product != null;
 
 		// Get product stock
-		int stockOnHand = productDaoCriteria.getInventoryProductByUpc(cartProduct.getProduct().getUpc()).getStock();
+		int stockOnHand = productDaoHQL.getInventoryProductByUpc(cartProduct.getProduct().getUpc()).getStock();
 
 		if (productInCart) {
 
@@ -80,7 +80,7 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	public List<CartProduct> getProductsInCart(long cartId) {
-		return cartDaoCriteria.getProductsInCart(cartId);
+		return cartDaoHQL.getProductsInCart(cartId);
 	}
 
 	public void removeProductInCart(CartProduct cartProduct) {
@@ -94,7 +94,7 @@ public class CustomerServiceImpl implements CustomerService {
 
 		for (CartProduct cartProduct : cartProducts) {
 			
-			int stock = productDaoCriteria.getInventoryProductByUpc(cartProduct.getProduct().getUpc()).getStock();
+			int stock = productDaoHQL.getInventoryProductByUpc(cartProduct.getProduct().getUpc()).getStock();
 		
 			InventoryProduct inventoryProduct = new InventoryProduct(cartProduct.getProduct(), stock);
 

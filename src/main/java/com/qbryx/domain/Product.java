@@ -74,7 +74,7 @@ public class Product implements java.io.Serializable {
 	}
 
 	@ManyToOne
-	@JoinColumn(name = "category_id", referencedColumnName = "category_id")
+	@JoinColumn(name = "category_id", referencedColumnName = "id")
 	public Category getCategory() {
 		return category;
 	}

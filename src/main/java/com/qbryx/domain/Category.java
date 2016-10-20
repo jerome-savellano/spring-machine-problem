@@ -1,14 +1,11 @@
 package com.qbryx.domain;
 
 import java.io.Serializable;
-import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -20,35 +17,24 @@ public class Category implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private long id;
-	private String categoryId;
+	private long categoryId;
 	private String name;
-	private Set<Product> products;
 	
 	public Category(){}
 	
-	public Category(String categoryId, String name) {
+	public Category(long categoryId, String name) {
 		super();
 		this.categoryId = categoryId;
 		this.name = name;
 	}
-	
-	public void setId(long id) {
-		this.id = id;
-	}
-	
+
 	@Id @GeneratedValue
 	@Column(name = "id")
-	public long getId() {
-		return id;
-	}
-
-	@Column(name = "category_id")
-	public String getCategoryId() {
+	public long getCategoryId() {
 		return categoryId;
 	}
 
-	public void setCategoryId(String categoryId) {
+	public void setCategoryId(long categoryId) {
 		this.categoryId = categoryId;
 	}
 	
@@ -59,15 +45,5 @@ public class Category implements Serializable{
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	@OneToMany
-	@JoinColumn(name = "category_id", insertable = false, updatable = false)
-	public Set<Product> getProducts() {
-		return products;
-	}
-	
-	public void setProducts(Set<Product> products) {
-		this.products = products;
 	}
 }

@@ -37,7 +37,7 @@ public class ProductDaoImpl implements ProductDao {
 				while(rs.next()){
 					Product product = new Product();
 					
-					product.setCategory(new Category(rs.getString("category_id"), rs.getString("name")));
+					product.setCategory(new Category(rs.getLong("id"), rs.getString("name")));
 					product.setName(rs.getString("name"));
 					product.setUpc(rs.getString("upc"));
 					
@@ -72,7 +72,7 @@ public class ProductDaoImpl implements ProductDao {
 					product = new Product();
 					product.setUpc(rs.getString("upc"));
 					product.setName(rs.getString("name"));
-					product.setCategory(new Category(rs.getString("category_id"), rs.getString("name")));
+					product.setCategory(new Category(rs.getLong("id"), rs.getString("name")));
 					product.setDescription(rs.getString("description"));
 					product.setPrice(rs.getBigDecimal("price"));
 				}
@@ -134,7 +134,7 @@ public class ProductDaoImpl implements ProductDao {
 					mProduct.setName(rs.getString("name"));
 					mProduct.setPrice(rs.getBigDecimal("price"));
 					mProduct.setUpc(rs.getString("upc"));
-					mProduct.setCategory(new Category(rs.getString("category_id"), rs.getString("cname")));
+					mProduct.setCategory(new Category(rs.getLong("id"), rs.getString("name")));
 					mProduct.setDescription(rs.getString("description"));
 					
 					product = new InventoryProduct(mProduct, rs.getInt("stock"));
@@ -156,7 +156,7 @@ public class ProductDaoImpl implements ProductDao {
 			
 			try {
 				stmt = ConnectionManager.prepareStatement(DAOQuery.SQL_ADD_PRODUCT);
-				stmt.setString(1, product.getCategory().getCategoryId());
+				stmt.setLong(1, product.getCategory().getCategoryId());
 				stmt.setString(2, product.getUpc());
 				stmt.setString(3, product.getName());
 				stmt.setString(4, product.getDescription());

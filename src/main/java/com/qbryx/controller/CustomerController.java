@@ -114,7 +114,7 @@ public class CustomerController {
 	@RequestMapping(value="/customer/removeProduct", method=RequestMethod.POST)
 	public String removeProduct(@RequestParam(value = "upc") String upc, HttpServletRequest request){
 		
-		System.out.println(upc);		
+		System.out.println(upc);
 		return "customer_home";
 	}
 }

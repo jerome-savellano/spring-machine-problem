@@ -17,9 +17,9 @@ public class DAOQuery {
 	public static final String SQL_UPDATE_PRODUCT_QUANTITY_IN_CART = "UPDATE `qbryx`.`cart` SET `quantity` = ? WHERE `user_id` = ? and upc = ? and is_purchased = 0;";
 	
 	//ProductDAO queries
-	public static final String SQL_GET_PRODUCTS_BY_CATEGORY = "select product.upc, product.name, product.category_id, category.name from product inner join category on product.category_id = category.category_id where category.category_id = ?";
+	public static final String SQL_GET_PRODUCTS_BY_CATEGORY = "select product.upc, product.name, product.category_id, category.name from product inner join category on product.category_id = category.id where category.id = ?";
 	public static final String SQL_GET_PRODUCT_BY_UPC_P = "select upc, name, category_id, description, price from product where upc = ?";
-	public static final String SQL_GET_PRODUCT_BY_UPC_M = "select p.name, p.price, p.upc, c.category_id, c.name as cname, p.description, pi.stock from product p inner join category c on p.category_id = c.category_id inner join product_inventory pi on p.upc = pi.upc  where p.upc = ?";
+	public static final String SQL_GET_PRODUCT_BY_UPC_M = "select p.name, p.price, p.upc, c.id, c.name as cname, p.description, pi.stock from product p inner join category c on p.category_id = c.id inner join product_inventory pi on p.upc = pi.upc  where p.upc = ?";
 	public static final String SQL_GET_PRODUCT_QUANTITY_ON_HAND = "select stock, upc from product_inventory where upc = ?";
 	public static final String SQL_GET_INVENTORY_PRODUCT = "select p.upc, p.stock from product_inventory p inner join customer_product_in_cart c on p.upc = c.upc where c.cart_id = 'jersav'";
 	public static final String SQL_ADD_PRODUCT = "insert into product (category_id, upc, name, description, price) values (?,?,?,?,?);";

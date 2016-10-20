@@ -14,8 +14,8 @@ import com.qbryx.managers.ConnectionManager;
 @Repository("categoryDao")
 public class CategoryDaoImpl implements CategoryDao {
 	
-	private static final String GET_CATEGORIES = "select category_id, name from category";
-	private static final String GET_CATEGORY = "select category_id, name from category where name = ?";
+	private static final String GET_CATEGORIES = "select id, name from category";
+	private static final String GET_CATEGORY = "select id, name from category where name = ?";
 
 	public List<Category> getCategories() {
 		
@@ -29,7 +29,7 @@ public class CategoryDaoImpl implements CategoryDao {
 				
 				ResultSet rs = stmt.executeQuery();
 				while(rs.next()){
-					Category category = new Category(rs.getString("category_id"), rs.getString("name"));
+					Category category = new Category(rs.getLong("id"), rs.getString("name"));
 					categories.add(category);
 					
 					ConnectionManager.close();
@@ -57,7 +57,7 @@ public class CategoryDaoImpl implements CategoryDao {
 				ResultSet rs = stmt.executeQuery();
 				
 				if(rs.next()){
-					category = new Category(rs.getString("category_id"), rs.getString("name"));
+					category = new Category(rs.getLong("id"), rs.getString("name"));
 				}
 				
 				ConnectionManager.close();

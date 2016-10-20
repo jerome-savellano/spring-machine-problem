@@ -116,7 +116,6 @@ public class ProductDaoHQLImpl implements ProductDao {
 		return product;
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void addProduct(Product product) {
 
@@ -129,12 +128,6 @@ public class ProductDaoHQLImpl implements ProductDao {
 		try {
 			transaction = session.beginTransaction();
 
-//			Query query = session.createSQLQuery(DAOQuery.HQL_ADD_PRODUCT).setParameter("upc", product.getUpc())
-//								 .setParameter("category", product.getCategory().getCategoryId())
-//								 .setParameter("name", product.getName()).setParameter("description", product.getDescription())
-//								 .setParameter("price", product.getPrice());
-//
-//			query.executeUpdate();
 			session.save(product);
 
 			transaction.commit();
@@ -158,13 +151,7 @@ public class ProductDaoHQLImpl implements ProductDao {
 		try {
 			transaction = session.beginTransaction();
 
-			@SuppressWarnings("deprecation")
-			Query query = session.createSQLQuery(DAOQuery.HQL_ADD_PRODUCT_STOCK)
-								 .setParameter("upc", inventoryProduct.getProduct().getUpc())
-								 .setParameter("stock", inventoryProduct.getStock());
-
-			query.executeUpdate();
-//			session.save(inventoryProduct);
+			session.save(inventoryProduct);
 			
 			transaction.commit();
 		} catch (HibernateException e) {
