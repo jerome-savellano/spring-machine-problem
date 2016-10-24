@@ -45,7 +45,7 @@ public class LoginController{
 		User user = userService.getUser(username);
 	
 		if(user != null && user.getPassword().equals(password)){
-			if(user.getUser_type().equals(UserType.CUSTOMER)){
+			if(user.getUserType().equals(UserType.CUSTOMER)){
 				
 				request.getSession().setAttribute("customer", user);
 				request.getSession().setAttribute("categories", productService.getCategories());

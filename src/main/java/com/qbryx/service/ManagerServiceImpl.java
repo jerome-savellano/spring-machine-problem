@@ -3,11 +3,13 @@ package com.qbryx.service;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.qbryx.dao.ProductDao;
 import com.qbryx.domain.InventoryProduct;
 
 @Service("managerService")
+@Transactional(readOnly = true)
 public class ManagerServiceImpl implements ManagerService {
 
 	@Resource(name="productDao")
@@ -20,11 +22,13 @@ public class ManagerServiceImpl implements ManagerService {
 		return productDaoHQL.getInventoryProductByUpc(upc);
 	}
 
+	@Transactional(readOnly = false)
 	public void addProduct(InventoryProduct inventoryProduct) {
 		productDaoHQL.addProduct(inventoryProduct.getProduct()); 
 		productDaoHQL.addProductStock(inventoryProduct);
 	}
 
+	@Transactional(readOnly = false)
 	public void updateProduct(InventoryProduct inventoryProduct) {
 		productDaoHQL.updateProduct(inventoryProduct.getProduct());
 		productDaoHQL.updateProductStock(inventoryProduct);

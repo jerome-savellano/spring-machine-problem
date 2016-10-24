@@ -38,11 +38,11 @@ public class User {
 	}
 
 	@Column(name = "user_type")
-	public String getUser_type() {
+	public String getUserType() {
 		return userType;
 	}
 
-	public void setUser_type(String user_type) {
+	public void setUserType(String user_type) {
 		this.userType = user_type;
 	}
 

@@ -1,17 +1,21 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:p="http://www.springframework.org/schema/p"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
          http://www.springframework.org/schema/aop
          http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
          http://www.springframework.org/schema/context
-		 http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+		 http://www.springframework.org/schema/context/spring-context-3.0.xsd
+		 http://www.springframework.org/schema/tx
+         http://www.springframework.org/schema/tx/spring-tx.xsd">
 
 	<context:component-scan base-package="com.qbryx">
 		<context:exclude-filter type="annotation"
 			expression="org.springframework.stereotype.Controller" />
 	</context:component-scan>
+	<tx:annotation-driven />
 
 	<bean id="dataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
@@ -32,15 +36,17 @@
 			<props>
 				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
 				<prop key="hibernate.id.new_generator_mappings">false</prop>
-			    <!-- <prop key="hibernate.show_sql">true</prop> -->
+				<!-- <prop key="hibernate.show_sql">true</prop> -->
 			</props>
 		</property>
-		
-		<!-- <property name="annotatedClasses">
-			<list>
-				<value>com.qbryx.domain.User</value>
-			</list>
-		</property> -->
+
+		<!-- <property name="annotatedClasses"> <list> <value>com.qbryx.domain.User</value> 
+			</list> </property> -->
 		<property name="packagesToScan" value="com.qbryx.domain" />
 	</bean>
+	
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate5.HibernateTransactionManager"
+		p:sessionFactory-ref="sessionFactory" />
+
 </beans>

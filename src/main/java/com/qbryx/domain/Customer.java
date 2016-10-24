@@ -14,7 +14,7 @@ public class Customer extends User{
 	private String cartId;
 		
 	public Customer(User user) {
-		super(user.getUserId(), user.getUser_type(), user.getUsername(), user.getPassword());
+		super(user.getUserId(), user.getUserType(), user.getUsername(), user.getPassword());
 		// TODO Auto-generated constructor stub
 	}
 

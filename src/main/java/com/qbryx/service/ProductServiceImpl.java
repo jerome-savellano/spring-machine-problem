@@ -5,6 +5,7 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.qbryx.dao.CategoryDao;
 import com.qbryx.dao.ProductDao;
@@ -12,6 +13,7 @@ import com.qbryx.domain.Category;
 import com.qbryx.domain.Product;
 
 @Service("productService")
+@Transactional(readOnly = true)
 public class ProductServiceImpl implements ProductService{
 	
 	@Resource(name="categoryDao")
@@ -31,15 +33,14 @@ public class ProductServiceImpl implements ProductService{
 	}
 
 	public List<Product> getProductsByCategory(String categoryName) {
-		return productDaoCriteria.getProductsByCategory(categoryName);
+		return productDaoHQL.getProductsByCategory(categoryName);
 	}
 
 	public Product getProduct(String upc) {
-		return productDaoCriteria.getProductByUpc(upc);
+		return productDaoHQL.getProductByUpc(upc);
 	}
 
 	public Category getCategory(String categoryName) {
 		return categoryDao.getCategory(categoryName);
 	}
-
 }

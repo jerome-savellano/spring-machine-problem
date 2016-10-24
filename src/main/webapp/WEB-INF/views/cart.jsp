@@ -26,38 +26,35 @@
 			<input type="hidden" name="page" value="${page}">
 			<button type="submit" class="btn btn-primary">Checkout</button>
 		</form>
-		<form
-			action="${pageContext.request.contextPath}/customer/removeProduct"
-			method="post"
-			id="removeProduct">
-			
-			<input type="hidden" name="page" value="${page}">
-			<table class="table">
-				<thead>
-					<tr>
-						<th>Name</th>
-						<th>Quantity</th>
-						<th>Amount</th>
-					</tr>
-				</thead>
-				<tbody>
-					<c:forEach items="${productsInCart}" var="product"
-						varStatus="status">
-						<input type="hidden" class="form-control" name="upc"
-								value="${product.getProduct().getUpc()}" form="removeProduct">
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Quantity</th>
+					<th>Amount</th>
+				</tr>
+			</thead>
+			<tbody>
+				<c:forEach items="${productsInCart}" var="product"
+					varStatus="status">
+					<form
+						action="${pageContext.request.contextPath}/customer/removeProduct"
+						method="post">
+						<input type="hidden" name="page" value="${page}"> <input
+							type="hidden" class="form-control" name="upc"
+							value="${product.getProduct().getUpc()}">
+							
 						<tr class="warning">
 
 							<td>${product.getProduct().getName()}</td>
 							<td>${product.getQuantity()}</td>
 							<td style="color: green;">&#8369; ${product.totalPrice()}</td>
 							<td><input type="submit" class="btn btn-warning btn-xs"
-								value="Remove from cart" form="removeProduct"></td>
+								value="Remove from cart"></td>
 						</tr>
-					</c:forEach>
-				</tbody>
-			</table>
-		</form>
-		
-		
+					</form>
+				</c:forEach>
+			</tbody>
+		</table>
 	</c:otherwise>
 </c:choose>

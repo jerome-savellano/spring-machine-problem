@@ -6,6 +6,7 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.qbryx.dao.CartDao;
 import com.qbryx.dao.ProductDao;
@@ -15,6 +16,7 @@ import com.qbryx.domain.InventoryProduct;
 import com.qbryx.exception.InsufficientStockException;
 
 @Service("customerService")
+@Transactional(readOnly = true)
 public class CustomerServiceImpl implements CustomerService {
 
 	@Resource(name = "userDao")
@@ -37,7 +39,8 @@ public class CustomerServiceImpl implements CustomerService {
 	
 	@Resource(name = "productDaoCriteria")
 	private ProductDao productDaoCriteria;
-
+	
+	@Transactional(readOnly = false)
 	public void addProductInCart(CartProduct cartProduct) throws InsufficientStockException {
 				
 		// Get product in cart
@@ -82,7 +85,8 @@ public class CustomerServiceImpl implements CustomerService {
 	public List<CartProduct> getProductsInCart(long cartId) {
 		return cartDaoHQL.getProductsInCart(cartId);
 	}
-
+	
+	@Transactional(readOnly = false)
 	public void removeProductInCart(CartProduct cartProduct) {
 		cartDaoHQL.removeProductInCart(cartProduct);
 	}

@@ -114,7 +114,10 @@ public class CustomerController {
 	@RequestMapping(value="/customer/removeProduct", method=RequestMethod.POST)
 	public String removeProduct(@RequestParam(value = "upc") String upc, HttpServletRequest request){
 		
-		System.out.println(upc);
-		return "customer_home";
+		long userId = UserUtil.getUserId(request);
+		CartProduct cartProduct = customerService.getProductInCart(userId, upc);
+		
+		customerService.removeProductInCart(cartProduct);
+		return "redirect:/customer";
 	}
 }

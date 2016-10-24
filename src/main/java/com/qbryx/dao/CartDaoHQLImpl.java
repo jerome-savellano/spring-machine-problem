@@ -6,10 +6,8 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.persistence.Query;
 
-import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.springframework.stereotype.Repository;
 
 import com.qbryx.domain.CartProduct;
@@ -26,27 +24,12 @@ public class CartDaoHQLImpl implements CartDao {
 
 		CartProduct product = null;
 
-		Session session = sessionFactory.openSession();
+		Session session = sessionFactory.getCurrentSession();
 
-		Transaction transaction = null;
+		Query query = session.createQuery(DAOQuery.HQL_CHECK_PRODUCT_IN_CART).setParameter("userId", userId)
+				.setParameter("upc", upc);
 
-		try {
-			transaction = session.beginTransaction();
-
-			Query query = session.createQuery(DAOQuery.HQL_CHECK_PRODUCT_IN_CART)
-								 .setParameter("userId", userId)
-								 .setParameter("upc", upc);
-
-			product = (CartProduct) query.getSingleResult();
-
-			transaction.commit();
-		} catch (HibernateException e) {
-			if (transaction != null)
-				transaction.rollback();
-			e.printStackTrace();
-		} finally {
-			session.close();
-		}
+		product = (CartProduct) query.getSingleResult();
 
 		return product;
 	}
@@ -57,129 +40,53 @@ public class CartDaoHQLImpl implements CartDao {
 
 		List<CartProduct> cartProducts = new ArrayList<>();
 
-		Session session = sessionFactory.openSession();
+		Session session = sessionFactory.getCurrentSession();
 
-		Transaction transaction = null;
+		Query query = session.createQuery(DAOQuery.HQL_GET_PRODUCTS_IN_CART).setParameter("userId", userId);
 
-		try {
-			transaction = session.beginTransaction();
-
-			Query query = session.createQuery(DAOQuery.HQL_GET_PRODUCTS_IN_CART)
-								 .setParameter("userId", userId);
-
-			cartProducts = query.getResultList();
-
-			transaction.commit();
-		} catch (HibernateException e) {
-			if (transaction != null)
-				transaction.rollback();
-			e.printStackTrace();
-		} finally {
-			session.close();
-		}
+		cartProducts = query.getResultList();
 
 		return cartProducts;
 	}
 
 	@Override
 	public void addProductInCart(CartProduct product) {
-			
-		Session session = sessionFactory.openSession();
 
-		Transaction transaction = null;
-
-		try {
-			transaction = session.beginTransaction();
-			
-			session.save(product);
-
-			transaction.commit();
-		} catch (HibernateException e) {
-			if (transaction != null)
-				transaction.rollback();
-			e.printStackTrace();
-		} finally {
-			session.close();
-		}
+		sessionFactory.getCurrentSession().save(product);
 	}
 
 	@Override
 	public void removeProductInCart(CartProduct cartProduct) {
-		
-		Session session = sessionFactory.openSession();
-		
-		Transaction transaction = null;
-		
-		try{
-			transaction = session.beginTransaction();
-			
-			Query query = session.createQuery(DAOQuery.HQL_REMOVE_PRODUCT_FROM_CART)
-								 .setParameter("userId", cartProduct.getUserId())
-								 .setParameter("upc", cartProduct.getProduct().getUpc());
-			
-			query.executeUpdate();
-			
-			transaction.commit();
-		}catch(HibernateException e){
-			
-			
-			e.printStackTrace();
-		}finally{
-			session.close();
-		}
-		
-		
+
+		Session session = sessionFactory.getCurrentSession();
+
+		Query query = session.createQuery(DAOQuery.HQL_REMOVE_PRODUCT_FROM_CART)
+				.setParameter("userId", cartProduct.getUserId()).setParameter("upc", cartProduct.getProduct().getUpc());
+
+		query.executeUpdate();
 	}
 
 	@Override
 	public void checkout(long userId) {
-		
-		Session session = sessionFactory.openSession();
-		
-		Transaction transaction = null;
 
-		try {
-			transaction = session.beginTransaction();
-			
-			Query query = session.createQuery(DAOQuery.HQL_UPDATE_PRODUCT_IN_CART)
-								 .setParameter("userId", userId);
-			
-			query.executeUpdate();
+		Session session = sessionFactory.getCurrentSession();
 
-			transaction.commit();
-		} catch (HibernateException e) {
-			if(transaction != null)
-				transaction.rollback();
-			e.printStackTrace();
-		} finally {
-			session.close();
-		}
+		Query query = session.createQuery(DAOQuery.HQL_UPDATE_PRODUCT_IN_CART).setParameter("userId", userId);
+
+		query.executeUpdate();
+
 	}
 
 	@Override
 	public void updateProductQuantityInCart(CartProduct cartProduct) {
 
-		Session session = sessionFactory.openSession();
+		Session session = sessionFactory.getCurrentSession();
 
-		Transaction transaction = null;
+		Query query = session.createQuery(DAOQuery.HQL_UPDATE_PRODUCT_QUANTITY_IN_CART)
+				.setParameter("quantity", cartProduct.getQuantity()).setParameter("userId", cartProduct.getUserId())
+				.setParameter("upc", cartProduct.getProduct().getUpc());
 
-		try {
-			transaction = session.beginTransaction();
+		query.executeUpdate();
 
-			Query query = session.createQuery(DAOQuery.HQL_UPDATE_PRODUCT_QUANTITY_IN_CART)
-								 .setParameter("quantity", cartProduct.getQuantity())
-								 .setParameter("userId", cartProduct.getUserId())
-								 .setParameter("upc", cartProduct.getProduct().getUpc());
-
-			query.executeUpdate();
-
-			transaction.commit();
-		} catch (HibernateException e) {
-			if (transaction != null)
-				transaction.rollback();
-			e.printStackTrace();
-		} finally {
-			session.close();
-		}
 	}
 }

@@ -18,13 +18,21 @@
 	crossorigin="anonymous"></script>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>${product.getName()}</title>
+<style>
+.table {
+	display: table;
+}
+
+.row {
+	display: table-row;
+}
+
+.cell {
+	display: table-cell;
+}
+</style>
 </head>
 <body>
-	<!-- <div class="container-fluid">
-		<div class="row">
-			<div class="col-md-12" style="padding: 5%;"></div>
-		</div>
-	</div> -->
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-md-6" style="padding: 2%;">
@@ -97,7 +105,8 @@
 					</div>
 					<button type="submit" class="btn btn-primary">Add to cart</button>
 				</form>
-				<form action="${pageContext.request.contextPath}/customer" style="padding-top: 3%;">
+				<form action="${pageContext.request.contextPath}/customer"
+					style="padding-top: 3%;">
 					<button type="submit" class="btn btn-warning">Back to Home</button>
 				</form>
 			</div>

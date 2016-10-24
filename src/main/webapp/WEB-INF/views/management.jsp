@@ -91,7 +91,7 @@
 						<div class="container-fluid">
 							<div class="row">
 								<div class="col-md-12">
-									<h2 class="page-header">${product.getName()}</h2>
+									<h2 class="page-header">${product.getProduct().getName()}</h2>
 									<dl>
 										<dt>
 											<h4>
@@ -101,7 +101,7 @@
 										<dd>
 											<h4>
 												<i><span style="color: green;">&#8369;
-														${product.getPrice()}</span>
+														${product.getProduct().getPrice()}</span>
 											</h4>
 											</i>
 										</dd>
@@ -112,7 +112,7 @@
 										</dt>
 										<dd>
 											<h4>
-												<i>${product.getUpc()}</i>
+												<i>${product.getProduct().getUpc()}</i>
 											</h4>
 										</dd>
 										<dt>
@@ -132,7 +132,7 @@
 										</dt>
 										<dd>
 											<h5>
-												<i>${product.getDescription()}</i>
+												<i>${product.getProduct().getDescription()}</i>
 											</h5>
 										</dd>
 										<dt>

@@ -6,10 +6,8 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.persistence.Query;
 
-import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.springframework.stereotype.Repository;
 
 import com.qbryx.domain.InventoryProduct;
@@ -35,24 +33,9 @@ public class ProductDaoHQLImpl implements ProductDao {
 
 		Session session = sessionFactory.openSession();
 
-		Transaction transaction = null;
+		Query query = session.createQuery(DAOQuery.HQL_GET_PRODUCTS_BY_CATEGORY).setParameter("category", categoryId);
 
-		try {
-			transaction = session.beginTransaction();
-
-			Query query = session.createQuery(DAOQuery.HQL_GET_PRODUCTS_BY_CATEGORY).setParameter("category",
-					categoryId);
-
-			products = (List<Product>) query.getResultList();
-
-			transaction.commit();
-		} catch (HibernateException e) {
-			if (transaction != null)
-				transaction.rollback();
-			e.printStackTrace();
-		} finally {
-			session.close();
-		}
+		products = (List<Product>) query.getResultList();
 
 		return products;
 	}
@@ -62,157 +45,60 @@ public class ProductDaoHQLImpl implements ProductDao {
 
 		Product product = null;
 
-		Session session = sessionFactory.openSession();
+		Session session = sessionFactory.getCurrentSession();
 
-		Transaction transaction = null;
+		Query query = session.createQuery(DAOQuery.HQL_GET_PRODUCT_BY_UPC).setParameter("upc", upc);
 
-		try {
-			transaction = session.beginTransaction();
-
-			Query query = session.createQuery(DAOQuery.HQL_GET_PRODUCT_BY_UPC).setParameter("upc", upc);
-
-			product = (Product) query.getSingleResult();
-
-			transaction.commit();
-		} catch (HibernateException e) {
-			if (transaction != null)
-				transaction.rollback();
-
-			e.printStackTrace();
-		} finally {
-			session.close();
-		}
+		product = (Product) query.getSingleResult();
 
 		return product;
 	}
 
 	@Override
 	public InventoryProduct getInventoryProductByUpc(final String upc) {
-		
+
 		InventoryProduct product = null;
 
-		Session session = sessionFactory.openSession();
+		Session session = sessionFactory.getCurrentSession();
 
-		Transaction transaction = null;
+		Query query = session.createQuery(DAOQuery.HQL_GET_INVENTORY_PRODUCT).setParameter("upc", upc);
 
-		try {
-			transaction = session.beginTransaction();
-
-			Query query = session.createQuery(DAOQuery.HQL_GET_INVENTORY_PRODUCT)
-								 .setParameter("upc", upc);
-			
-			product = (InventoryProduct) query.getSingleResult();
-						
-			transaction.commit();
-		} catch (HibernateException e) {
-			if (transaction != null)
-				transaction.rollback();
-
-			e.printStackTrace();
-		} finally {
-			session.close();
-		}
+		product = (InventoryProduct) query.getSingleResult();
 
 		return product;
 	}
 
 	@Override
 	public void addProduct(Product product) {
-
-		System.out.println(product.getCategory().getCategoryId());
-		
-		Session session = sessionFactory.openSession();
-
-		Transaction transaction = null;
-
-		try {
-			transaction = session.beginTransaction();
-
-			session.save(product);
-
-			transaction.commit();
-		} catch (HibernateException e) {
-			if (transaction != null)
-				transaction.rollback();
-
-			e.printStackTrace();
-		} finally {
-			session.close();
-		}
+		sessionFactory.getCurrentSession().save(product);
 	}
 
 	@Override
 	public void addProductStock(InventoryProduct inventoryProduct) {
-
-		Session session = sessionFactory.openSession();
-
-		Transaction transaction = null;
-
-		try {
-			transaction = session.beginTransaction();
-
-			session.save(inventoryProduct);
-			
-			transaction.commit();
-		} catch (HibernateException e) {
-
-			e.printStackTrace();
-		} finally {
-			session.close();
-		}
-
+		sessionFactory.getCurrentSession().save(inventoryProduct);
 	}
 
 	@Override
 	public void updateProduct(Product product) {
-		
+
 		Session session = sessionFactory.getCurrentSession();
-		
-		Transaction transaction = null;
-		
-		try{
-			transaction = session.beginTransaction();
-			
-			Query query = session.createQuery(DAOQuery.HQL_UPDATE_PRODUCT)
-								 .setParameter("name", product.getName())
-								 .setParameter("description", product.getDescription())
-								 .setParameter("price", product.getPrice())
-								 .setParameter("upc", product.getUpc());
-			
-			query.executeUpdate();
-								 
-			transaction.commit();
-		}catch(HibernateException e){
-			if(transaction != null) transaction.rollback();
-			e.printStackTrace();
-		}finally{
-			session.close();
-		}
-		
+
+		Query query = session.createQuery(DAOQuery.HQL_UPDATE_PRODUCT).setParameter("name", product.getName())
+				.setParameter("description", product.getDescription()).setParameter("price", product.getPrice())
+				.setParameter("upc", product.getUpc());
+
+		query.executeUpdate();
 	}
 
 	@Override
 	public void updateProductStock(InventoryProduct inventoryProduct) {
-		
-		Session session = sessionFactory.openSession();
-		
-		Transaction transaction = null;
-		
-		try{
-			transaction = session.beginTransaction();
-			
-			Query query = session.createQuery(DAOQuery.HQL_UPDATE_INVENTORY)
-								 .setParameter("stock", inventoryProduct.getStock())
-								 .setParameter("upc", inventoryProduct.getProduct().getUpc());
-			
-			query.executeUpdate();
-			
-			transaction.commit();
-		}catch(HibernateException e){
-			if(transaction != null) transaction.rollback();
-			e.printStackTrace();
-		}finally{
-			session.close();
-		}
+
+		Session session = sessionFactory.getCurrentSession();
+
+		Query query = session.createQuery(DAOQuery.HQL_UPDATE_INVENTORY)
+				.setParameter("stock", inventoryProduct.getStock())
+				.setParameter("upc", inventoryProduct.getProduct().getUpc());
+
+		query.executeUpdate();
 	}
 }
