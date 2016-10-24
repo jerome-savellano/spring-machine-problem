@@ -17,6 +17,7 @@ import com.qbryx.service.ProductService;
 import com.qbryx.util.Path;
 
 @Controller
+@RequestMapping(Path.MANAGEMENT_ROOT_PATH)
 public class ManagementController {
 
 	@Resource(name = "managerService")
@@ -25,17 +26,17 @@ public class ManagementController {
 	@Resource(name = "productService")
 	private ProductService productService;
 
-	@RequestMapping(Path.MANAGEMENT_ROOT_PATH)
+	@RequestMapping()
 	public String management(Model model) {
 
 		model.addAttribute("viewFlag", 1);
 		return "management";
 	}
 
-	@RequestMapping(Path.MANAGEMENT_ROOT_PATH + "/search")
+	@RequestMapping("/search")
 	public String search(@RequestParam(value = "upc") String upc, Model model) {
 
-		boolean productNotFound = false;
+		boolean productNotFound = false; // remove
 		InventoryProduct product = managerService.getProduct(upc);
 
 		if (product == null) {
@@ -48,7 +49,7 @@ public class ManagementController {
 		return "management";
 	}
 
-	@RequestMapping(Path.MANAGEMENT_ROOT_PATH + "/createProduct")
+	@RequestMapping("/createProduct")
 	public String createProduct(Model model, @RequestParam(value = "name") String name,
 			@RequestParam(value = "upc") String upc, @RequestParam(value = "category") String _category,
 			@RequestParam(value = "description") String description, @RequestParam(value = "price") BigDecimal price,
@@ -66,7 +67,7 @@ public class ManagementController {
 		return "management";
 	}
 
-	@RequestMapping(Path.MANAGEMENT_ROOT_PATH + "/productByCategory")
+	@RequestMapping("/productByCategory")
 	public String prodByCat(Model model, @RequestParam(value = "category", required = false) String category) {
 
 		model.addAttribute("viewFlag", 2);
@@ -83,21 +84,22 @@ public class ManagementController {
 		return "management";
 	}
 
-	@RequestMapping(Path.MANAGEMENT_ROOT_PATH + "/viewProduct")
+	@RequestMapping("/viewProduct")
 	public String viewProduct(Model model, @RequestParam(value = "upc") String upc) {
+		
 		InventoryProduct product = managerService.getProduct(upc);
 		
 		model.addAttribute("product", product);
 		return "update_product";
 	}
 	
-	@RequestMapping(Path.MANAGEMENT_ROOT_PATH + "/updateProduct")
+	@RequestMapping("/updateProduct")
 	public String updateProduct(Model model, @RequestParam(value = "name") String name,
-			@RequestParam(value = "upc") String upc, @RequestParam(value = "category") String _category,
+			@RequestParam(value = "upc") String upc, @RequestParam(value = "category") String categoryName,
 			@RequestParam(value = "description") String description, @RequestParam(value = "price") BigDecimal price,
 			@RequestParam(value = "stock") int stock){
 		
-		Category category = productService.getCategory(_category);
+		Category category = productService.getCategory(categoryName);  
 
 		Product product = new Product(upc, category, name, description, price);
 		InventoryProduct inventoryProduct = new InventoryProduct(product, stock);

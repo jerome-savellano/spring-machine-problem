@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.hibernate.annotations.common.util.impl.LoggerFactory;
+import org.jboss.logging.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +20,8 @@ import com.qbryx.exception.InsufficientStockException;
 @Service("customerService")
 @Transactional(readOnly = true)
 public class CustomerServiceImpl implements CustomerService {
+	
+	private static Logger logger = LoggerFactory.logger(CustomerServiceImpl.class);
 
 	@Resource(name = "userDao")
 	private UserDao userDao;
@@ -43,6 +47,8 @@ public class CustomerServiceImpl implements CustomerService {
 	@Transactional(readOnly = false)
 	public void addProductInCart(CartProduct cartProduct) throws InsufficientStockException {
 				
+		logger.info("Product with upc " + cartProduct.getProduct().getUpc() + " and quantity " + cartProduct.getQuantity() + "adding to cart");
+		
 		// Get product in cart
 		CartProduct product = cartDaoHQL.getProductInCart(cartProduct.getUserId(), cartProduct.getProduct().getUpc());
 
@@ -91,6 +97,7 @@ public class CustomerServiceImpl implements CustomerService {
 		cartDaoHQL.removeProductInCart(cartProduct);
 	}
 
+	@Transactional(readOnly = false)
 	public List<CartProduct> checkout(long userId) throws InsufficientStockException {
 		List<CartProduct> invalidProduct = new ArrayList<CartProduct>();
 

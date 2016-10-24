@@ -20,10 +20,10 @@ public class User {
 	
 	public User(){}
 			
-	public User(long id, String user_type, String username, String password) {
+	public User(long id, String userType, String username, String password) {
 		super();
 		this.userId = id;
-		this.userType = user_type;
+		this.userType = userType;
 		this.username = username;
 		this.password = password;
 	}

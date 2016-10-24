@@ -98,11 +98,11 @@ public class CustomerController {
 	@RequestMapping("/customer/checkout")
 	public String checkout(HttpServletRequest request, Model model){
 		
-		long cartId = UserUtil.getUserId(request);
+		long userId = UserUtil.getUserId(request);
 		
 		try {
 			
-			customerService.checkout(cartId);
+			customerService.checkout(userId);
 			model.addAttribute("checkoutSuccess", true);
 			
 			return "customer_home";
