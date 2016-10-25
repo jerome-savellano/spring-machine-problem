@@ -39,4 +39,32 @@ public class UserDaoImpl implements UserDao {
 		
 		return user;
 	}
+
+	@Override
+	public String getPassword(String username) {
+		
+		String password = "";
+		
+		if(ConnectionManager.getConnection() != null){
+			PreparedStatement stmt;
+				
+			try {
+				stmt = ConnectionManager.prepareStatement(DAOQuery.SQL_GET_USER);
+				stmt.setString(1, username);
+				
+				ResultSet rs = stmt.executeQuery();
+				
+				if(rs.next()){
+					password = rs.getString("password");
+				}
+				
+				ConnectionManager.close();
+			} catch (SQLException e) {
+				throw new RuntimeException();
+			}
+			
+		}
+	
+		return password;
+	}
 }

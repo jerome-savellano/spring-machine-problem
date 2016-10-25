@@ -1,5 +1,7 @@
 package com.qbryx.controller;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
@@ -18,6 +20,7 @@ import com.qbryx.service.CustomerService;
 import com.qbryx.service.ProductService;
 
 @Controller
+@RequestMapping("/customer")
 public class CustomerController {
 
 	@Resource(name = "customerService")
@@ -29,38 +32,37 @@ public class CustomerController {
 	@Resource(name = "cartHelper")
 	private CartHelper cartHelper;
 		
-	@RequestMapping("/customer")
+	@RequestMapping()
 	public String home(Model model, HttpServletRequest request) {
 					
-		cartHelper.populateCartInLayout(customerService, UserUtil.getUserId(request), model);
+		cartHelper.populateCartInLayout(customerService, UserUtil.getUser(request), model);
 		return "customer_home";
 	}
 
-	@RequestMapping("/customer/viewProduct")
-	public String viewProduct(@RequestParam(value = "category", required = false) String category, Model model,
+	@RequestMapping("/viewProduct")
+	public String viewProduct(@RequestParam(value = "category", required = false) String categoryName, Model model,
 			HttpServletRequest request) {
 		
-		cartHelper.populateCartInLayout(customerService, UserUtil.getUserId(request), model);
+		cartHelper.populateCartInLayout(customerService, UserUtil.getUser(request), model);
 		
-		if (category != null) {
-			model.addAttribute("category", category);
-			model.addAttribute("categorySelected", true);
-			model.addAttribute("products", productService.getProductsByCategory(category));
-
-			return "customer_home";
-		} else {
-			model.addAttribute("invalidCategorySelected", true);
-			return "customer_home";
+		if (categoryName != null) {
+			List<Product> products = productService.getProductsByCategory(categoryName);
+			
+			model.addAttribute("category", categoryName);
+			model.addAttribute("products", products);
 		}
+			
+		return "customer_home";
 	}
 
-	@RequestMapping("/customer/processProduct")
-	public String processProduct(@RequestParam(value = "upc") String upc,
-			@RequestParam(value = "category") String category, Model model, HttpServletRequest request) {
+	@RequestMapping("/processProduct")
+	public String processProduct(@RequestParam(value = "id") long id,
+			@RequestParam(value = "category") String category, 
+			@RequestParam(value = "upc") String upc, Model model, HttpServletRequest request) {
 		
 		Product product = productService.getProduct(upc);
 		
-		CartProduct cartProduct = customerService.getProductInCart(UserUtil.getUserId(request), upc);
+		CartProduct cartProduct = customerService.getProductInCart(UserUtil.getUser(request), id);
 				
 		int quantityInCart = 0;
 		
@@ -68,7 +70,7 @@ public class CustomerController {
 			quantityInCart = cartProduct.getQuantity();
 		}
 		
-		cartHelper.populateCartInLayout(customerService, UserUtil.getUserId(request), model);
+		cartHelper.populateCartInLayout(customerService, UserUtil.getUser(request), model);
 		
 		model.addAttribute("product", product);
 		model.addAttribute("category", category);
@@ -77,47 +79,47 @@ public class CustomerController {
 		return "product";
 	}
 
-	@RequestMapping("/customer/addProductToCart")
+	@RequestMapping("/addProductToCart")
 	public String productCart(@RequestParam(value = "upc") String upc, @RequestParam(value = "quantity") int quantity,
 			Model model, HttpServletRequest request) {
 
 		CartProduct cartProduct = new CartProduct();
-		cartProduct.setUserId(UserUtil.getUserId(request));
+		cartProduct.setUserId(UserUtil.getUser(request).getUserId());
 		cartProduct.setProduct(productService.getProduct(upc));
 		cartProduct.setQuantity(quantity);
 		
 		try {
 
-			customerService.addProductInCart(cartProduct);
-			return "sucess";
+			customerService.addProductInCart(UserUtil.getUser(request), cartProduct);
+			return "success";
 		} catch (InsufficientStockException e) {
+			
 			return "insufficient_stock";
 		}
 	}
 	
-	@RequestMapping("/customer/checkout")
+	@RequestMapping("/checkout")
 	public String checkout(HttpServletRequest request, Model model){
-		
-		long userId = UserUtil.getUserId(request);
-		
-		try {
+					
+		try {	
 			
-			customerService.checkout(userId);
+			customerService.checkout(UserUtil.getUser(request));
 			model.addAttribute("checkoutSuccess", true);
 			
 			return "customer_home";
 		} catch (InsufficientStockException e) {
+			
 			return "insufficient_stock";
 		}
 	}
 	
-	@RequestMapping(value="/customer/removeProduct", method=RequestMethod.POST)
-	public String removeProduct(@RequestParam(value = "upc") String upc, HttpServletRequest request){
+	@RequestMapping(value="/removeProduct", method=RequestMethod.POST)
+	public String removeProduct(@RequestParam(value = "id") long id, HttpServletRequest request){
 		
-		long userId = UserUtil.getUserId(request);
-		CartProduct cartProduct = customerService.getProductInCart(userId, upc);
+		CartProduct cartProduct = customerService.getProductInCart(UserUtil.getUser(request), id);
 		
 		customerService.removeProductInCart(cartProduct);
+		
 		return "redirect:/customer";
 	}
 }

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import com.qbryx.domain.CartProduct;
 import com.qbryx.domain.Product;
+import com.qbryx.domain.User;
 import com.qbryx.managers.ConnectionManager;
 import com.qbryx.util.DAOQuery;
 
@@ -24,7 +25,7 @@ public class CartDaoImpl implements CartDao {
 			try {
 				stmt = ConnectionManager.prepareStatement(DAOQuery.SQL_ADD_PRODUCT_IN_CART);
 				stmt.setLong(1, product.getUserId());
-				stmt.setString(2, product.getProduct().getUpc());
+				stmt.setLong(2, product.getProduct().getId());
 				stmt.setInt(3, product.getQuantity());
 				stmt.setInt(4, product.getIsPurchased());
 
@@ -38,7 +39,7 @@ public class CartDaoImpl implements CartDao {
 
 	}
 
-	public List<CartProduct> getProductsInCart(long cartId) {
+	public List<CartProduct> getProductsInCart(User user) {
 
 		List<CartProduct> cartProducts = new ArrayList<CartProduct>();
 
@@ -47,7 +48,7 @@ public class CartDaoImpl implements CartDao {
 
 			try {
 				stmt = ConnectionManager.prepareStatement(DAOQuery.SQL_GET_PRODUCTS_IN_CART);
-				stmt.setLong(1, cartId);
+				stmt.setLong(1, user.getUserId());
 
 				ResultSet rs = stmt.executeQuery();
 
@@ -78,7 +79,7 @@ public class CartDaoImpl implements CartDao {
 			try {
 				stmt = ConnectionManager.prepareStatement(DAOQuery.SQL_REMOVE_PRODUCT_IN_CART);
 				stmt.setLong(1, cartProduct.getUserId());
-				stmt.setString(2, cartProduct.getProduct().getUpc());
+				stmt.setLong(2, cartProduct.getProduct().getId());
 
 				stmt.executeUpdate();
 
@@ -89,14 +90,14 @@ public class CartDaoImpl implements CartDao {
 		}
 	}
 
-	public void checkout(long cartId) {
+	public void checkout(User user) {
 		
 		if (ConnectionManager.getConnection() != null) {
 			PreparedStatement stmt;
 
 			try {
 				stmt = ConnectionManager.prepareStatement(DAOQuery.SQL_UPDATE_PRODUCT_IN_CART);
-				stmt.setLong(1, cartId);
+				stmt.setLong(1, user.getUserId());
 
 				stmt.executeUpdate();
 
@@ -107,7 +108,7 @@ public class CartDaoImpl implements CartDao {
 		}
 	}
 
-	public CartProduct getProductInCart(long userId, String upc) {
+	public CartProduct getProductInCart(User user, long productId) {
 
 		CartProduct cartProduct = null;
 
@@ -116,8 +117,8 @@ public class CartDaoImpl implements CartDao {
 
 			try {
 				stmt = ConnectionManager.prepareStatement(DAOQuery.SQL_CHECK_PRODUCT_IN_CART);
-				stmt.setLong(1, userId);
-				stmt.setString(2, upc);
+				stmt.setLong(1, user.getUserId());
+				stmt.setLong(2, productId);
 
 				ResultSet rs = stmt.executeQuery();
 
@@ -125,7 +126,7 @@ public class CartDaoImpl implements CartDao {
 					
 					cartProduct = new CartProduct();
 					cartProduct.setUserId(rs.getLong("user_id"));
-					cartProduct.setProduct(new Product(rs.getString("upc")));
+					cartProduct.setProduct(new Product(rs.getLong("id")));
 					cartProduct.setQuantity(rs.getInt("quantity"));
 					
 					ConnectionManager.close();
@@ -148,7 +149,7 @@ public class CartDaoImpl implements CartDao {
 				stmt = ConnectionManager.prepareStatement(DAOQuery.SQL_UPDATE_PRODUCT_QUANTITY_IN_CART);
 				stmt.setInt(1, cartProduct.getQuantity());
 				stmt.setLong(2, cartProduct.getUserId());
-				stmt.setString(3, cartProduct.getProduct().getUpc());
+				stmt.setLong(3, cartProduct.getProduct().getId());
 
 				stmt.executeUpdate();
 

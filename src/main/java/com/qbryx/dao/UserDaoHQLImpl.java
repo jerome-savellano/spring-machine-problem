@@ -23,4 +23,9 @@ public class UserDaoHQLImpl implements UserDao {
 
 		return (User) query.getSingleResult();
 	}
+
+	@Override
+	public String getPassword(String username) {
+		throw new UnsupportedOperationException();
+	}
 }

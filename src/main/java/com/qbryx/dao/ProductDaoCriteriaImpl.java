@@ -62,7 +62,7 @@ public class ProductDaoCriteriaImpl implements ProductDao {
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public Product getProductByUpc(String upc) {
+	public Product getProduct(String upc) {
 		
 		Product product = null;
 		
@@ -92,7 +92,7 @@ public class ProductDaoCriteriaImpl implements ProductDao {
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public InventoryProduct getInventoryProductByUpc(String upc) {
+	public InventoryProduct getInventoryProduct(long id) {
 		
 		InventoryProduct inventoryProduct = null;
 		
@@ -104,7 +104,7 @@ public class ProductDaoCriteriaImpl implements ProductDao {
 			transaction = session.beginTransaction();
 			
 			Criteria criteria = session.createCriteria(InventoryProduct.class)
-									   .add(Restrictions.eq("product.upc", upc));
+									   .add(Restrictions.eq("product.id", id));
 									   
 			inventoryProduct = (InventoryProduct) criteria.uniqueResult();					   
 			
@@ -136,7 +136,7 @@ public class ProductDaoCriteriaImpl implements ProductDao {
 	}
 
 	@Override
-	public void updateProductStock(InventoryProduct inventoryProduct) {
-		productDao.updateProductStock(inventoryProduct);
+	public void updateStock(InventoryProduct inventoryProduct) {
+		productDao.updateStock(inventoryProduct);
 	}
 }

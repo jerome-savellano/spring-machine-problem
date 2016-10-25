@@ -41,11 +41,10 @@
 						action="${pageContext.request.contextPath}/customer/removeProduct"
 						method="post">
 						<input type="hidden" name="page" value="${page}"> <input
-							type="hidden" class="form-control" name="upc"
-							value="${product.getProduct().getUpc()}">
+							type="hidden" class="form-control" name="id"
+							value="${product.getProduct().getId()}">
 							
 						<tr class="warning">
-
 							<td>${product.getProduct().getName()}</td>
 							<td>${product.getQuantity()}</td>
 							<td style="color: green;">&#8369; ${product.totalPrice()}</td>

@@ -7,6 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.qbryx.dao.ProductDao;
 import com.qbryx.domain.InventoryProduct;
+import com.qbryx.domain.Product;
+import com.qbryx.exception.DuplicateProductException;
 
 @Service("managerService")
 @Transactional(readOnly = true)
@@ -19,18 +21,30 @@ public class ManagerServiceImpl implements ManagerService {
 	private ProductDao productDaoHQL;
 
 	public InventoryProduct getProduct(String upc) {		
-		return productDaoHQL.getInventoryProductByUpc(upc);
+		
+		Product product = productDaoHQL.getProduct(upc);
+		
+		return productDaoHQL.getInventoryProduct(product.getId());
 	}
 
 	@Transactional(readOnly = false)
-	public void addProduct(InventoryProduct inventoryProduct) {
-		productDaoHQL.addProduct(inventoryProduct.getProduct()); 
+	public void add(InventoryProduct inventoryProduct) throws DuplicateProductException{
+		
+		Product product = inventoryProduct.getProduct();
+		
+		boolean productExists = (productDaoHQL.getProduct(inventoryProduct.getProduct().getUpc()) != null);
+		
+		if(productExists){
+			throw new DuplicateProductException();
+		}
+		
+		productDaoHQL.addProduct(product); 
 		productDaoHQL.addProductStock(inventoryProduct);
 	}
 
 	@Transactional(readOnly = false)
-	public void updateProduct(InventoryProduct inventoryProduct) {
+	public void update(InventoryProduct inventoryProduct) {
 		productDaoHQL.updateProduct(inventoryProduct.getProduct());
-		productDaoHQL.updateProductStock(inventoryProduct);
+		productDaoHQL.updateStock(inventoryProduct);
 	}
 }

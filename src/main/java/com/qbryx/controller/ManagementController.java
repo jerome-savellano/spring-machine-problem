@@ -12,12 +12,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.qbryx.domain.Category;
 import com.qbryx.domain.InventoryProduct;
 import com.qbryx.domain.Product;
+import com.qbryx.exception.DuplicateProductException;
 import com.qbryx.service.ManagerService;
 import com.qbryx.service.ProductService;
-import com.qbryx.util.Path;
+import com.qbryx.util.Validator;
 
 @Controller
-@RequestMapping(Path.MANAGEMENT_ROOT_PATH)
+@RequestMapping("/manager")
 public class ManagementController {
 
 	@Resource(name = "managerService")
@@ -29,7 +30,7 @@ public class ManagementController {
 	@RequestMapping()
 	public String management(Model model) {
 
-		model.addAttribute("viewFlag", 1);
+		model.addAttribute("activeTab", 1);
 		return "management";
 	}
 
@@ -45,68 +46,79 @@ public class ManagementController {
 
 		model.addAttribute("product", product);
 		model.addAttribute("productNotFound", productNotFound);
-		model.addAttribute("viewFlag", 1);
+		model.addAttribute("activeTab", 1);
 		return "management";
 	}
 
 	@RequestMapping("/createProduct")
 	public String createProduct(Model model, @RequestParam(value = "name") String name,
-			@RequestParam(value = "upc") String upc, @RequestParam(value = "category") String _category,
+			@RequestParam(value = "upc") String upc, @RequestParam(value = "category") String categoryName,
 			@RequestParam(value = "description") String description, @RequestParam(value = "price") BigDecimal price,
-			@RequestParam(value = "stock") int stock) {
+			@RequestParam(value = "stock") int stock){
+		
+		model.addAttribute("activeTab", 3);
+			
+		if(Validator.invalidUpcFormat(upc)){
+			
+			model.addAttribute("invalidFormat", true);
+			return "management";
+		}
 
-		Category category = productService.getCategory(_category);
+		Category category = productService.getCategory(categoryName);
 
 		Product product = new Product(upc, category, name, description, price);
 		InventoryProduct inventoryProduct = new InventoryProduct(product, stock);
 
-		managerService.addProduct(inventoryProduct);
+		try {
+			
+			managerService.add(inventoryProduct);
+			model.addAttribute("productCreated", true);
+		} catch (DuplicateProductException e) {
+			
+			model.addAttribute("upc", upc);
+			model.addAttribute("duplicateProduct", true);
+		}
 
-		model.addAttribute("productCreated", true);
-		model.addAttribute("viewFlag", 3);
+		
+		
 		return "management";
 	}
 
 	@RequestMapping("/productByCategory")
 	public String prodByCat(Model model, @RequestParam(value = "category", required = false) String category) {
 
-		model.addAttribute("viewFlag", 2);
+		model.addAttribute("activeTab", 2);
 
 		if (category != null) {
-
-			model.addAttribute("categorySelected", true);
 			model.addAttribute("products", productService.getProductsByCategory(category));
-		} else {
-
-			model.addAttribute("invalidCategorySelected", true);
 		}
-
+		
 		return "management";
 	}
 
 	@RequestMapping("/viewProduct")
 	public String viewProduct(Model model, @RequestParam(value = "upc") String upc) {
-		
+
 		InventoryProduct product = managerService.getProduct(upc);
-		
+
 		model.addAttribute("product", product);
 		return "update_product";
 	}
-	
+
 	@RequestMapping("/updateProduct")
 	public String updateProduct(Model model, @RequestParam(value = "name") String name,
 			@RequestParam(value = "upc") String upc, @RequestParam(value = "category") String categoryName,
 			@RequestParam(value = "description") String description, @RequestParam(value = "price") BigDecimal price,
-			@RequestParam(value = "stock") int stock){
-		
-		Category category = productService.getCategory(categoryName);  
+			@RequestParam(value = "stock") int stock) {
+
+		Category category = productService.getCategory(categoryName);
 
 		Product product = new Product(upc, category, name, description, price);
 		InventoryProduct inventoryProduct = new InventoryProduct(product, stock);
-		
-		managerService.updateProduct(inventoryProduct);
-	
-		model.addAttribute("viewFlag", 2);
+
+		managerService.update(inventoryProduct);
+
+		model.addAttribute("activeTab", 2);
 		model.addAttribute("productUpdated", true);
 		return "management";
 	}

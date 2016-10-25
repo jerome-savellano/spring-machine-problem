@@ -47,7 +47,7 @@ public class InventoryProduct {
 	}
 
 	@OneToOne
-	@JoinColumn(name="upc", referencedColumnName = "upc")
+	@JoinColumn(name="product_id")
 	public Product getProduct() {
 		return product;
 	}

@@ -10,7 +10,7 @@ import javax.persistence.Table;
 @Table(name = "USER")
 public class User {
 	
-	private long userId;
+	private long id;
 	
 	private String userType;
 	
@@ -22,7 +22,7 @@ public class User {
 			
 	public User(long id, String userType, String username, String password) {
 		super();
-		this.userId = id;
+		this.id = id;
 		this.userType = userType;
 		this.username = username;
 		this.password = password;
@@ -31,10 +31,10 @@ public class User {
 	@Id @GeneratedValue
 	@Column(name = "id")
 	public long getUserId() {
-		return userId;
+		return id;
 	}
 	public void setUserId(long userId) {
-		this.userId = userId;
+		this.id = userId;
 	}
 
 	@Column(name = "user_type")

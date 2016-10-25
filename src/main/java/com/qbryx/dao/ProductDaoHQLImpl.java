@@ -41,7 +41,7 @@ public class ProductDaoHQLImpl implements ProductDao {
 	}
 
 	@Override
-	public Product getProductByUpc(String upc) {
+	public Product getProduct(String upc) {
 
 		Product product = null;
 
@@ -55,13 +55,13 @@ public class ProductDaoHQLImpl implements ProductDao {
 	}
 
 	@Override
-	public InventoryProduct getInventoryProductByUpc(final String upc) {
+	public InventoryProduct getInventoryProduct(long productId) {
 
 		InventoryProduct product = null;
 
 		Session session = sessionFactory.getCurrentSession();
 
-		Query query = session.createQuery(DAOQuery.HQL_GET_INVENTORY_PRODUCT).setParameter("upc", upc);
+		Query query = session.createQuery(DAOQuery.HQL_GET_INVENTORY_PRODUCT).setParameter("product_id", productId);
 
 		product = (InventoryProduct) query.getSingleResult();
 
@@ -91,13 +91,13 @@ public class ProductDaoHQLImpl implements ProductDao {
 	}
 
 	@Override
-	public void updateProductStock(InventoryProduct inventoryProduct) {
+	public void updateStock(InventoryProduct inventoryProduct) {
 
 		Session session = sessionFactory.getCurrentSession();
 
 		Query query = session.createQuery(DAOQuery.HQL_UPDATE_INVENTORY)
 				.setParameter("stock", inventoryProduct.getStock())
-				.setParameter("upc", inventoryProduct.getProduct().getUpc());
+				.setParameter("product_id", inventoryProduct.getProduct().getId());
 
 		query.executeUpdate();
 	}

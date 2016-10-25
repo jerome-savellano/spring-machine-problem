@@ -7,14 +7,15 @@ import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
 import com.qbryx.domain.CartProduct;
+import com.qbryx.domain.User;
 import com.qbryx.service.CustomerService;
 
 @Component("cartHelper")
 public class CartHelper {
 		
-	public void populateCartInLayout(CustomerService customerService, long cartId, Model model){
+	public void populateCartInLayout(CustomerService customerService, User user, Model model){
 		
-		List<CartProduct> cartProducts = customerService.getProductsInCart(cartId);
+		List<CartProduct> cartProducts = customerService.getProductsInCart(user);
 		
 		BigDecimal totalAmount = BigDecimal.ZERO;
 		

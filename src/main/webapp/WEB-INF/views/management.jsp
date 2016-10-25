@@ -43,28 +43,29 @@
 	<div class="container">
 		<form action="${pageContext.request.contextPath}/logout">
 			<h2>
-				Welcome, ${manager.getUsername()}! <input type="submit"
+				Welcome, ${user.getUsername()}! <input type="submit"
 					class="btn btn-warning btn-xs" value="Logout">
 			</h2>
 		</form>
 
 		<ul class="nav nav-tabs">
-			<li class="<c:if test="${viewFlag == 1}">active</c:if>"><a
+			<li class="<c:if test="${activeTab == 1}">active</c:if>"><a
 				data-toggle="tab" href="/search#menu1">Search product by UPC</a></li>
-			<li class="<c:if test="${viewFlag == 2}">active</c:if>"><a
+			<li class="<c:if test="${activeTab == 2}">active</c:if>"><a
 				data-toggle="tab" href="#menu2">Update product by category</a></li>
-			<li class="<c:if test="${viewFlag == 3}">active</c:if>"><a
+			<li class="<c:if test="${activeTab == 3}">active</c:if>"><a
 				data-toggle="tab" href="#menu3">Add a product</a></li>
 		</ul>
 
 		<div class="tab-content">
 			<div id="menu1"
-				class="tab-pane fade <c:if test="${viewFlag == 1}">in active</c:if>">
+				class="tab-pane fade <c:if test="${activeTab == 1}">in active</c:if>">
 				<div class="container-fluid"
 					style="padding-left: 20%; padding-right: 20%; padding-top: 2%;">
 					<div class="row">
 						<div class="col-md-12">
-							<form action="${pageContext.request.contextPath}/management/search" method="post">
+							<form action="${pageContext.request.contextPath}/manager/search"
+								method="post">
 								<div class="form-group">
 									<div class="input-group">
 										<input type="number" name="upc" class="form-control"
@@ -153,14 +154,10 @@
 				</c:choose>
 			</div>
 			<div id="menu2"
-				class="tab-pane fade <c:if test="${viewFlag == 2}">in active</c:if>">
+				class="tab-pane fade <c:if test="${activeTab == 2}">in active</c:if>">
 				<div class="container-fluid" style="padding: 2%;">
-					<c:if test="${invalidCategorySelected}">
-						<div class="alert alert-danger">
-							<strong>Oops!</strong> Please select a category.
-						</div>
-					</c:if>
-					<form method="post" action="${pageContext.request.contextPath}/management/productByCategory">
+					<form method="post"
+						action="${pageContext.request.contextPath}/manager/productByCategory">
 						<div class="row" style="padding: 2%;">
 							<c:if test="${productUpdated}">
 								<div class="alert alert-success fade in">
@@ -181,20 +178,23 @@
 								<input type="submit" class="btn btn-info" value="Go!">
 							</div>
 						</div>
-						<c:if test="${categorySelected}">
+						<c:if test="${empty products}">
+							<h1 class="text-center text-muted"><i>No category selected...</i></h1>
+						</c:if>
+						<c:if test="${not empty products}">
 							<div class="list-group">
-								<c:forEach items="${products}" var="item"
-									varStatus="status">
-									<a href="${pageContext.request.contextPath}/management/viewProduct?upc=${item.getUpc()}" class="list-group-item">${item.getName()}</a>
+								<c:forEach items="${products}" var="item" varStatus="status">
+									<a
+										href="${pageContext.request.contextPath}/manager/viewProduct?upc=${item.getUpc()}"
+										class="list-group-item">${item.getName()}</a>
 								</c:forEach>
 							</div>
 						</c:if>
 					</form>
-
 				</div>
 			</div>
 			<div id="menu3"
-				class="tab-pane fade <c:if test="${viewFlag == 3}">in active</c:if>">
+				class="tab-pane fade <c:if test="${activeTab == 3}">in active</c:if>">
 				<div class="container-fluid" style="padding: 2%;">
 					<div class="row">
 						<div class="col-md-12"
@@ -206,7 +206,23 @@
 									Product has been created!
 								</div>
 							</c:if>
-							<form action="${pageContext.request.contextPath}/management/createProduct" method="post">
+							<c:if test="${duplicateProduct}">
+								<div class="alert alert-warning fade in">
+									<a href="#" class="close" data-dismiss="alert"
+										aria-label="close">&times;</a> <strong>Oh no!</strong>
+									Product with the UPC ${upc} already exists!
+								</div>
+							</c:if>
+							<c:if test="${invalidFormat}">
+								<div class="alert alert-warning fade in">
+									<a href="#" class="close" data-dismiss="alert"
+										aria-label="close">&times;</a> <strong>Oops!</strong>
+									Invalid UPC format!
+								</div>
+							</c:if>
+							<form
+								action="${pageContext.request.contextPath}/manager/createProduct"
+								method="post">
 								<div class="form-group">
 									<label for="Name">Name </label> <input type="text" name="name"
 										class="form-control" required />

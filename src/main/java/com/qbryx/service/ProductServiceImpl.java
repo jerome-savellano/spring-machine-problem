@@ -37,7 +37,7 @@ public class ProductServiceImpl implements ProductService{
 	}
 
 	public Product getProduct(String upc) {
-		return productDaoHQL.getProductByUpc(upc);
+		return productDaoHQL.getProduct(upc);
 	}
 
 	public Category getCategory(String categoryName) {

@@ -13,33 +13,37 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "PRODUCT")
 public class Product implements java.io.Serializable {
- 
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
 	private long id;
-	
+
 	private String upc;
-	
+
 	private Category category;
-	
+
 	private String name;
-	
+
 	private String description;
 
 	private BigDecimal price;
-	
-	public Product(){
-		
+
+	public Product() {
+
 	}
-	
-	public Product(String upc){
+
+	public Product(String upc) {
 		this.upc = upc;
 	}
 	
-	public Product(String upc, String name, BigDecimal price){
+	public Product(long id) {
+		this.id = id;
+	}
+
+	public Product(String upc, String name, BigDecimal price) {
 		this.upc = upc;
 		this.name = name;
 		this.price = price;
@@ -57,8 +61,9 @@ public class Product implements java.io.Serializable {
 	public void setId(long id) {
 		this.id = id;
 	}
-	
-	@Id @GeneratedValue
+
+	@Id
+	@GeneratedValue
 	@Column(name = "id")
 	public long getId() {
 		return id;
@@ -74,7 +79,7 @@ public class Product implements java.io.Serializable {
 	}
 
 	@ManyToOne
-	@JoinColumn(name = "category_id", referencedColumnName = "id")
+	@JoinColumn(name = "category_id")
 	public Category getCategory() {
 		return category;
 	}

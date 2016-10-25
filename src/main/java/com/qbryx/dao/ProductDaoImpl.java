@@ -54,7 +54,7 @@ public class ProductDaoImpl implements ProductDao {
 		return products;
 	}
 
-	public Product getProductByUpc(String upc) {
+	public Product getProduct(String upc) {
 		
 		Product product = null;
 		
@@ -116,7 +116,7 @@ public class ProductDaoImpl implements ProductDao {
 		return stock;
 	}
 
-	public InventoryProduct getInventoryProductByUpc(String upc) {
+	public InventoryProduct getInventoryProduct(long id) {
 		
 		InventoryProduct product = null;
 		
@@ -125,7 +125,7 @@ public class ProductDaoImpl implements ProductDao {
 			
 			try {
 				stmt = ConnectionManager.prepareStatement(DAOQuery.SQL_GET_PRODUCT_BY_UPC_M);
-				stmt.setString(1, upc);
+				stmt.setLong(1, id);
 				
 				ResultSet rs = stmt.executeQuery();
 				
@@ -212,7 +212,7 @@ public class ProductDaoImpl implements ProductDao {
 		}
 	}
 
-	public void updateProductStock(InventoryProduct inventoryProduct) {
+	public void updateStock(InventoryProduct inventoryProduct) {
 		
 		if(ConnectionManager.getConnection() != null){
 			PreparedStatement stmt;

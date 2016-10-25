@@ -38,7 +38,7 @@
 			<div class="col-md-8">
 				<form action="${pageContext.request.contextPath}/logout">
 					<h1 class="page-header">
-						Hi, ${customer.getUsername()}! <input type="submit"
+						Hi, ${user.getUsername()}! <input type="submit"
 							class="btn btn-warning btn-xs" value="Logout">
 					</h1>
 				</form>
@@ -46,34 +46,34 @@
 			</div>
 			<div class="col-md-4">
 				<h1 class="page-header">Browse products</h1>
-				<c:if test="${invalidCategorySelected}">
-					<div class="alert alert-danger">
-						<strong>Oops!</strong> Please select a category.
-					</div>
-				</c:if>
 				<form method="post"
 					action="${pageContext.request.contextPath}/customer/viewProduct"
 					class="form-inline">
 					<div class="form-group" style="padding: 0;">
 						<select class="form-control" name="category">
-							<option selected disabled>SELECT CATEGORY</option>
+							<option selected disabled value>SELECT CATEGORY</option>
 							<c:forEach items="${categories}" var="item">
 								<option>${item.getName()}</option>
 							</c:forEach>
 						</select> <input type="submit" class="btn btn-info" value="VIEW CATEGORY">
 					</div>
-					<c:if test="${categorySelected}">
-						<div class="list-group">
-							<div class="page-header">
-								<h1>${category}</h1>
+					<c:choose>
+						<c:when test="${not empty category}">
+							<div class="list-group">
+								<div class="page-header">
+									<h1>${category}</h1>
+								</div>
+								<c:forEach items="${products}" var="item" varStatus="status">
+									<a
+										href="${pageContext.request.contextPath}/customer/processProduct?id=${item.getId()}&upc=${item.getUpc()}&category=${item.getCategory().getName()}"
+										class="list-group-item">${item.getName()}</a>
+								</c:forEach>
 							</div>
-							<c:forEach items="${products}" var="item" varStatus="status">
-								<a
-									href="${pageContext.request.contextPath}/customer/processProduct?upc=${item.getUpc()}&category=${item.getCategory().getCategoryId()}"
-									class="list-group-item">${item.getName()}</a>
-							</c:forEach>
-						</div>
-					</c:if>
+						</c:when>
+						<c:when test="${empty category}">
+							<h5><i>No category selected...</i></h5>
+						</c:when>
+					</c:choose>
 				</form>
 			</div>
 		</div>

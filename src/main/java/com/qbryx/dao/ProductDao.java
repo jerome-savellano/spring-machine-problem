@@ -9,11 +9,11 @@ public interface ProductDao {
 
 	List<Product> getAllProducts();
 	List<Product> getProductsByCategory(String categoryId);
-	Product getProductByUpc(String upc); //method signature change to getProduct(String upc)
-	InventoryProduct getInventoryProductByUpc(String upc); //separate DAO
+	Product getProduct(String upc);
+	InventoryProduct getInventoryProduct(long id);
 	
 	void addProduct(Product product);
 	void addProductStock(InventoryProduct inventoryProduct);
 	void updateProduct(Product product);
-	void updateProductStock(InventoryProduct inventoryProduct);
+	void updateStock(InventoryProduct inventoryProduct);
 }

@@ -48,4 +48,9 @@ public class UserDaoCriteriaImpl implements UserDao {
 		
 		return user;
 	}
+
+	@Override
+	public String getPassword(String username) {
+		throw new UnsupportedOperationException();
+	}
 }

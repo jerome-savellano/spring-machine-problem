@@ -1,5 +1,7 @@
 package com.qbryx.controller;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
@@ -9,11 +11,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.qbryx.domain.Category;
 import com.qbryx.domain.User;
 import com.qbryx.service.CustomerService;
 import com.qbryx.service.ProductService;
 import com.qbryx.service.UserService;
-import com.qbryx.util.UserType;
 
 @Controller
 public class LoginController{
@@ -30,11 +32,9 @@ public class LoginController{
 	@RequestMapping("/initial")
 	public String trasdasday(HttpServletRequest request){
 		
-		if(request.getSession().getAttribute("user") != null){
-			return "redirect:/processLogin";
-		}else{
-			return "login";
-		}
+		User user = (User) request.getSession().getAttribute("user");
+		
+		return (user != null) ? "redirect:/processLogin" : "login";
 	}
 	
 	@RequestMapping(value="/processLogin", method=RequestMethod.POST)
@@ -42,26 +42,22 @@ public class LoginController{
 			@RequestParam(value="password") String password,
 			HttpServletRequest request, Model model){
 		
-		User user = userService.getUser(username);
-	
-		if(user != null && user.getPassword().equals(password)){
-			if(user.getUserType().equals(UserType.CUSTOMER)){
-				
-				request.getSession().setAttribute("customer", user);
-				request.getSession().setAttribute("categories", productService.getCategories());
-				return "redirect:/customer";
-			}else{
-				
-				request.getSession().setAttribute("categories", productService.getCategories());
-				request.getSession().setAttribute("manager", user);
-				return "redirect:/management";
-			}
-		}else{
+		boolean userValid = userService.authenticate(username, password);
 		
-			model.addAttribute("userDoesNotExist", true);
-			model.addAttribute("username", username);
-			return "login";
+		if(userValid){
+			
+			User user = userService.getUser(username);
+			
+			List<Category> categories = productService.getCategories();
+			
+			request.getSession().setAttribute("categories", categories);
+			request.getSession().setAttribute("user", user);
+			
+			return "redirect:/" + user.getUserType();
 		}
+			
+		model.addAttribute("username", username);
+		return "login";
 	}
 	
 	@RequestMapping("/logout")

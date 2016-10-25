@@ -13,6 +13,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.qbryx.domain.CartProduct;
+import com.qbryx.domain.User;
 import com.qbryx.exception.InsufficientStockException;
 
 @Repository("cartDaoCriteria")
@@ -26,7 +27,7 @@ public class CartDaoCriteriaImpl implements CartDao {
 		
 	@SuppressWarnings("deprecation")
 	@Override
-	public CartProduct getProductInCart(long userId, String upc) {
+	public CartProduct getProductInCart(User user, long id) {
 		
 		CartProduct cartProduct = null;
 		
@@ -38,8 +39,8 @@ public class CartDaoCriteriaImpl implements CartDao {
 			transaction = session.beginTransaction();
 			
 			Criteria criteria = session.createCriteria(CartProduct.class)
-									   .add(Restrictions.eq("userId", userId))
-									   .add(Restrictions.eq("product.upc", upc))
+									   .add(Restrictions.eq("userId", user.getUserId()))
+									   .add(Restrictions.eq("product.id", id))
 									   .add(Restrictions.eq("isPurchased", 0));
 			
 			cartProduct = (CartProduct) criteria.uniqueResult();
@@ -58,7 +59,7 @@ public class CartDaoCriteriaImpl implements CartDao {
 
 	@SuppressWarnings({ "unchecked", "deprecation" })
 	@Override
-	public List<CartProduct> getProductsInCart(long userId) {
+	public List<CartProduct> getProductsInCart(User user) {
 		
 		List<CartProduct> cartProducts = null;
 		
@@ -70,7 +71,7 @@ public class CartDaoCriteriaImpl implements CartDao {
 			transaction = session.beginTransaction();
 			
 			Criteria criteria = session.createCriteria(CartProduct.class)
-									   .add(Restrictions.eq("userId", userId))
+									   .add(Restrictions.eq("userId", user.getUserId()))
 									   .add(Restrictions.eq("isPurchased", 0));
 			
 			cartProducts = (List<CartProduct>) criteria.list();
@@ -98,8 +99,8 @@ public class CartDaoCriteriaImpl implements CartDao {
 	}
 
 	@Override
-	public void checkout(long userId) {
-		cartDao.checkout(userId);
+	public void checkout(User user) {
+		cartDao.checkout(user);
 	}
 
 	@Override

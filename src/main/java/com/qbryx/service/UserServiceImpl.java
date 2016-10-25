@@ -12,11 +12,21 @@ import com.qbryx.domain.User;
 @Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
 	
-	@Resource(name="userDaoCriteria")
+	@Resource(name="userDao")
 	private UserDao userDao;
 	
-	public User getUser(String username) {
+	public boolean authenticate(String username, String password){
+		
+		String userPassword = userDao.getPassword(username);
+		
+		if(userPassword.equals(password)){
+			return true;
+		}
+		
+		return false;
+	}
+	
+	public User getUser(String username) {			
 		return userDao.getUser(username);
 	}
-
 }

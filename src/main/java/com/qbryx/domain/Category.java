@@ -17,25 +17,26 @@ public class Category implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private long categoryId;
+	private long id;
+	
 	private String name;
 	
 	public Category(){}
 	
 	public Category(long categoryId, String name) {
 		super();
-		this.categoryId = categoryId;
+		this.id = categoryId;
 		this.name = name;
 	}
 
 	@Id @GeneratedValue
 	@Column(name = "id")
 	public long getCategoryId() {
-		return categoryId;
+		return id;
 	}
 
 	public void setCategoryId(long categoryId) {
-		this.categoryId = categoryId;
+		this.id = categoryId;
 	}
 	
 	@Column(name = "name")

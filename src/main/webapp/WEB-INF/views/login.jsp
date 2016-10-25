@@ -43,7 +43,7 @@ html, body, .container-table {
 				<div
 					style="background-color: #297f56; padding: 15px; border-radius: 5%;">
 					<h1 style="text-align: center; color: white;">QBRYX BRYKaBRAX</h1>
-					<c:if test="${userDoesNotExist}">
+					<c:if test="${not empty username}">
 						<div class="alert alert-danger">
 							<strong>Oops!</strong> User does not exist. Your username/password might be incorrect.
 						</div>
