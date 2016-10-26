@@ -6,13 +6,15 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.qbryx.util.UserType;
+
 @Entity
 @Table(name = "USER")
 public class User {
 	
 	private long id;
 	
-	private String userType;
+	private UserType userType;
 	
 	private String username;
 	
@@ -20,7 +22,7 @@ public class User {
 	
 	public User(){}
 			
-	public User(long id, String userType, String username, String password) {
+	public User(long id, UserType userType, String username, String password) {
 		super();
 		this.id = id;
 		this.userType = userType;
@@ -38,11 +40,11 @@ public class User {
 	}
 
 	@Column(name = "user_type")
-	public String getUserType() {
+	public UserType getUserType() {
 		return userType;
 	}
 
-	public void setUserType(String user_type) {
+	public void setUserType(UserType user_type) {
 		this.userType = user_type;
 	}
 

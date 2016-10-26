@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import com.qbryx.domain.User;
 import com.qbryx.managers.ConnectionManager;
 import com.qbryx.util.DAOQuery;
+import com.qbryx.util.UserType;
 
 @Repository("userDao")
 public class UserDaoImpl implements UserDao {
@@ -26,7 +27,7 @@ public class UserDaoImpl implements UserDao {
 				ResultSet rs = stmt.executeQuery();
 				
 				if(rs.next()){
-					user = new User(rs.getInt("id"), rs.getString("user_type"), rs.getString("username"), rs.getString("password"));
+					user = new User(rs.getInt("id"), UserType.valueOf(rs.getString("user_type")), rs.getString("username"), rs.getString("password"));
 				}
 				
 				ConnectionManager.close();

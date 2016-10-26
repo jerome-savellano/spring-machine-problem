@@ -50,39 +50,37 @@ public class ManagementController {
 		return "management";
 	}
 
-	@RequestMapping("/createProduct")
-	public String createProduct(Model model, @RequestParam(value = "name") String name,
-			@RequestParam(value = "upc") String upc, @RequestParam(value = "category") String categoryName,
-			@RequestParam(value = "description") String description, @RequestParam(value = "price") BigDecimal price,
-			@RequestParam(value = "stock") int stock){
-		
-		model.addAttribute("activeTab", 3);
+		@RequestMapping("/createProduct")
+		public String createProduct(Model model, @RequestParam(value = "name") String name,
+				@RequestParam(value = "upc") String upc, @RequestParam(value = "category") String categoryName,
+				@RequestParam(value = "description") String description, @RequestParam(value = "price") BigDecimal price,
+				@RequestParam(value = "stock") int stock){
 			
-		if(Validator.invalidUpcFormat(upc)){
-			
-			model.addAttribute("invalidFormat", true);
+			model.addAttribute("activeTab", 3);
+				
+			if(Validator.invalidUpcFormat(upc)){
+				
+				model.addAttribute("invalidFormat", true);
+				return "management";
+			}
+	
+			Category category = productService.getCategory(categoryName);
+	
+			Product product = new Product(upc, category, name, description, price);
+			InventoryProduct inventoryProduct = new InventoryProduct(product, stock);
+	
+			try {
+				
+				managerService.add(inventoryProduct);
+				model.addAttribute("productCreated", true);
+			} catch (DuplicateProductException e) {
+				
+				model.addAttribute("upc", upc);
+				model.addAttribute("duplicateProduct", true);
+			}
+	
 			return "management";
 		}
-
-		Category category = productService.getCategory(categoryName);
-
-		Product product = new Product(upc, category, name, description, price);
-		InventoryProduct inventoryProduct = new InventoryProduct(product, stock);
-
-		try {
-			
-			managerService.add(inventoryProduct);
-			model.addAttribute("productCreated", true);
-		} catch (DuplicateProductException e) {
-			
-			model.addAttribute("upc", upc);
-			model.addAttribute("duplicateProduct", true);
-		}
-
-		
-		
-		return "management";
-	}
 
 	@RequestMapping("/productByCategory")
 	public String prodByCat(Model model, @RequestParam(value = "category", required = false) String category) {

@@ -53,7 +53,7 @@ public class LoginController{
 			request.getSession().setAttribute("categories", categories);
 			request.getSession().setAttribute("user", user);
 			
-			return "redirect:/" + user.getUserType();
+			return "redirect:/" + user.getUserType().getUserType();
 		}
 			
 		model.addAttribute("username", username);

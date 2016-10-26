@@ -1,6 +1,22 @@
 package com.qbryx.util;
 
-public class UserType {
-	public static final String CUSTOMER = "customer";
-	public static final String MANAGER = "manager";
+public enum UserType {
+	
+	CUSTOMER ("customer"),
+	MANAGER  ("manager")
+	;
+	
+	private String userType;
+	
+	private UserType(String userType){
+		this.setUserType(userType);
+	}
+
+	public String getUserType() {
+		return userType;
+	}
+
+	public void setUserType(String userType) {
+		this.userType = userType;
+	}
 }
