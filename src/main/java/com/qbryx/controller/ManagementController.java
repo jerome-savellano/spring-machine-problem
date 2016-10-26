@@ -1,9 +1,11 @@
 package com.qbryx.controller;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -81,18 +83,22 @@ public class ManagementController {
 	}*/
 	
 	@RequestMapping("/createProduct")
-	public String createProduct(@ModelAttribute("inventoryProductBuilder") InventoryProductBuilder inventoryProductBuilder
-			, Model model) {
+	public String createProduct(@ModelAttribute("inventoryProductBuilder") @Valid InventoryProductBuilder inventoryProductBuilder,
+			BindingResult bindingResult, Model model) {
 
 		model.addAttribute("activeTab", 3);
 		
+		if(bindingResult.hasErrors()){
+			
+		}
+		
 		InventoryProduct inventoryProduct = inventoryProductBuilder.getInventoryProduct(productService);
 
-		if (Validator.invalidUpcFormat(inventoryProduct.getProduct().getUpc())) {
+		/*if (Validator.invalidUpcFormat(inventoryProduct.getProduct().getUpc())) {
 
 			model.addAttribute("invalidFormat", true);
 			return "management";
-		}
+		}*/
 
 		try {
 
@@ -147,7 +153,7 @@ public class ManagementController {
 	}*/
 	
 	@RequestMapping("/updateProduct")
-	public String updateProduct(@ModelAttribute("inventoryProductBuilder") InventoryProductBuilder inventoryProductBuilder,
+	public String updateProduct(@ModelAttribute("inventoryProductBuilder") @Valid InventoryProductBuilder inventoryProductBuilder,
 			Model model) {
 		
 		InventoryProduct inventoryProduct = inventoryProductBuilder.getInventoryProduct(productService);

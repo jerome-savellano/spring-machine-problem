@@ -2,6 +2,9 @@ package com.qbryx.util;
 
 import java.math.BigDecimal;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.NotNull;
+
 import org.springframework.format.annotation.NumberFormat;
 
 import com.qbryx.domain.InventoryProduct;
@@ -10,14 +13,18 @@ import com.qbryx.service.ProductService;
 
 public class InventoryProductBuilder {
 	
+	@NotNull
 	private String name;
 	
-	@NumberFormat 
+	@NumberFormat @Max(12)
 	private String upc;
+	
 	private String categoryName;
 	private String description;
 	private BigDecimal price;
 	private int stock;
+	
+	public InventoryProductBuilder(){}
 	
 	public String getName() {
 		return name;
