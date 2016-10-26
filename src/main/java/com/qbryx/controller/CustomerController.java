@@ -56,13 +56,12 @@ public class CustomerController {
 	}
 
 	@RequestMapping("/processProduct")
-	public String processProduct(@RequestParam(value = "id") long id,
-			@RequestParam(value = "category") String category, 
-			@RequestParam(value = "upc") String upc, Model model, HttpServletRequest request) {
+	public String processProduct(@RequestParam(value = "upc") String upc, 
+			Model model, HttpServletRequest request) {
 		
 		Product product = productService.getProduct(upc);
 		
-		CartProduct cartProduct = customerService.getProductInCart(UserUtil.getUser(request), id);
+		CartProduct cartProduct = customerService.getProductInCart(UserUtil.getUser(request), product.getId());
 				
 		int quantityInCart = 0;
 		
@@ -73,7 +72,7 @@ public class CustomerController {
 		cartHelper.populateCartInLayout(customerService, UserUtil.getUser(request), model);
 		
 		model.addAttribute("product", product);
-		model.addAttribute("category", category);
+		model.addAttribute("category", product.getCategory().getName());
 		model.addAttribute("quantity", quantityInCart);
 
 		return "product";

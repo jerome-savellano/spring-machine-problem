@@ -65,16 +65,18 @@
 								</div>
 								<c:forEach items="${products}" var="item" varStatus="status">
 									<a
-										href="${pageContext.request.contextPath}/customer/processProduct?id=${item.getId()}&upc=${item.getUpc()}&category=${item.getCategory().getName()}"
+										href="${pageContext.request.contextPath}/customer/processProduct?upc=${item.getUpc()}"
 										class="list-group-item">${item.getName()}</a>
 								</c:forEach>
 							</div>
 						</c:when>
-						<c:when test="${empty category}">
-							<h5><i>No category selected...</i></h5>
-						</c:when>
 					</c:choose>
 				</form>
+				<c:if test="${empty category}">
+					<h5>
+						<i>No category selected...</i>
+					</h5>
+				</c:if>
 			</div>
 		</div>
 	</div>

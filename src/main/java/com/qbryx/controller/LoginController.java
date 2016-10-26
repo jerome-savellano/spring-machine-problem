@@ -7,9 +7,9 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.qbryx.domain.Category;
 import com.qbryx.domain.User;
@@ -38,25 +38,24 @@ public class LoginController{
 	}
 	
 	@RequestMapping(value="/processLogin", method=RequestMethod.POST)
-	public String processLogin(@RequestParam(value="username") String username,
-			@RequestParam(value="password") String password,
+	public String processLogin(@ModelAttribute("user") User user,
 			HttpServletRequest request, Model model){
 		
-		boolean userValid = userService.authenticate(username, password);
+		boolean userValid = userService.authenticate(user.getUsername(), user.getPassword());
 		
 		if(userValid){
 			
-			User user = userService.getUser(username);
+			User validUser = userService.getUser(user.getUsername());
 			
 			List<Category> categories = productService.getCategories();
 			
 			request.getSession().setAttribute("categories", categories);
-			request.getSession().setAttribute("user", user);
+			request.getSession().setAttribute("user", validUser);
 			
-			return "redirect:/" + user.getUserType().getUserType();
+			return "redirect:/" + validUser.getUserType().getUserType();
 		}
 			
-		model.addAttribute("username", username);
+		model.addAttribute("username", user.getUsername());
 		return "login";
 	}
 	

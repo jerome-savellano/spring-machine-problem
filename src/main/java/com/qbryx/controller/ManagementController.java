@@ -1,20 +1,18 @@
 package com.qbryx.controller;
 
-import java.math.BigDecimal;
-
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.qbryx.domain.Category;
 import com.qbryx.domain.InventoryProduct;
-import com.qbryx.domain.Product;
 import com.qbryx.exception.DuplicateProductException;
 import com.qbryx.service.ManagerService;
 import com.qbryx.service.ProductService;
+import com.qbryx.util.InventoryProductBuilder;
 import com.qbryx.util.Validator;
 
 @Controller
@@ -50,38 +48,65 @@ public class ManagementController {
 		return "management";
 	}
 
-		@RequestMapping("/createProduct")
-		public String createProduct(Model model, @RequestParam(value = "name") String name,
-				@RequestParam(value = "upc") String upc, @RequestParam(value = "category") String categoryName,
-				@RequestParam(value = "description") String description, @RequestParam(value = "price") BigDecimal price,
-				@RequestParam(value = "stock") int stock){
-			
-			model.addAttribute("activeTab", 3);
-				
-			if(Validator.invalidUpcFormat(upc)){
-				
-				model.addAttribute("invalidFormat", true);
-				return "management";
-			}
-	
-			Category category = productService.getCategory(categoryName);
-	
-			Product product = new Product(upc, category, name, description, price);
-			InventoryProduct inventoryProduct = new InventoryProduct(product, stock);
-	
-			try {
-				
-				managerService.add(inventoryProduct);
-				model.addAttribute("productCreated", true);
-			} catch (DuplicateProductException e) {
-				
-				model.addAttribute("upc", upc);
-				model.addAttribute("duplicateProduct", true);
-			}
-	
+	/*@RequestMapping("/createProduct")
+	public String createProduct(Model model, @RequestParam(value = "name") String name,
+			@RequestParam(value = "upc") String upc, @RequestParam(value = "category") String categoryName,
+			@RequestParam(value = "description") String description, @RequestParam(value = "price") BigDecimal price,
+			@RequestParam(value = "stock") int stock) {
+
+		model.addAttribute("activeTab", 3);
+
+		if (Validator.invalidUpcFormat(upc)) {
+
+			model.addAttribute("invalidFormat", true);
 			return "management";
 		}
 
+		Category category = productService.getCategory(categoryName);
+
+		Product product = new Product(upc, category, name, description, price);
+		InventoryProduct inventoryProduct = new InventoryProduct(product, stock);
+
+		try {
+
+			managerService.add(inventoryProduct);
+			model.addAttribute("productCreated", true);
+		} catch (DuplicateProductException e) {
+
+			model.addAttribute("upc", upc);
+			model.addAttribute("duplicateProduct", true);
+		}
+
+		return "management";
+	}*/
+	
+	@RequestMapping("/createProduct")
+	public String createProduct(@ModelAttribute("inventoryProductBuilder") InventoryProductBuilder inventoryProductBuilder
+			, Model model) {
+
+		model.addAttribute("activeTab", 3);
+		
+		InventoryProduct inventoryProduct = inventoryProductBuilder.getInventoryProduct(productService);
+
+		if (Validator.invalidUpcFormat(inventoryProduct.getProduct().getUpc())) {
+
+			model.addAttribute("invalidFormat", true);
+			return "management";
+		}
+
+		try {
+
+			managerService.add(inventoryProduct);
+			model.addAttribute("productCreated", true);
+		} catch (DuplicateProductException e) {
+
+			model.addAttribute("upc", inventoryProduct.getProduct().getUpc());
+			model.addAttribute("duplicateProduct", true);
+		}
+
+		return "management";
+	}
+	
 	@RequestMapping("/productByCategory")
 	public String prodByCat(Model model, @RequestParam(value = "category", required = false) String category) {
 
@@ -90,7 +115,7 @@ public class ManagementController {
 		if (category != null) {
 			model.addAttribute("products", productService.getProductsByCategory(category));
 		}
-		
+
 		return "management";
 	}
 
@@ -103,7 +128,7 @@ public class ManagementController {
 		return "update_product";
 	}
 
-	@RequestMapping("/updateProduct")
+	/*@RequestMapping("/updateProduct")
 	public String updateProduct(Model model, @RequestParam(value = "name") String name,
 			@RequestParam(value = "upc") String upc, @RequestParam(value = "category") String categoryName,
 			@RequestParam(value = "description") String description, @RequestParam(value = "price") BigDecimal price,
@@ -114,6 +139,19 @@ public class ManagementController {
 		Product product = new Product(upc, category, name, description, price);
 		InventoryProduct inventoryProduct = new InventoryProduct(product, stock);
 
+		managerService.update(inventoryProduct);
+
+		model.addAttribute("activeTab", 2);
+		model.addAttribute("productUpdated", true);
+		return "management";
+	}*/
+	
+	@RequestMapping("/updateProduct")
+	public String updateProduct(@ModelAttribute("inventoryProductBuilder") InventoryProductBuilder inventoryProductBuilder,
+			Model model) {
+		
+		InventoryProduct inventoryProduct = inventoryProductBuilder.getInventoryProduct(productService);
+				
 		managerService.update(inventoryProduct);
 
 		model.addAttribute("activeTab", 2);
