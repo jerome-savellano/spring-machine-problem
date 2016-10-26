@@ -2,10 +2,9 @@ package com.qbryx.util;
 
 import java.math.BigDecimal;
 
-import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
-
-import org.springframework.format.annotation.NumberFormat;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 import com.qbryx.domain.InventoryProduct;
 import com.qbryx.domain.Product;
@@ -16,7 +15,8 @@ public class InventoryProductBuilder {
 	@NotNull
 	private String name;
 	
-	@NumberFormat @Max(12)
+	@Pattern(regexp="[0-9]+", message="UPC must contain numbers only")
+	@Size(min=12, max=12, message="UPC must be 12 digits only")
 	private String upc;
 	
 	private String categoryName;
@@ -83,7 +83,7 @@ public class InventoryProductBuilder {
 		product.setName(name);
 		product.setDescription(description);
 		product.setPrice(price);
-		
+				
 		InventoryProduct inventoryProduct = new InventoryProduct();
 		
 		inventoryProduct.setProduct(product);

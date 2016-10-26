@@ -85,20 +85,16 @@ public class ManagementController {
 	@RequestMapping("/createProduct")
 	public String createProduct(@ModelAttribute("inventoryProductBuilder") @Valid InventoryProductBuilder inventoryProductBuilder,
 			BindingResult bindingResult, Model model) {
-
+		
 		model.addAttribute("activeTab", 3);
 		
 		if(bindingResult.hasErrors()){
 			
+			model.addAttribute("errorMessage", "Please check your upc. UPC must contain numbers only and 12 digits long");
+			return "management";
 		}
 		
 		InventoryProduct inventoryProduct = inventoryProductBuilder.getInventoryProduct(productService);
-
-		/*if (Validator.invalidUpcFormat(inventoryProduct.getProduct().getUpc())) {
-
-			model.addAttribute("invalidFormat", true);
-			return "management";
-		}*/
 
 		try {
 

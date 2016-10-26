@@ -234,7 +234,7 @@
 								<div class="form-group">
 									<div class="form-group">
 										<label for="category">Category</label> <select
-											class="form-control" name="category" required>
+											class="form-control" name="categoryName" required>
 											<option selected disabled value="">SELECT CATEGORY</option>
 											<c:forEach items="${categories}" var="item">
 												<option>${item.getName()}</option>
