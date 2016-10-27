@@ -15,9 +15,9 @@ import com.qbryx.domain.CartProduct;
 import com.qbryx.domain.Product;
 import com.qbryx.exception.InsufficientStockException;
 import com.qbryx.helper.CartHelper;
-import com.qbryx.helper.UserUtil;
 import com.qbryx.service.CustomerService;
 import com.qbryx.service.ProductService;
+import com.qbryx.util.UserUtil;
 
 @Controller
 @RequestMapping("/customer")
@@ -103,7 +103,7 @@ public class CustomerController {
 		try {	
 			
 			customerService.checkout(UserUtil.getUser(request));
-			model.addAttribute("checkoutSuccess", true);
+			model.addAttribute("successMessage", "Continue to shop at QBRYX	BRYKaBRAX!");
 			
 			return "customer_home";
 		} catch (InsufficientStockException e) {

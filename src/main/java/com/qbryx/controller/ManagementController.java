@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.qbryx.domain.InventoryProduct;
 import com.qbryx.exception.DuplicateProductException;
 import com.qbryx.exception.ProductNotFoundException;
+import com.qbryx.helper.InventoryProductHelper;
 import com.qbryx.service.ManagerService;
 import com.qbryx.service.ProductService;
-import com.qbryx.util.InventoryProductHelper;
 
 @Controller
 @RequestMapping("/manager")

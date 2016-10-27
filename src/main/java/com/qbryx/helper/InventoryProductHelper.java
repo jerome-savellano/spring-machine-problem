@@ -1,4 +1,4 @@
-package com.qbryx.util;
+package com.qbryx.helper;
 
 import java.math.BigDecimal;
 

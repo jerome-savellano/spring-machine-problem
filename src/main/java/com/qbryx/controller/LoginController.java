@@ -1,7 +1,5 @@
 package com.qbryx.controller;
 
-import java.util.List;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
@@ -11,7 +9,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.qbryx.domain.Category;
 import com.qbryx.domain.User;
 import com.qbryx.service.CustomerService;
 import com.qbryx.service.ProductService;
@@ -47,9 +44,7 @@ public class LoginController{
 			
 			User validUser = userService.getUser(user.getUsername());
 			
-			List<Category> categories = productService.getCategories();
-			
-			request.getSession().setAttribute("categories", categories);
+			request.getSession().setAttribute("categories", productService.getCategories());
 			request.getSession().setAttribute("user", validUser);
 			
 			return "redirect:/" + validUser.getUserType().getUserType();

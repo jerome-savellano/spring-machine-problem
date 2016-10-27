@@ -1,4 +1,4 @@
-package com.qbryx.helper;
+package com.qbryx.util;
 
 import javax.servlet.http.HttpServletRequest;
 

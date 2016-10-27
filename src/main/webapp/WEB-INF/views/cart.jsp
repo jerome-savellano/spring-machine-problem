@@ -1,10 +1,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
-<c:if test="${checkoutSuccess}">
+<c:if test="${not empty successMessage}">
 	<div class="alert alert-success fade in">
 		<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-		<strong>Checkout successful!</strong> Continue to shop at QBRYX
-		BRYKaBRAX!
+		<strong>Checkout successful!</strong> ${successMessage}
 	</div>
 </c:if>
 <c:choose>
