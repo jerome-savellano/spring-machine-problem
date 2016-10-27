@@ -114,4 +114,10 @@ public class Product implements java.io.Serializable {
 	public void setPrice(BigDecimal price) {
 		this.price = price;
 	}
+
+	@Override
+	public String toString() {
+		return "Product [id=" + id + ", upc=" + upc + ", category=" + category + ", name=" + name + ", description="
+				+ description + ", price=" + price + "]";
+	}
 }

@@ -10,21 +10,23 @@ import com.qbryx.domain.InventoryProduct;
 import com.qbryx.domain.Product;
 import com.qbryx.service.ProductService;
 
-public class InventoryProductBuilder {
+public class InventoryProductHelper {
 	
 	@NotNull
 	private String name;
 	
-	@Pattern(regexp="[0-9]+", message="UPC must contain numbers only")
+	@Pattern(regexp="\\d+", message="UPC must contain numbers only")
 	@Size(min=12, max=12, message="UPC must be 12 digits only")
 	private String upc;
 	
 	private String categoryName;
 	private String description;
+	
 	private BigDecimal price;
+	
 	private int stock;
 	
-	public InventoryProductBuilder(){}
+	public InventoryProductHelper(){}
 	
 	public String getName() {
 		return name;
@@ -74,7 +76,7 @@ public class InventoryProductBuilder {
 		this.stock = stock;
 	}
 	
-	public InventoryProduct getInventoryProduct(ProductService productService){
+	public InventoryProduct buildInventoryProduct(ProductService productService){
 		
 		Product product = new Product();
 		
@@ -88,6 +90,21 @@ public class InventoryProductBuilder {
 		
 		inventoryProduct.setProduct(product);
 		inventoryProduct.setStock(stock);
+		
+		return inventoryProduct;
+	}
+	
+	public InventoryProduct getExistingInvetoryProduct(ProductService productService){	
+		
+		Product product = productService.getProduct(upc);
+		
+		product.setUpc(upc);
+		product.setCategory(productService.getCategory(categoryName));
+		product.setName(name);
+		product.setDescription(description);
+		product.setPrice(price);
+
+		InventoryProduct inventoryProduct = new InventoryProduct(product, stock);
 		
 		return inventoryProduct;
 	}

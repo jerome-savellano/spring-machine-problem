@@ -25,19 +25,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Welcome!</title>
-<script>
-	window.setTimeout(function() {
-		$(".alert-warning").fadeTo(500, 0).slideUp(500, function() {
-			$(this).remove();
-		});
-		$(".alert-success").fadeTo(500, 0).slideUp(500, function() {
-			$(this).remove();
-		});
-		$(".alert-danger").fadeTo(500, 0).slideUp(500, function() {
-			$(this).remove();
-		});
-	}, 3000);
-</script>
 </head>
 <body>
 	<div class="container">
@@ -80,15 +67,18 @@
 					</div>
 				</div>
 				<c:choose>
-					<c:when test="${empty product && !productNotFound}">
+					<c:when test="${not empty errorMessage}">
+						<c:if test="${not empty errorMessage}">
+								<div class="alert alert-warning alert-dismissible" role="alert">
+									<button type="button" class="close" data-dismiss="alert"
+										aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									</button>
+									<strong>Warning!</strong> ${errorMessage}
+								</div>
+							</c:if>
 					</c:when>
-					<c:when test="${productNotFound}">
-						<div class="alert alert-warning">
-							<strong>Product not found!</strong> No product was found with the
-							UPC indicated. Please check the UPC carefully.
-						</div>
-					</c:when>
-					<c:otherwise>
+					<c:when test="${not empty product}">
 						<div class="container-fluid">
 							<div class="row">
 								<div class="col-md-12">
@@ -150,7 +140,7 @@
 								</div>
 							</div>
 						</div>
-					</c:otherwise>
+					</c:when>
 				</c:choose>
 			</div>
 			<div id="menu2"
@@ -159,7 +149,7 @@
 					<form method="post"
 						action="${pageContext.request.contextPath}/manager/productByCategory">
 						<div class="row" style="padding: 2%;">
-							<c:if test="${productUpdated}">
+							<c:if test="${not empty successMessage}">
 								<div class="alert alert-success fade in">
 									<a href="#" class="close" data-dismiss="alert"
 										aria-label="close">&times;</a> <strong>Success!</strong>
@@ -179,7 +169,9 @@
 							</div>
 						</div>
 						<c:if test="${empty products}">
-							<h1 class="text-center text-muted"><i>No category selected...</i></h1>
+							<h1 class="text-center text-muted">
+								<i>No category selected...</i>
+							</h1>
 						</c:if>
 						<c:if test="${not empty products}">
 							<div class="list-group">
@@ -199,25 +191,22 @@
 					<div class="row">
 						<div class="col-md-12"
 							style="padding-left: 15%; padding-right: 15%;">
-							<c:if test="${productCreated}">
-								<div class="alert alert-success fade in">
-									<a href="#" class="close" data-dismiss="alert"
-										aria-label="close">&times;</a> <strong>Success!</strong>
-									Product has been created!
+							<c:if test="${not empty errorMessage}">
+								<div class="alert alert-warning alert-dismissible" role="alert">
+									<button type="button" class="close" data-dismiss="alert"
+										aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									</button>
+									<strong>Warning!</strong> ${errorMessage}
 								</div>
 							</c:if>
-							<c:if test="${duplicateProduct}">
-								<div class="alert alert-warning fade in">
-									<a href="#" class="close" data-dismiss="alert"
-										aria-label="close">&times;</a> <strong>Oh no!</strong>
-									Product with the UPC ${upc} already exists!
-								</div>
-							</c:if>
-							<c:if test="${invalidFormat}">
-								<div class="alert alert-warning fade in">
-									<a href="#" class="close" data-dismiss="alert"
-										aria-label="close">&times;</a> <strong>Oops!</strong>
-									Invalid UPC format!
+							<c:if test="${not empty successMessage}">
+								<div class="alert alert-success alert-dismissible" role="alert">
+									<button type="button" class="close" data-dismiss="alert"
+										aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									</button>
+									<strong>Success!</strong> ${successMessage}
 								</div>
 							</c:if>
 							<form

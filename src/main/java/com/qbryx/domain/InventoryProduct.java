@@ -55,4 +55,9 @@ public class InventoryProduct {
 	public void setProduct(Product product) {
 		this.product = product;
 	}
+
+	@Override
+	public String toString() {
+		return "InventoryProduct [id=" + id + ", product=" + product + ", stock=" + stock + "]";
+	}
 }

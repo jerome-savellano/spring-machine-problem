@@ -9,6 +9,7 @@ import com.qbryx.dao.ProductDao;
 import com.qbryx.domain.InventoryProduct;
 import com.qbryx.domain.Product;
 import com.qbryx.exception.DuplicateProductException;
+import com.qbryx.exception.ProductNotFoundException;
 
 @Service("managerService")
 @Transactional(readOnly = true)
@@ -20,9 +21,11 @@ public class ManagerServiceImpl implements ManagerService {
 	@Resource(name="productDaoHQL")
 	private ProductDao productDaoHQL;
 
-	public InventoryProduct getProduct(String upc) {		
+	public InventoryProduct getProduct(String upc) throws ProductNotFoundException {		
 		
 		Product product = productDaoHQL.getProduct(upc);
+		
+		if(product == null) throw new ProductNotFoundException();
 		
 		return productDaoHQL.getInventoryProduct(product.getId());
 	}
