@@ -89,8 +89,7 @@ public class ManagementController {
 		model.addAttribute("activeTab", 3);
 		
 		if(bindingResult.hasErrors()){
-			
-			model.addAttribute("errorMessage", "Please check your upc. UPC must contain numbers only and 12 digits long");
+			model.addAttribute("errorMessage", bindingResult.getFieldError().getDefaultMessage());
 			return "management";
 		}
 		
