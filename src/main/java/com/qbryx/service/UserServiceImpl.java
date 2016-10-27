@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.qbryx.dao.UserDao;
 import com.qbryx.domain.User;
+import com.qbryx.exception.UserNotFoundException;
 
 @Service("userService")
 @Transactional(readOnly = true)
@@ -15,18 +16,14 @@ public class UserServiceImpl implements UserService {
 	@Resource(name="userDao")
 	private UserDao userDao;
 	
-	public boolean authenticate(String username, String password){
+	public User authenticate(String username, String password) throws UserNotFoundException{
 		
-		String userPassword = userDao.getPassword(username);
+		User user = userDao.getUser(username);
 		
-		if(userPassword.equals(password)){
-			return true;
+		if(user == null || !user.getPassword().equals(password)){
+			throw new UserNotFoundException();
 		}
-		
-		return false;
-	}
-	
-	public User getUser(String username) {			
-		return userDao.getUser(username);
+				
+		return user;
 	}
 }

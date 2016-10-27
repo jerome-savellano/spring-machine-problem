@@ -6,7 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.qbryx.util.UserType;
+import com.qbryx.enums.UserType;
 
 @Entity
 @Table(name = "USER")

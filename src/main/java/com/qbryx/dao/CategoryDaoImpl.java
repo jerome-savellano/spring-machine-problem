@@ -9,7 +9,7 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 import com.qbryx.domain.Category;
-import com.qbryx.managers.ConnectionManager;
+import com.qbryx.manager.ConnectionManager;
 
 @Repository("categoryDao")
 public class CategoryDaoImpl implements CategoryDao {

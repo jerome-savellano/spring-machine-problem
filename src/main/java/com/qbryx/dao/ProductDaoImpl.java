@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.qbryx.domain.Category;
 import com.qbryx.domain.InventoryProduct;
 import com.qbryx.domain.Product;
-import com.qbryx.managers.ConnectionManager;
+import com.qbryx.manager.ConnectionManager;
 import com.qbryx.util.DAOQuery;
 
 @Repository("productDao")
