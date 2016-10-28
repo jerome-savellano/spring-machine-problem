@@ -1,5 +1,6 @@
 package com.qbryx.dao;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,13 +16,16 @@ import com.qbryx.util.DAOQuery;
 public class UserDaoImpl implements UserDao {
 	
 	public User getUser(String username) {
+		
+		Connection connection = ConnectionManager.getConnection();
+		
 		User user = null;
 		
-		if(ConnectionManager.getConnection() != null){
+		if(connection != null){
 			PreparedStatement stmt;
 				
 			try {
-				stmt = ConnectionManager.prepareStatement(DAOQuery.SQL_GET_USER);
+				stmt = connection.prepareStatement(DAOQuery.SQL_GET_USER);
 				stmt.setString(1, username);
 				
 				ResultSet rs = stmt.executeQuery();
@@ -30,7 +34,7 @@ public class UserDaoImpl implements UserDao {
 					user = new User(rs.getInt("id"), UserType.valueOf(rs.getString("user_type")), rs.getString("username"), rs.getString("password"));
 				}
 				
-				ConnectionManager.close();
+				connection.close();
 			} catch (SQLException e) {
 				throw new RuntimeException();
 			}			

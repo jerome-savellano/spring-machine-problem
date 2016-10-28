@@ -21,13 +21,13 @@ public class ProductDaoHQLImpl implements ProductDao {
 	private SessionFactory sessionFactory;
 
 	@Override
-	public List<Product> getAllProducts() {
+	public List<Product> findAllProducts() {
 		throw new UnsupportedOperationException();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Product> getProductsByCategory(String categoryId) {
+	public List<Product> findProductsByCategory(String categoryId) {
 
 		List<Product> products = new ArrayList<>();
 
@@ -41,7 +41,7 @@ public class ProductDaoHQLImpl implements ProductDao {
 	}
 
 	@Override
-	public Product getProduct(String upc) {
+	public Product findProductByUpc(String upc) {
 
 		Product product = null;
 
@@ -55,7 +55,7 @@ public class ProductDaoHQLImpl implements ProductDao {
 	}
 
 	@Override
-	public InventoryProduct getInventoryProduct(long productId) {
+	public InventoryProduct findInventoryProductById(long productId) {
 
 		InventoryProduct product = null;
 
@@ -74,7 +74,7 @@ public class ProductDaoHQLImpl implements ProductDao {
 	}
 
 	@Override
-	public void addProductStock(InventoryProduct inventoryProduct) {
+	public void addStock(InventoryProduct inventoryProduct) {
 		sessionFactory.getCurrentSession().save(inventoryProduct);
 	}
 

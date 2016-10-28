@@ -47,7 +47,7 @@
 							readonly="readonly" />
 					</div>
 					<div class="form-group">
-						<label for="category">Category</label><input type="text" name="category"
+						<label for="category">Category</label><input type="text" name="categoryName"
 							class="form-control" value="${product.getProduct().getCategory().getName()}"
 							readonly="readonly" />
 					</div>

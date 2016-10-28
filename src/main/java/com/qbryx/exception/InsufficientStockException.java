@@ -1,6 +1,6 @@
 package com.qbryx.exception;
 
-public class InsufficientStockException extends Exception{
+public class InsufficientStockException extends RuntimeException{
 
 	/**
 	 * 

@@ -97,7 +97,7 @@ public class InventoryProductHelper {
 	public InventoryProduct getExistingInvetoryProduct(ProductService productService){	
 		
 		Product product = productService.getProduct(upc);
-		
+				
 		product.setUpc(upc);
 		product.setCategory(productService.getCategory(categoryName));
 		product.setName(name);

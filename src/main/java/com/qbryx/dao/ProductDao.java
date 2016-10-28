@@ -7,13 +7,13 @@ import com.qbryx.domain.Product;
 
 public interface ProductDao {
 
-	List<Product> getAllProducts();
-	List<Product> getProductsByCategory(String categoryId);
-	Product getProduct(String upc);
-	InventoryProduct getInventoryProduct(long id);
+	List<Product> findAllProducts();
+	List<Product> findProductsByCategory(String categoryId);
+	Product findProductByUpc(String upc);
+	InventoryProduct findInventoryProductById(long id);
 	
 	void addProduct(Product product);
-	void addProductStock(InventoryProduct inventoryProduct);
+	void addStock(InventoryProduct inventoryProduct);
 	void updateProduct(Product product);
 	void updateStock(InventoryProduct inventoryProduct);
 }

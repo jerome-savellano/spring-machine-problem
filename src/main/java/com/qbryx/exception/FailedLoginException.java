@@ -1,6 +1,6 @@
 package com.qbryx.exception;
 
-public class UserNotFoundException extends Exception{
+public class FailedLoginException extends Exception{
 
 	/**
 	 * 

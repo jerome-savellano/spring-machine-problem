@@ -157,7 +157,7 @@
 								</div>
 							</c:if>
 							<div class="col-md-8" style="padding-left: 20%;">
-								<select class="form-control" name="category">
+								<select class="form-control" name="categoryName">
 									<option selected disabled>SELECT CATEGORY</option>
 									<c:forEach items="${categories}" var="item">
 										<option>${item.getName()}</option>

@@ -117,12 +117,12 @@ public class ManagementController {
 	}
 
 	@RequestMapping("/productByCategory")
-	public String prodByCat(Model model, @RequestParam(value = "category", required = false) String category) {
+	public String prodByCat(Model model, @RequestParam(value = "categoryName", required = false) String categoryName) {
 
 		model.addAttribute("activeTab", 2);
 
-		if (category != null) {
-			model.addAttribute("products", productService.getProductsByCategory(category));
+		if (categoryName != null) {
+			model.addAttribute("products", productService.getProductsByCategory(categoryName));
 		}
 
 		return "management";
@@ -170,9 +170,11 @@ public class ManagementController {
 	public String updateProduct(
 			@ModelAttribute("inventoryProductHelper") @Valid InventoryProductHelper inventoryProductHelper,
 			Model model) {
-
+		
+		System.out.println(inventoryProductHelper.getCategoryName());
+		
 		InventoryProduct inventoryProduct = inventoryProductHelper.getExistingInvetoryProduct(productService);
-
+		
 		managerService.update(inventoryProduct);
 
 		model.addAttribute("activeTab", 2);

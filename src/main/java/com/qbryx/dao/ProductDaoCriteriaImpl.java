@@ -5,10 +5,8 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.hibernate.Criteria;
-import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -17,106 +15,62 @@ import com.qbryx.domain.Product;
 
 @Repository("productDaoCriteria")
 public class ProductDaoCriteriaImpl implements ProductDao {
-	
+
 	@Resource(name = "sessionFactory")
 	private SessionFactory sessionFactory;
-	
+
 	@Resource(name = "productDaoHQL")
 	private ProductDao productDao;
 
 	@Override
-	public List<Product> getAllProducts() {
+	public List<Product> findAllProducts() {
 		throw new UnsupportedOperationException();
 	}
 
 	@SuppressWarnings({ "unchecked", "deprecation" })
 	@Override
-	public List<Product> getProductsByCategory(String name) {
-		
+	public List<Product> findProductsByCategory(String name) {
+
 		List<Product> products = null;
-		
+
 		Session session = sessionFactory.openSession();
-		
-		Transaction transaction = null;
-		
-		try{
-			transaction = session.beginTransaction();
-			
-			Criteria criteria = session.createCriteria(Product.class)
-									   .createAlias("category", "c")
-									   .add(Restrictions.eq("c.name", name));
-									   
-			products = (List<Product>) criteria.list();					   
-			
-			transaction.commit();
-		}catch(HibernateException e){
-			if(transaction != null) transaction.rollback();
-			
-			e.printStackTrace();
-		}finally{
-			session.close();
-		}
-		
+
+		Criteria criteria = session.createCriteria(Product.class).createAlias("category", "c")
+				.add(Restrictions.eq("c.name", name));
+
+		products = (List<Product>) criteria.list();
+
 		return products;
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public Product getProduct(String upc) {
-		
+	public Product findProductByUpc(String upc) {
+
 		Product product = null;
-		
+
 		Session session = sessionFactory.openSession();
-		
-		Transaction transaction = null;
-		
-		try{
-			transaction = session.beginTransaction();
-			
-			Criteria criteria = session.createCriteria(Product.class)
-									   .add(Restrictions.eq("upc", upc));
-									   
-			product = (Product) criteria.uniqueResult();					   
-			
-			transaction.commit();
-		}catch(HibernateException e){
-			if(transaction != null) transaction.rollback();
-			
-			e.printStackTrace();
-		}finally{
-			session.close();
-		}
-		
+
+		Criteria criteria = session.createCriteria(Product.class).add(Restrictions.eq("upc", upc));
+
+		product = (Product) criteria.uniqueResult();
+
 		return product;
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public InventoryProduct getInventoryProduct(long id) {
-		
+	public InventoryProduct findInventoryProductById(long id) {
+
 		InventoryProduct inventoryProduct = null;
-		
+
 		Session session = sessionFactory.openSession();
-		
-		Transaction transaction = null;
-		
-		try{
-			transaction = session.beginTransaction();
-			
-			Criteria criteria = session.createCriteria(InventoryProduct.class)
-									   .add(Restrictions.eq("product.id", id));
-									   
-			inventoryProduct = (InventoryProduct) criteria.uniqueResult();					   
-			
-			transaction.commit();
-		}catch(HibernateException e){
-			if(transaction != null) transaction.rollback();
-			
-			e.printStackTrace();
-		}finally{
-			session.close();
-		}
-		
+
+		Criteria criteria = session.createCriteria(InventoryProduct.class)
+								   .add(Restrictions.eq("product.id", id));
+
+		inventoryProduct = (InventoryProduct) criteria.uniqueResult();
+
 		return inventoryProduct;
 	}
 
@@ -126,8 +80,8 @@ public class ProductDaoCriteriaImpl implements ProductDao {
 	}
 
 	@Override
-	public void addProductStock(InventoryProduct inventoryProduct) {
-		productDao.addProductStock(inventoryProduct);
+	public void addStock(InventoryProduct inventoryProduct) {
+		productDao.addStock(inventoryProduct);
 	}
 
 	@Override

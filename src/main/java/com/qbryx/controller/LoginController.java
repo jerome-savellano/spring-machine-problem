@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.qbryx.domain.User;
-import com.qbryx.exception.UserNotFoundException;
+import com.qbryx.exception.FailedLoginException;
 import com.qbryx.service.CustomerService;
 import com.qbryx.service.ProductService;
 import com.qbryx.service.UserService;
@@ -50,7 +50,7 @@ public class LoginController{
 			request.getSession().setAttribute("user", user);		
 			
 			return "redirect:/" + user.getUserType().getType();
-		} catch (UserNotFoundException e) {
+		} catch (FailedLoginException e) {
 			
 			model.addAttribute("username", loginUser.getUsername());
 			return "login";

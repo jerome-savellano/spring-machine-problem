@@ -21,7 +21,7 @@ public class CartDaoHQLImpl implements CartDao {
 	private SessionFactory sessionFactory;
 
 	@Override
-	public CartProduct getProductInCart(User user, long id) {
+	public CartProduct findProductInCart(User user, long id) {
 
 		CartProduct product = null;
 

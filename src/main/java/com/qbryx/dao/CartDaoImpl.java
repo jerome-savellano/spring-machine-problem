@@ -1,5 +1,6 @@
 package com.qbryx.dao;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,12 +19,14 @@ import com.qbryx.util.DAOQuery;
 public class CartDaoImpl implements CartDao {
 
 	public void addProductInCart(CartProduct product) {
+		
+		Connection connection = ConnectionManager.getConnection();
 
-		if (ConnectionManager.getConnection() != null) {
+		if (connection != null) {
 			PreparedStatement stmt;
 
 			try {
-				stmt = ConnectionManager.prepareStatement(DAOQuery.SQL_ADD_PRODUCT_IN_CART);
+				stmt = connection.prepareStatement(DAOQuery.SQL_ADD_PRODUCT_IN_CART);
 				stmt.setLong(1, product.getUserId());
 				stmt.setLong(2, product.getProduct().getId());
 				stmt.setInt(3, product.getQuantity());
@@ -31,23 +34,26 @@ public class CartDaoImpl implements CartDao {
 
 				stmt.executeUpdate();
 
-				ConnectionManager.close();
+				connection.close();
 			} catch (SQLException e) {
 				System.out.println(e.getMessage());
 			}
 		}
-
+		
+		
 	}
 
 	public List<CartProduct> getProductsInCart(User user) {
 
 		List<CartProduct> cartProducts = new ArrayList<CartProduct>();
+		
+		Connection connection = ConnectionManager.getConnection();
 
-		if (ConnectionManager.getConnection() != null) {
+		if (connection != null) {
 			PreparedStatement stmt;
 
 			try {
-				stmt = ConnectionManager.prepareStatement(DAOQuery.SQL_GET_PRODUCTS_IN_CART);
+				stmt = connection.prepareStatement(DAOQuery.SQL_GET_PRODUCTS_IN_CART);
 				stmt.setLong(1, user.getUserId());
 
 				ResultSet rs = stmt.executeQuery();
@@ -61,7 +67,7 @@ public class CartDaoImpl implements CartDao {
 
 					cartProducts.add(cartProduct);
 
-					ConnectionManager.close();
+					connection.close();
 				}
 			} catch (SQLException e) {
 				throw new RuntimeException();
@@ -73,17 +79,19 @@ public class CartDaoImpl implements CartDao {
 
 	public void removeProductInCart(CartProduct cartProduct) {
 		
-		if (ConnectionManager.getConnection() != null) {
+		Connection connection = ConnectionManager.getConnection();
+		
+		if (connection != null) {
 			PreparedStatement stmt;
 
 			try {
-				stmt = ConnectionManager.prepareStatement(DAOQuery.SQL_REMOVE_PRODUCT_IN_CART);
+				stmt = connection.prepareStatement(DAOQuery.SQL_REMOVE_PRODUCT_IN_CART);
 				stmt.setLong(1, cartProduct.getUserId());
 				stmt.setLong(2, cartProduct.getProduct().getId());
 
 				stmt.executeUpdate();
 
-				ConnectionManager.close();
+				connection.close();
 			} catch (SQLException e) {
 				throw new RuntimeException();
 			}
@@ -92,31 +100,35 @@ public class CartDaoImpl implements CartDao {
 
 	public void checkout(User user) {
 		
-		if (ConnectionManager.getConnection() != null) {
+		Connection connection = ConnectionManager.getConnection();
+		
+		if (connection != null) {
 			PreparedStatement stmt;
 
 			try {
-				stmt = ConnectionManager.prepareStatement(DAOQuery.SQL_UPDATE_PRODUCT_IN_CART);
+				stmt = connection.prepareStatement(DAOQuery.SQL_UPDATE_PRODUCT_IN_CART);
 				stmt.setLong(1, user.getUserId());
 
 				stmt.executeUpdate();
 
-				ConnectionManager.close();
+				connection.close();
 			} catch (SQLException e) {
 				throw new RuntimeException();
 			}
 		}
 	}
 
-	public CartProduct getProductInCart(User user, long productId) {
+	public CartProduct findProductInCart(User user, long productId) {
 
 		CartProduct cartProduct = null;
+		
+		Connection connection = ConnectionManager.getConnection();
 
-		if (ConnectionManager.getConnection() != null) {
+		if (connection != null) {
 			PreparedStatement stmt;
 
 			try {
-				stmt = ConnectionManager.prepareStatement(DAOQuery.SQL_CHECK_PRODUCT_IN_CART);
+				stmt = connection.prepareStatement(DAOQuery.SQL_CHECK_PRODUCT_IN_CART);
 				stmt.setLong(1, user.getUserId());
 				stmt.setLong(2, productId);
 
@@ -129,7 +141,7 @@ public class CartDaoImpl implements CartDao {
 					cartProduct.setProduct(new Product(rs.getLong("id")));
 					cartProduct.setQuantity(rs.getInt("quantity"));
 					
-					ConnectionManager.close();
+					connection.close();
 				}
 			} catch (SQLException e) {
 				throw new RuntimeException();
@@ -141,19 +153,21 @@ public class CartDaoImpl implements CartDao {
 	}
 
 	public void updateProductQuantityInCart(CartProduct cartProduct) {
+		
+		Connection connection = ConnectionManager.getConnection();
 
-		if (ConnectionManager.getConnection() != null) {
+		if (connection != null) {
 			PreparedStatement stmt;
 
 			try {
-				stmt = ConnectionManager.prepareStatement(DAOQuery.SQL_UPDATE_PRODUCT_QUANTITY_IN_CART);
+				stmt = connection.prepareStatement(DAOQuery.SQL_UPDATE_PRODUCT_QUANTITY_IN_CART);
 				stmt.setInt(1, cartProduct.getQuantity());
 				stmt.setLong(2, cartProduct.getUserId());
 				stmt.setLong(3, cartProduct.getProduct().getId());
 
 				stmt.executeUpdate();
 
-				ConnectionManager.close();
+				connection.close();
 			} catch (SQLException e) {
 				throw new RuntimeException();
 			}

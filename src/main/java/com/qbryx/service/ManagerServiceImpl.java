@@ -15,39 +15,43 @@ import com.qbryx.exception.ProductNotFoundException;
 @Transactional(readOnly = true)
 public class ManagerServiceImpl implements ManagerService {
 
-	@Resource(name="productDao")
+	@Resource(name = "productDaoHQL")
 	private ProductDao productDao;
-	
-	@Resource(name="productDaoHQL")
-	private ProductDao productDaoHQL;
 
-	public InventoryProduct getProduct(String upc) throws ProductNotFoundException {		
-		
-		Product product = productDaoHQL.getProduct(upc);
-		
-		if(product == null) throw new ProductNotFoundException();
-		
-		return productDaoHQL.getInventoryProduct(product.getId());
+	public InventoryProduct getProduct(String upc) throws ProductNotFoundException {
+
+		Product product = productDao.findProductByUpc(upc);
+
+		if (product == null) {
+			throw new ProductNotFoundException();
+		}
+
+		return productDao.findInventoryProductById(product.getId()); // create
+																		// separated
+																		// DAO
+																		// for
+																		// inventory
+																		// product
 	}
 
 	@Transactional(readOnly = false)
-	public void add(InventoryProduct inventoryProduct) throws DuplicateProductException{
-		
+	public void add(InventoryProduct inventoryProduct) throws DuplicateProductException {
+
 		Product product = inventoryProduct.getProduct();
-		
-		boolean productExists = (productDaoHQL.getProduct(inventoryProduct.getProduct().getUpc()) != null);
-		
-		if(productExists){
+
+		boolean productExists = (productDao.findProductByUpc(inventoryProduct.getProduct().getUpc()) != null);
+
+		if (productExists) {
 			throw new DuplicateProductException();
 		}
-		
-		productDaoHQL.addProduct(product); 
-		productDaoHQL.addProductStock(inventoryProduct);
+
+		productDao.addProduct(product);
+		productDao.addStock(inventoryProduct);
 	}
 
 	@Transactional(readOnly = false)
 	public void update(InventoryProduct inventoryProduct) {
-		productDaoHQL.updateProduct(inventoryProduct.getProduct());
-		productDaoHQL.updateStock(inventoryProduct);
+		productDao.updateProduct(inventoryProduct.getProduct());
+		productDao.updateStock(inventoryProduct);
 	}
 }

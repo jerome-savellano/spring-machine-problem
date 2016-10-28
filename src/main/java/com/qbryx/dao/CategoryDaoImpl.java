@@ -1,5 +1,6 @@
 package com.qbryx.dao;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,39 +20,44 @@ public class CategoryDaoImpl implements CategoryDao {
 
 	public List<Category> getCategories() {
 		
+		Connection connection = ConnectionManager.getConnection();
+		
 		List<Category> categories = new ArrayList<Category>();
 		
-		if(ConnectionManager.getConnection() != null){
+		if(connection != null){
 			PreparedStatement stmt;
 				
 			try {
-				stmt = ConnectionManager.prepareStatement(GET_CATEGORIES);
+				stmt = connection.prepareStatement(GET_CATEGORIES);
 				
 				ResultSet rs = stmt.executeQuery();
+				
 				while(rs.next()){
 					Category category = new Category(rs.getLong("id"), rs.getString("name"));
-					categories.add(category);
-					
-					ConnectionManager.close();
+					categories.add(category);	
 				}
+				
+				connection.close();
 			} catch (SQLException e) {
 				throw new RuntimeException();
 			}
 			
 		}
-
+		
 		return categories;
 	}
 
 	public Category getCategory(String categoryName) {
 		
+		Connection connection = ConnectionManager.getConnection();
+		
 		Category category = null;
 		
-		if(ConnectionManager.getConnection() != null){
+		if(connection != null){
 			PreparedStatement stmt;
 				
 			try {
-				stmt = ConnectionManager.prepareStatement(GET_CATEGORY);
+				stmt = connection.prepareStatement(GET_CATEGORY);
 				stmt.setString(1, categoryName);
 				
 				ResultSet rs = stmt.executeQuery();
@@ -60,7 +66,7 @@ public class CategoryDaoImpl implements CategoryDao {
 					category = new Category(rs.getLong("id"), rs.getString("name"));
 				}
 				
-				ConnectionManager.close();
+				connection.close();
 			} catch (SQLException e) {
 				throw new RuntimeException();
 			}

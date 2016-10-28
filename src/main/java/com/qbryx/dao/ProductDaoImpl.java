@@ -1,5 +1,6 @@
 package com.qbryx.dao;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,19 +18,21 @@ import com.qbryx.util.DAOQuery;
 @Repository("productDao")
 public class ProductDaoImpl implements ProductDao {
 
-	public List<Product> getAllProducts() {
+	public List<Product> findAllProducts() {
 		throw new UnsupportedOperationException();
 	}
 
-	public List<Product> getProductsByCategory(String categoryId) {
+	public List<Product> findProductsByCategory(String categoryId) {
+		
+		Connection connection = ConnectionManager.getConnection();
 		
 		List<Product> products = new ArrayList<Product>();
 			
-		if(ConnectionManager.getConnection() != null){
+		if(connection != null){
 			PreparedStatement stmt;
 			
 			try {
-				stmt = ConnectionManager.prepareStatement(DAOQuery.SQL_GET_PRODUCTS_BY_CATEGORY);
+				stmt = connection.prepareStatement(DAOQuery.SQL_GET_PRODUCTS_BY_CATEGORY);
 				stmt.setString(1, categoryId);
 				
 				ResultSet rs = stmt.executeQuery();
@@ -44,7 +47,7 @@ public class ProductDaoImpl implements ProductDao {
 					products.add(product);
 				}
 				
-				ConnectionManager.close();
+				connection.close();
 			} catch (SQLException e) {
 				throw new RuntimeException();
 			}
@@ -54,16 +57,18 @@ public class ProductDaoImpl implements ProductDao {
 		return products;
 	}
 
-	public Product getProduct(String upc) {
+	public Product findProductByUpc(String upc) {
+		
+		Connection connection = ConnectionManager.getConnection();
 		
 		Product product = null;
 		
-		if(ConnectionManager.getConnection() != null){
+		if(connection != null){
 			PreparedStatement stmt;
 			
 			
 			try {
-				stmt = ConnectionManager.prepareStatement(DAOQuery.SQL_GET_PRODUCT_BY_UPC_P);
+				stmt = connection.prepareStatement(DAOQuery.SQL_GET_PRODUCT_BY_UPC_P);
 				stmt.setString(1,  upc);
 				
 				ResultSet rs = stmt.executeQuery();
@@ -77,7 +82,7 @@ public class ProductDaoImpl implements ProductDao {
 					product.setPrice(rs.getBigDecimal("price"));
 				}
 				
-				ConnectionManager.close();
+				connection.close();
 			} catch (SQLException e) {
 				throw new RuntimeException();
 			}
@@ -89,14 +94,16 @@ public class ProductDaoImpl implements ProductDao {
 
 	public int getStock(String upc) {
 		
+		Connection connection = ConnectionManager.getConnection();
+		
 		int stock = 0;
 		
-		if(ConnectionManager.getConnection() != null){
+		if(connection != null){
 			PreparedStatement stmt;
 			
 			
 			try {
-			stmt = ConnectionManager.prepareStatement(DAOQuery.SQL_GET_PRODUCT_QUANTITY_ON_HAND);
+			stmt = connection.prepareStatement(DAOQuery.SQL_GET_PRODUCT_QUANTITY_ON_HAND);
 				stmt.setString(1, upc);
 				
 				ResultSet rs = stmt.executeQuery();
@@ -105,7 +112,7 @@ public class ProductDaoImpl implements ProductDao {
 					stock = rs.getInt("stock");
 				}
 				
-				ConnectionManager.close();
+				connection.close();
 			} catch (SQLException e) {
 				throw new RuntimeException();
 			}
@@ -116,15 +123,17 @@ public class ProductDaoImpl implements ProductDao {
 		return stock;
 	}
 
-	public InventoryProduct getInventoryProduct(long id) {
+	public InventoryProduct findInventoryProductById(long id) {
+		
+		Connection connection = ConnectionManager.getConnection();
 		
 		InventoryProduct product = null;
 		
-		if(ConnectionManager.getConnection() != null){
+		if(connection != null){
 			PreparedStatement stmt;
 			
 			try {
-				stmt = ConnectionManager.prepareStatement(DAOQuery.SQL_GET_PRODUCT_BY_UPC_M);
+				stmt = connection.prepareStatement(DAOQuery.SQL_GET_PRODUCT_BY_UPC_M);
 				stmt.setLong(1, id);
 				
 				ResultSet rs = stmt.executeQuery();
@@ -140,7 +149,7 @@ public class ProductDaoImpl implements ProductDao {
 					product = new InventoryProduct(mProduct, rs.getInt("stock"));
 				}
 				
-				ConnectionManager.close();
+				connection.close();
 			} catch (SQLException e) {
 				throw new RuntimeException();
 			}
@@ -151,7 +160,9 @@ public class ProductDaoImpl implements ProductDao {
 
 	public void addProduct(Product product) {
 		
-		if(ConnectionManager.getConnection() != null){
+		Connection connection = ConnectionManager.getConnection();
+		
+		if(connection != null){
 			PreparedStatement stmt;
 			
 			try {
@@ -164,26 +175,28 @@ public class ProductDaoImpl implements ProductDao {
 				
 				stmt.executeUpdate();
 				
-				ConnectionManager.close();
+				connection.close();
 			} catch (SQLException e) {
 				throw new RuntimeException();
 			}
 		}
 	}
 
-	public void addProductStock(InventoryProduct inventoryProduct) {
+	public void addStock(InventoryProduct inventoryProduct) {
 		
-		if(ConnectionManager.getConnection() != null){
+		Connection connection = ConnectionManager.getConnection();
+		
+		if(connection != null){
 			PreparedStatement stmt;
 			
 			try {
-				stmt = ConnectionManager.prepareStatement(DAOQuery.SQL_ADD_PRODUCT_STOCK);
+				stmt = connection.prepareStatement(DAOQuery.SQL_ADD_PRODUCT_STOCK);
 				stmt.setString(1, inventoryProduct.getProduct().getUpc());
 				stmt.setInt(2, inventoryProduct.getStock());
 				
 				stmt.executeUpdate();
 				
-				ConnectionManager.close();
+				connection.close();
 			} catch (SQLException e) {
 				throw new RuntimeException();
 			}
@@ -192,12 +205,13 @@ public class ProductDaoImpl implements ProductDao {
 
 	public void updateProduct(Product product) {
 		
-		if(ConnectionManager.getConnection() != null){
+		Connection connection = ConnectionManager.getConnection();
+		
+		if(connection != null){
 			PreparedStatement stmt;
-			
-			
+					
 			try {
-				stmt = ConnectionManager.prepareStatement(DAOQuery.SQL_UPDATE_PRODUCT);		
+				stmt = connection.prepareStatement(DAOQuery.SQL_UPDATE_PRODUCT);		
 				stmt.setString(1, product.getName());
 				stmt.setString(2, product.getDescription());
 				stmt.setBigDecimal(3, product.getPrice());
@@ -205,7 +219,7 @@ public class ProductDaoImpl implements ProductDao {
 				
 				stmt.executeUpdate();
 				
-				ConnectionManager.close();
+				connection.close();
 			} catch (SQLException e) {
 				throw new RuntimeException();
 			}
@@ -214,17 +228,19 @@ public class ProductDaoImpl implements ProductDao {
 
 	public void updateStock(InventoryProduct inventoryProduct) {
 		
-		if(ConnectionManager.getConnection() != null){
+		Connection connection = ConnectionManager.getConnection();
+		
+		if(connection != null){
 			PreparedStatement stmt;
 			
 			try {
-				stmt = ConnectionManager.prepareStatement(DAOQuery.SQL_UPDATE_PRODUCT_INVENTORY);
+				stmt = connection.prepareStatement(DAOQuery.SQL_UPDATE_PRODUCT_INVENTORY);
 				stmt.setInt(1, inventoryProduct.getStock());
 				stmt.setString(2, inventoryProduct.getProduct().getUpc());
 				
 				stmt.executeUpdate();
 				
-				ConnectionManager.close();
+				connection.close();
 			} catch (SQLException e) {
 				throw new RuntimeException();
 			}
