@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.qbryx.domain.InventoryProduct;
@@ -87,9 +88,9 @@ public class ManagementController {
 	 * return "management"; }
 	 */
 
-	@RequestMapping("/createProduct")
+	@RequestMapping(value = "/createProduct", method = RequestMethod.POST)
 	public String createProduct(
-			@ModelAttribute("inventoryProductHelper") @Valid InventoryProductHelper inventoryProductHelper,
+			@ModelAttribute("intprdct") @Valid InventoryProductHelper inventoryProductHelper,
 			BindingResult bindingResult, Model model) {
 
 		model.addAttribute("activeTab", 3);
@@ -105,7 +106,7 @@ public class ManagementController {
 		try {
 
 			managerService.add(inventoryProduct);
-			model.addAttribute("successMessage", "Product successfully created!");
+			model.addAttribute("successCreateMessage", "Product successfully created!");
 			
 		} catch (DuplicateProductException e) {
 
@@ -114,6 +115,7 @@ public class ManagementController {
 			model.addAttribute("errorMessage", "Product with UPC " + upc + " already exists.");
 		}
 
+		model.addAttribute("inventoryProductHelper", new InventoryProductHelper());
 		return "management";
 	}
 
@@ -178,7 +180,7 @@ public class ManagementController {
 		managerService.update(inventoryProduct);
 
 		model.addAttribute("activeTab", 2);
-		model.addAttribute("successMessage", "Product successfully updated!");
+		model.addAttribute("successUpdateMessage", "Product successfully updated!");
 		return "management";
 	}
 }

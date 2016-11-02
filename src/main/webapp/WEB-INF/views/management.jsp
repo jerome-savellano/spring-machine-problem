@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -149,7 +150,7 @@
 					<form method="post"
 						action="${pageContext.request.contextPath}/manager/productByCategory">
 						<div class="row" style="padding: 2%;">
-							<c:if test="${not empty successMessage}">
+							<c:if test="${not empty successUpdateMessage}">
 								<div class="alert alert-success fade in">
 									<a href="#" class="close" data-dismiss="alert"
 										aria-label="close">&times;</a> <strong>Success!</strong>
@@ -200,21 +201,22 @@
 									<strong>Warning!</strong> ${errorMessage}
 								</div>
 							</c:if>
-							<c:if test="${not empty successMessage}">
+							<c:if test="${not empty successCreateMessage}">
 								<div class="alert alert-success alert-dismissible" role="alert">
 									<button type="button" class="close" data-dismiss="alert"
 										aria-label="Close">
 										<span aria-hidden="true">&times;</span>
 									</button>
-									<strong>Success!</strong> ${successMessage}
+									<strong>Success!</strong> ${successCreateMessage}
 								</div>
 							</c:if>
-							<form
+							<form:form
 								action="${pageContext.request.contextPath}/manager/createProduct"
-								method="post">
+								method="post"
+								commandName="inventoryProductHelper">
 								<div class="form-group">
 									<label for="Name">Name </label> <input type="text" name="name"
-										class="form-control" required />
+										class="form-control" required/>
 								</div>
 								<div class="form-group">
 									<label for="UPC">UPC </label> <input type="number" name="upc"
@@ -245,7 +247,7 @@
 								</div>
 								<button type="submit" class="btn btn-primary">Add
 									product</button>
-							</form>
+							</form:form>
 						</div>
 					</div>
 				</div>
