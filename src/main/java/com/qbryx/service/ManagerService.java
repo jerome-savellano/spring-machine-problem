@@ -6,7 +6,7 @@ import com.qbryx.exception.ProductNotFoundException;
 
 public interface ManagerService {
 	
-	InventoryProduct getProduct(String upc) throws ProductNotFoundException;
+	InventoryProduct findProductByUpc(String upc) throws ProductNotFoundException;
 	
 	void add(InventoryProduct inventoryProduct) throws DuplicateProductException;
 	void update(InventoryProduct inventoryProduct);

@@ -2,6 +2,7 @@ package com.qbryx.helper;
 
 import java.math.BigDecimal;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -20,10 +21,12 @@ public class InventoryProductHelper {
 	private String upc;
 	
 	private String categoryName;
+	
 	private String description;
 	
 	private BigDecimal price;
 	
+	@Min(1) 
 	private int stock;
 	
 	public InventoryProductHelper(){}

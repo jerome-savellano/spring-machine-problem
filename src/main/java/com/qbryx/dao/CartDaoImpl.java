@@ -98,7 +98,7 @@ public class CartDaoImpl implements CartDao {
 		}
 	}
 
-	public void checkout(User user) {
+	public void checkout(CartProduct cartProduct) {
 		
 		Connection connection = ConnectionManager.getConnection();
 		
@@ -107,7 +107,8 @@ public class CartDaoImpl implements CartDao {
 
 			try {
 				stmt = connection.prepareStatement(DAOQuery.SQL_UPDATE_PRODUCT_IN_CART);
-				stmt.setLong(1, user.getUserId());
+				stmt.setLong(1, cartProduct.getUserId());
+				stmt.setLong(2, cartProduct.getProduct().getId());
 
 				stmt.executeUpdate();
 

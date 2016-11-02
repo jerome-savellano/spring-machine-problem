@@ -27,8 +27,10 @@ public class CartDaoHQLImpl implements CartDao {
 
 		Session session = sessionFactory.getCurrentSession();
 
-		Query query = session.createQuery(DAOQuery.HQL_CHECK_PRODUCT_IN_CART).setParameter("userId", user.getUserId())
-				.setParameter("product_id", id);
+		Query query = session.createQuery(DAOQuery.HQL_CHECK_PRODUCT_IN_CART);
+		
+		query.setParameter("userId", user.getUserId());
+		query.setParameter("product_id", id);
 
 		product = (CartProduct) query.getSingleResult();
 
@@ -43,7 +45,9 @@ public class CartDaoHQLImpl implements CartDao {
 
 		Session session = sessionFactory.getCurrentSession();
 
-		Query query = session.createQuery(DAOQuery.HQL_GET_PRODUCTS_IN_CART).setParameter("userId", user.getUserId());
+		Query query = session.createQuery(DAOQuery.HQL_GET_PRODUCTS_IN_CART);
+		
+		query.setParameter("userId", user.getUserId());
 
 		cartProducts = query.getResultList();
 
@@ -61,21 +65,25 @@ public class CartDaoHQLImpl implements CartDao {
 
 		Session session = sessionFactory.getCurrentSession();
 
-		Query query = session.createQuery(DAOQuery.HQL_REMOVE_PRODUCT_FROM_CART)
-				.setParameter("userId", cartProduct.getUserId()).setParameter("product_id", cartProduct.getProduct().getId());
+		Query query = session.createQuery(DAOQuery.HQL_REMOVE_PRODUCT_FROM_CART);
+		
+		query.setParameter("userId", cartProduct.getUserId());
+		query.setParameter("product_id", cartProduct.getProduct().getId());
 
 		query.executeUpdate();
 	}
 
 	@Override
-	public void checkout(User user) {
+	public void checkout(CartProduct cartProduct) {
 
 		Session session = sessionFactory.getCurrentSession();
 
-		Query query = session.createQuery(DAOQuery.HQL_UPDATE_PRODUCT_IN_CART).setParameter("userId", user.getUserId());
-
+		Query query = session.createQuery(DAOQuery.HQL_UPDATE_PRODUCT_IN_CART);
+		
+		query.setParameter("userId", cartProduct.getUserId());
+		query.setParameter("product_id", cartProduct.getProduct().getId());
+		
 		query.executeUpdate();
-
 	}
 
 	@Override
@@ -83,9 +91,11 @@ public class CartDaoHQLImpl implements CartDao {
 
 		Session session = sessionFactory.getCurrentSession();
 
-		Query query = session.createQuery(DAOQuery.HQL_UPDATE_PRODUCT_QUANTITY_IN_CART)
-				.setParameter("quantity", cartProduct.getQuantity()).setParameter("userId", cartProduct.getUserId())
-				.setParameter("product_id", cartProduct.getProduct().getId());
+		Query query = session.createQuery(DAOQuery.HQL_UPDATE_PRODUCT_QUANTITY_IN_CART);
+		
+		query.setParameter("quantity", cartProduct.getQuantity());
+		query.setParameter("userId", cartProduct.getUserId());
+		query.setParameter("product_id", cartProduct.getProduct().getId());
 
 		query.executeUpdate();
 

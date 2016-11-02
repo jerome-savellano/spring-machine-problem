@@ -55,20 +55,6 @@ public class ProductDaoHQLImpl implements ProductDao {
 	}
 
 	@Override
-	public InventoryProduct findInventoryProductById(long productId) {
-
-		InventoryProduct product = null;
-
-		Session session = sessionFactory.getCurrentSession();
-
-		Query query = session.createQuery(DAOQuery.HQL_GET_INVENTORY_PRODUCT).setParameter("product_id", productId);
-
-		product = (InventoryProduct) query.getSingleResult();
-
-		return product;
-	}
-
-	@Override
 	public void addProduct(Product product) {
 		sessionFactory.getCurrentSession().save(product);
 	}

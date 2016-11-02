@@ -23,13 +23,18 @@
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<style type="text/css">
+</style>
 <title>Welcome!</title>
 <script>
 	window.setTimeout(function() {
-		$(".alert-success").fadeTo(500, 0).slideUp(500, function() {
+		$(".panel-success").fadeTo(500, 0).slideUp(500, function() {
 			$(this).remove();
 		});
-	}, 3000);
+		$(".panel-danger").fadeTo(500, 0).slideUp(500, function() {
+			$(this).remove();
+		});
+	}, 5000);
 </script>
 </head>
 <body>
@@ -42,7 +47,10 @@
 							class="btn btn-warning btn-xs" value="Logout">
 					</h1>
 				</form>
+
 				<jsp:include page="cart.jsp"></jsp:include>
+				<jsp:include page="checked_out_products.jsp"></jsp:include>
+				<jsp:include page="rejected_products.jsp"></jsp:include>
 			</div>
 			<div class="col-md-4">
 				<h1 class="page-header">Browse products</h1>

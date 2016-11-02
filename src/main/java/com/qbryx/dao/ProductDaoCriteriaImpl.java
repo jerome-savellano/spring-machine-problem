@@ -58,22 +58,6 @@ public class ProductDaoCriteriaImpl implements ProductDao {
 		return product;
 	}
 
-	@SuppressWarnings("deprecation")
-	@Override
-	public InventoryProduct findInventoryProductById(long id) {
-
-		InventoryProduct inventoryProduct = null;
-
-		Session session = sessionFactory.openSession();
-
-		Criteria criteria = session.createCriteria(InventoryProduct.class)
-								   .add(Restrictions.eq("product.id", id));
-
-		inventoryProduct = (InventoryProduct) criteria.uniqueResult();
-
-		return inventoryProduct;
-	}
-
 	@Override
 	public void addProduct(Product product) {
 		productDao.addProduct(product);

@@ -69,8 +69,8 @@ public class CartDaoCriteriaImpl implements CartDao {
 	}
 
 	@Override
-	public void checkout(User user) {
-		cartDao.checkout(user);
+	public void checkout(CartProduct cartProduct) {
+		cartDao.checkout(cartProduct);
 	}
 
 	@Override

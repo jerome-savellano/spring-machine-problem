@@ -5,6 +5,7 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.qbryx.dao.InventoryDao;
 import com.qbryx.dao.ProductDao;
 import com.qbryx.domain.InventoryProduct;
 import com.qbryx.domain.Product;
@@ -17,8 +18,11 @@ public class ManagerServiceImpl implements ManagerService {
 
 	@Resource(name = "productDaoHQL")
 	private ProductDao productDao;
+	
+	@Resource(name = "inventoryDao")
+	private InventoryDao inventoryDao;
 
-	public InventoryProduct getProduct(String upc) throws ProductNotFoundException {
+	public InventoryProduct findProductByUpc(String upc) throws ProductNotFoundException {
 
 		Product product = productDao.findProductByUpc(upc);
 
@@ -26,12 +30,7 @@ public class ManagerServiceImpl implements ManagerService {
 			throw new ProductNotFoundException();
 		}
 
-		return productDao.findInventoryProductById(product.getId()); // create
-																		// separated
-																		// DAO
-																		// for
-																		// inventory
-																		// product
+		return inventoryDao.findInventoryProduct(product);
 	}
 
 	@Transactional(readOnly = false)

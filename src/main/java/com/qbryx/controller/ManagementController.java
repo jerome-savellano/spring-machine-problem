@@ -41,7 +41,7 @@ public class ManagementController {
 
 		try {
 
-			product = managerService.getProduct(upc);
+			product = managerService.findProductByUpc(upc);
 		} catch (ProductNotFoundException e) {
 
 			model.addAttribute("errorMessage", "Product with UPC " + upc + " does not exist.");
@@ -106,6 +106,7 @@ public class ManagementController {
 
 			managerService.add(inventoryProduct);
 			model.addAttribute("successMessage", "Product successfully created!");
+			
 		} catch (DuplicateProductException e) {
 
 			String upc = inventoryProductHelper.getUpc();
@@ -134,7 +135,7 @@ public class ManagementController {
 		InventoryProduct product = null;
 
 		try {
-			product = managerService.getProduct(upc);
+			product = managerService.findProductByUpc(upc);
 		} catch (ProductNotFoundException e) {
 
 		}
@@ -171,7 +172,6 @@ public class ManagementController {
 			@ModelAttribute("inventoryProductHelper") @Valid InventoryProductHelper inventoryProductHelper,
 			Model model) {
 		
-		System.out.println(inventoryProductHelper.getCategoryName());
 		
 		InventoryProduct inventoryProduct = inventoryProductHelper.getExistingInvetoryProduct(productService);
 		

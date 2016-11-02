@@ -1,6 +1,9 @@
 package com.qbryx.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -8,9 +11,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.qbryx.dao.CartDao;
+import com.qbryx.dao.InventoryDao;
 import com.qbryx.dao.ProductDao;
 import com.qbryx.domain.CartProduct;
 import com.qbryx.domain.InventoryProduct;
+import com.qbryx.domain.Product;
 import com.qbryx.domain.User;
 import com.qbryx.exception.InsufficientStockException;
 
@@ -23,6 +28,9 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Resource(name = "productDaoHQL")
 	private ProductDao productDao;
+	
+	@Resource(name = "inventoryDao")
+	private InventoryDao inventoryDao;
 
 	@Transactional(readOnly = false)
 	public void addProductInCart(User user, CartProduct cartProduct) throws InsufficientStockException {
@@ -31,7 +39,7 @@ public class CustomerServiceImpl implements CustomerService {
 
 		boolean inCart = (productInCart != null);
 
-		int stockOnHand = productDao.findInventoryProductById(cartProduct.getProduct().getId()).getStock();
+		int stockOnHand = inventoryDao.findInventoryProduct(cartProduct.getProduct()).getStock();
 
 		int quantity = (inCart) ? productInCart.getQuantity() + cartProduct.getQuantity() : cartProduct.getQuantity();
 
@@ -62,35 +70,63 @@ public class CustomerServiceImpl implements CustomerService {
 		cartDao.removeProductInCart(cartProduct);
 	}
 
-	@Transactional(readOnly = false)
-	public void checkout(User user) throws InsufficientStockException {
+	@Transactional(readOnly = false, rollbackFor = InsufficientStockException.class)
+	public Map<String, List<CartProduct>> checkout(User user) throws InsufficientStockException {
+		
+		Map<String, List<CartProduct>> checkoutRecord = new HashMap<>();
+		
+		List<CartProduct> checkedOutProducts = new ArrayList<>();
+		
+		List<CartProduct> rejectedProducts = new ArrayList<>();
 
 		List<CartProduct> cartProducts = getProductsInCart(user);
-
+		
 		for (CartProduct cartProduct : cartProducts) {
 
-			InventoryProduct inventoryProduct = productDao.findInventoryProductById(cartProduct.getProduct().getId());
+			InventoryProduct inventoryProduct = inventoryDao.findInventoryProduct(cartProduct.getProduct());
 
 			boolean stockAvailable = (inventoryProduct.getStock() >= cartProduct.getQuantity());
 
 			if (stockAvailable) {
+				
+				cartDao.checkout(cartProduct);
 
 				int newStock = inventoryProduct.getStock() - cartProduct.getQuantity();
 
 				inventoryProduct.setStock(newStock);
-
+						
 				productDao.updateStock(inventoryProduct);
 
-				cartDao.checkout(user);
+				checkedOutProducts.add(cartProduct);
 			} else {
-
-				throw new InsufficientStockException();
+				
+				rejectedProducts.add(cartProduct);
 			}
 		}
+		
+		checkoutRecord.put("checkedOutProducts", checkedOutProducts);
+		checkoutRecord.put("rejectedProducts", rejectedProducts);
+		
+		return checkoutRecord;
 	}
 
 	@Override
 	public CartProduct getProductInCart(User user, long id) {
 		return cartDao.findProductInCart(user, id);
+	}
+
+	@Override
+	public int checkStock(Product product) {
+		
+		int stock = 0;
+		
+		InventoryProduct inventoryProduct = inventoryDao.findInventoryProduct(product);
+		
+		if(inventoryProduct != null){
+			
+			stock = inventoryProduct.getStock();
+		}
+		
+		return stock;
 	}
 }
