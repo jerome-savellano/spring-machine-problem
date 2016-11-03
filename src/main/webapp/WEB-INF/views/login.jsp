@@ -2,6 +2,7 @@
 	pageEncoding="ISO-8859-1"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 
 <fmt:setLocale value="${pageContext.request.locale}" />
 <fmt:setBundle basename="com.qbryx.properties.language" />
@@ -27,9 +28,11 @@ html, body, .container-table {
 	height: 100%;
 	width: 100%;
 }
+
 .container-table {
 	display: table;
 }
+
 .vertical-center-row {
 	display: table-cell;
 	vertical-align: middle;
@@ -45,21 +48,41 @@ html, body, .container-table {
 					<h1 style="text-align: center; color: white;">QBRYX BRYKaBRAX</h1>
 					<c:if test="${not empty username}">
 						<div class="alert alert-danger">
-							<strong>Oops!</strong> User does not exist. Your username/password might be incorrect.
+							<strong>Oops!</strong> User does not exist. Your
+							username/password might be incorrect.
 						</div>
 					</c:if>
-					<form action="processLogin" method="post">
+					<form:form modelAttribute="user" action="processLogin"
+						method="post">
+						<c:set var="usernameError">
+							<form:errors path="username" />
+						</c:set>
+						<c:set var="passwordError">
+							<form:errors path="password" />
+						</c:set>
+						<c:if test="${not empty usernameError}">
+							<div class="alert alert-danger">
+								<strong>Oops!</strong> ${usernameError}
+							</div>
+						</c:if>
+						<c:if test="${not empty passwordError}">
+							<div class="alert alert-danger">
+								<strong>Oops!</strong> ${passwordError}
+							</div>
+						</c:if>
 						<div class="form-group">
-							<label for="email" style="color: white;">Username</label> <input
+							<label for="email" style="color: white;">Username</label>
+							<%-- <input
 								type="text" class="form-control" name="username"
-								value="${username}" required>
+								value="${username}" required> --%>
+							<form:input path="username" cssClass="form-control" required="required"/>
 						</div>
 						<div class="form-group">
-							<label for="pwd" style="color: white;">Password</label> <input
-								type="password" class="form-control" name="password" required>
+							<label for="pwd" style="color: white;">Password</label> 
+							<form:input path="password" cssClass="form-control" required="required"/>
 						</div>
 						<button type="submit" class="btn btn-default">Submit</button>
-					</form>
+					</form:form>
 				</div>
 			</div>
 		</div>
