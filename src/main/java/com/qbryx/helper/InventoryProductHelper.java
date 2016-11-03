@@ -3,7 +3,6 @@ package com.qbryx.helper;
 import java.math.BigDecimal;
 
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
@@ -13,7 +12,6 @@ import com.qbryx.service.ProductService;
 
 public class InventoryProductHelper {
 	
-	@NotNull
 	private String name;
 	
 	@Pattern(regexp="\\d+", message="UPC must contain numbers only")
@@ -28,7 +26,7 @@ public class InventoryProductHelper {
 	
 	@Min(1) 
 	private int stock;
-	
+
 	public InventoryProductHelper(){}
 	
 	public String getName() {

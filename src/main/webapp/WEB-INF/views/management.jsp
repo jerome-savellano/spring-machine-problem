@@ -2,6 +2,7 @@
 	pageEncoding="ISO-8859-1"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -70,14 +71,14 @@
 				<c:choose>
 					<c:when test="${not empty errorMessage}">
 						<c:if test="${not empty errorMessage}">
-								<div class="alert alert-warning alert-dismissible" role="alert">
-									<button type="button" class="close" data-dismiss="alert"
-										aria-label="Close">
-										<span aria-hidden="true">&times;</span>
-									</button>
-									<strong>Warning!</strong> ${errorMessage}
-								</div>
-							</c:if>
+							<div class="alert alert-warning alert-dismissible" role="alert">
+								<button type="button" class="close" data-dismiss="alert"
+									aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+								<strong>Warning!</strong> ${errorMessage}
+							</div>
+						</c:if>
 					</c:when>
 					<c:when test="${not empty product}">
 						<div class="container-fluid">
@@ -212,12 +213,14 @@
 							</c:if>
 							<form:form
 								action="${pageContext.request.contextPath}/manager/createProduct"
-								method="post"
-								commandName="inventoryProductHelper">
-								<div class="form-group">
-									<label for="Name">Name </label> <input type="text" name="name"
-										class="form-control" required/>
-								</div>
+								method="post" 
+								modelAttribute="inventoryProductHelper">
+								<spring:bind path="name">
+									<div class="form-group ${status.error ? 'has-error' : ''}">
+										<label for="Name">Name </label>
+										<form:input path="name" cssClass="form-control" />
+									</div>
+								</spring:bind>
 								<div class="form-group">
 									<label for="UPC">UPC </label> <input type="number" name="upc"
 										class="form-control" required />

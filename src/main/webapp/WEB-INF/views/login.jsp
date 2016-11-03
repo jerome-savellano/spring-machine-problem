@@ -3,7 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
-
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <fmt:setLocale value="${pageContext.request.locale}" />
 <fmt:setBundle basename="com.qbryx.properties.language" />
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -44,43 +44,35 @@ html, body, .container-table {
 		<div class="row vertical-center-row">
 			<div class="col-md-4 col-md-offset-4">
 				<div
-					style="background-color: #297f56; padding: 15px; border-radius: 5%;">
+					style="background-color: #7EC0EE; padding: 15px; border-radius: 5%;">
 					<h1 style="text-align: center; color: white;">QBRYX BRYKaBRAX</h1>
 					<c:if test="${not empty username}">
 						<div class="alert alert-danger">
-							<strong>Oops!</strong> User does not exist. Your
+							Login failed for user <strong>${username}</strong>. Your
 							username/password might be incorrect.
 						</div>
 					</c:if>
-					<form:form modelAttribute="user" action="processLogin"
+					<form:form modelAttribute="user" action="login"
 						method="post">
-						<c:set var="usernameError">
-							<form:errors path="username" />
-						</c:set>
-						<c:set var="passwordError">
-							<form:errors path="password" />
-						</c:set>
-						<c:if test="${not empty usernameError}">
-							<div class="alert alert-danger">
-								<strong>Oops!</strong> ${usernameError}
-							</div>
-						</c:if>
-						<c:if test="${not empty passwordError}">
-							<div class="alert alert-danger">
-								<strong>Oops!</strong> ${passwordError}
-							</div>
-						</c:if>
-						<div class="form-group">
-							<label for="email" style="color: white;">Username</label>
-							<%-- <input
+						<spring:bind path="username">
+							<div class="form-group ${status.error ? 'has-error' : ''}">
+								<label for="email" style="color: white;">Username</label>
+								<%-- <input
 								type="text" class="form-control" name="username"
 								value="${username}" required> --%>
-							<form:input path="username" cssClass="form-control" required="required"/>
-						</div>
-						<div class="form-group">
-							<label for="pwd" style="color: white;">Password</label> 
-							<form:input path="password" cssClass="form-control" required="required"/>
-						</div>
+								<form:input path="username" cssClass="form-control"
+									required="required" />
+								<form:errors path="username"/>
+							</div>
+						</spring:bind>
+						<spring:bind path="password">
+							<div class="form-group ${status.error ? 'has-error' : ''}">
+								<label for="pwd" style="color: white;">Password</label>
+								<form:input type="password" path="password"
+									cssClass="form-control" required="required" />
+								<form:errors path="password"/>
+							</div>
+						</spring:bind>
 						<button type="submit" class="btn btn-default">Submit</button>
 					</form:form>
 				</div>

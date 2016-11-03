@@ -3,9 +3,12 @@ package com.qbryx.controller;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,6 +20,7 @@ import com.qbryx.exception.ProductNotFoundException;
 import com.qbryx.helper.InventoryProductHelper;
 import com.qbryx.service.ManagerService;
 import com.qbryx.service.ProductService;
+import com.qbryx.util.ProductValidator;
 
 @Controller
 @RequestMapping("/manager")
@@ -28,10 +32,19 @@ public class ManagementController {
 	@Resource(name = "productService")
 	private ProductService productService;
 
+	@Autowired
+	private ProductValidator productValidator;
+
+	@InitBinder
+	protected void initBinder(WebDataBinder binder) {
+		binder.setValidator(productValidator);
+	}
+
 	@RequestMapping()
 	public String management(Model model) {
 
 		model.addAttribute("activeTab", 1);
+		model.addAttribute("inventoryProductHelper", new InventoryProductHelper());
 		return "management";
 	}
 
@@ -87,17 +100,22 @@ public class ManagementController {
 	 * 
 	 * return "management"; }
 	 */
+	@RequestMapping(value = "/createProduct", method = RequestMethod.GET)
+	public String createProduct(Model model) {
+
+		model.addAttribute("activeTab", 3);
+		model.addAttribute("inventoryProductHelper", new InventoryProductHelper());
+		return "management";
+	}
 
 	@RequestMapping(value = "/createProduct", method = RequestMethod.POST)
 	public String createProduct(
-			@ModelAttribute("intprdct") @Valid InventoryProductHelper inventoryProductHelper,
+			@ModelAttribute("inventoryProductHelper") @Valid InventoryProductHelper inventoryProductHelper,
 			BindingResult bindingResult, Model model) {
 
 		model.addAttribute("activeTab", 3);
 
 		if (bindingResult.hasErrors()) {
-
-			model.addAttribute("errorMessage", bindingResult.getFieldError().getDefaultMessage());
 			return "management";
 		}
 
@@ -107,7 +125,7 @@ public class ManagementController {
 
 			managerService.add(inventoryProduct);
 			model.addAttribute("successCreateMessage", "Product successfully created!");
-			
+
 		} catch (DuplicateProductException e) {
 
 			String upc = inventoryProductHelper.getUpc();
@@ -128,6 +146,7 @@ public class ManagementController {
 			model.addAttribute("products", productService.getProductsByCategory(categoryName));
 		}
 
+		model.addAttribute("inventoryProductHelper", new InventoryProductHelper());
 		return "management";
 	}
 
@@ -173,10 +192,9 @@ public class ManagementController {
 	public String updateProduct(
 			@ModelAttribute("inventoryProductHelper") @Valid InventoryProductHelper inventoryProductHelper,
 			Model model) {
-		
-		
+
 		InventoryProduct inventoryProduct = inventoryProductHelper.getExistingInvetoryProduct(productService);
-		
+
 		managerService.update(inventoryProduct);
 
 		model.addAttribute("activeTab", 2);

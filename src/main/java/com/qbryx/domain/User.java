@@ -6,8 +6,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import org.hibernate.validator.constraints.NotEmpty;
-
 import com.qbryx.enums.UserType;
 
 @Entity
@@ -18,7 +16,6 @@ public class User {
 	
 	private UserType userType;
 	
-	@NotEmpty
 	private String username;
 	
 	private String password;

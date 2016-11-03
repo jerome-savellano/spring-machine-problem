@@ -17,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.qbryx.domain.User;
 import com.qbryx.exception.FailedLoginException;
+import com.qbryx.helper.InventoryProductHelper;
 import com.qbryx.service.CustomerService;
 import com.qbryx.service.ProductService;
 import com.qbryx.service.UserService;
@@ -34,7 +35,7 @@ public class LoginController{
 	
 	@Resource(name="customerService")
 	private CustomerService customerService;
-	
+
 	@Autowired
 	private LoginValidator loginValidator;
 	
@@ -51,12 +52,12 @@ public class LoginController{
 		return (user != null) ? "redirect:/" + user.getUserType().getType() : "redirect:/login";
 	}
 	
-	@RequestMapping("/login")
+	@RequestMapping(value="/login", method=RequestMethod.GET)
 	public ModelAndView login(){
 		return new ModelAndView("login", "user", new User());
 	}
 	
-	@RequestMapping(value="/processLogin", method=RequestMethod.POST)
+	@RequestMapping(value="/login", method=RequestMethod.POST)
 	public String processLogin(@Validated @ModelAttribute("user") User loginUser, BindingResult bindingResult,
 			HttpServletRequest request, Model model){
 		
@@ -71,7 +72,7 @@ public class LoginController{
 			user = userService.authenticate(loginUser.getUsername(), loginUser.getPassword());
 			
 			request.getSession().setAttribute("categories", productService.getCategories());
-			request.getSession().setAttribute("user", user);		
+			request.getSession().setAttribute("user", user);
 			
 			return "redirect:/" + user.getUserType().getType();
 		} catch (FailedLoginException e) {
