@@ -30,20 +30,22 @@
 </head>
 <body>
 	<div class="container">
-		<form action="${pageContext.request.contextPath}/logout">
-			<h2>
-				Welcome, ${user.getUsername()}! <input type="submit"
-					class="btn btn-warning btn-xs" value="Logout">
-			</h2>
-		</form>
 
+		<h2>
+			Welcome, ${user.getUsername()}! <a
+				href="${pageContext.request.contextPath}/logout"
+				class="btn btn-warning btn-xs">Logout</a>
+		</h2>
+		<div style="padding-bottom: 1%">
+			<a
+				href="${pageContext.request.contextPath}/${user.getUserType().getType()}/createProduct"
+				class="btn btn-primary btn-md">Create product</a>
+		</div>
 		<ul class="nav nav-tabs">
 			<li class="<c:if test="${activeTab == 1}">active</c:if>"><a
 				data-toggle="tab" href="/search#menu1">Search product by UPC</a></li>
 			<li class="<c:if test="${activeTab == 2}">active</c:if>"><a
 				data-toggle="tab" href="#menu2">Update product by category</a></li>
-			<li class="<c:if test="${activeTab == 3}">active</c:if>"><a
-				data-toggle="tab" href="#menu3">Add a product</a></li>
 		</ul>
 
 		<div class="tab-content">
@@ -185,74 +187,6 @@
 							</div>
 						</c:if>
 					</form>
-				</div>
-			</div>
-			<div id="menu3"
-				class="tab-pane fade <c:if test="${activeTab == 3}">in active</c:if>">
-				<div class="container-fluid" style="padding: 2%;">
-					<div class="row">
-						<div class="col-md-12"
-							style="padding-left: 15%; padding-right: 15%;">
-							<c:if test="${not empty errorMessage}">
-								<div class="alert alert-warning alert-dismissible" role="alert">
-									<button type="button" class="close" data-dismiss="alert"
-										aria-label="Close">
-										<span aria-hidden="true">&times;</span>
-									</button>
-									<strong>Warning!</strong> ${errorMessage}
-								</div>
-							</c:if>
-							<c:if test="${not empty successCreateMessage}">
-								<div class="alert alert-success alert-dismissible" role="alert">
-									<button type="button" class="close" data-dismiss="alert"
-										aria-label="Close">
-										<span aria-hidden="true">&times;</span>
-									</button>
-									<strong>Success!</strong> ${successCreateMessage}
-								</div>
-							</c:if>
-							<form:form
-								action="${pageContext.request.contextPath}/manager/createProduct"
-								method="post" 
-								modelAttribute="inventoryProductHelper">
-								<spring:bind path="name">
-									<div class="form-group ${status.error ? 'has-error' : ''}">
-										<label for="Name">Name </label>
-										<form:input path="name" cssClass="form-control" />
-									</div>
-								</spring:bind>
-								<div class="form-group">
-									<label for="UPC">UPC </label> <input type="number" name="upc"
-										class="form-control" required />
-								</div>
-								<div class="form-group">
-									<div class="form-group">
-										<label for="category">Category</label> <select
-											class="form-control" name="categoryName" required>
-											<option selected disabled value="">SELECT CATEGORY</option>
-											<c:forEach items="${categories}" var="item">
-												<option>${item.getName()}</option>
-											</c:forEach>
-										</select>
-									</div>
-								</div>
-								<div class="form-group">
-									<label for="description">Description</label>
-									<textarea class="form-control" rows="5" name="description"></textarea>
-								</div>
-								<div class="form-group">
-									<label for="price">Price </label> <input type="number"
-										name="price" class="form-control" required />
-								</div>
-								<div class="form-group">
-									<label for="stock">Stock </label> <input type="number"
-										name="stock" class="form-control" required />
-								</div>
-								<button type="submit" class="btn btn-primary">Add
-									product</button>
-							</form:form>
-						</div>
-					</div>
 				</div>
 			</div>
 		</div>

@@ -7,8 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -35,16 +33,10 @@ public class ManagementController {
 	@Autowired
 	private ProductValidator productValidator;
 
-	@InitBinder
-	protected void initBinder(WebDataBinder binder) {
-		binder.setValidator(productValidator);
-	}
-
 	@RequestMapping()
 	public String management(Model model) {
 
 		model.addAttribute("activeTab", 1);
-		model.addAttribute("inventoryProductHelper", new InventoryProductHelper());
 		return "management";
 	}
 
@@ -105,18 +97,20 @@ public class ManagementController {
 
 		model.addAttribute("activeTab", 3);
 		model.addAttribute("inventoryProductHelper", new InventoryProductHelper());
-		return "management";
+		return "create_product";
 	}
 
 	@RequestMapping(value = "/createProduct", method = RequestMethod.POST)
 	public String createProduct(
-			@ModelAttribute("inventoryProductHelper") @Valid InventoryProductHelper inventoryProductHelper,
+			@Valid @ModelAttribute("inventoryProductHelper") InventoryProductHelper inventoryProductHelper,
 			BindingResult bindingResult, Model model) {
 
 		model.addAttribute("activeTab", 3);
 
+		productValidator.validate(inventoryProductHelper, bindingResult);
+
 		if (bindingResult.hasErrors()) {
-			return "management";
+			return "create_product";
 		}
 
 		InventoryProduct inventoryProduct = inventoryProductHelper.buildInventoryProduct(productService);
@@ -134,7 +128,7 @@ public class ManagementController {
 		}
 
 		model.addAttribute("inventoryProductHelper", new InventoryProductHelper());
-		return "management";
+		return "create_product";
 	}
 
 	@RequestMapping("/productByCategory")
@@ -146,7 +140,6 @@ public class ManagementController {
 			model.addAttribute("products", productService.getProductsByCategory(categoryName));
 		}
 
-		model.addAttribute("inventoryProductHelper", new InventoryProductHelper());
 		return "management";
 	}
 
@@ -158,7 +151,7 @@ public class ManagementController {
 		try {
 			product = managerService.findProductByUpc(upc);
 		} catch (ProductNotFoundException e) {
-
+			
 		}
 
 		model.addAttribute("product", product);

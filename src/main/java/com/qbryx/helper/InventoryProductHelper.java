@@ -2,10 +2,6 @@ package com.qbryx.helper;
 
 import java.math.BigDecimal;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
-
 import com.qbryx.domain.InventoryProduct;
 import com.qbryx.domain.Product;
 import com.qbryx.service.ProductService;
@@ -13,19 +9,16 @@ import com.qbryx.service.ProductService;
 public class InventoryProductHelper {
 	
 	private String name;
-	
-	@Pattern(regexp="\\d+", message="UPC must contain numbers only")
-	@Size(min=12, max=12, message="UPC must be 12 digits only")
+
 	private String upc;
 	
 	private String categoryName;
 	
 	private String description;
 	
-	private BigDecimal price;
-	
-	@Min(1) 
-	private int stock;
+	private String price;
+
+	private String stock;
 
 	public InventoryProductHelper(){}
 	
@@ -61,19 +54,19 @@ public class InventoryProductHelper {
 		this.description = description;
 	}
 	
-	public BigDecimal getPrice() {
+	public String getPrice() {
 		return price;
 	}
 	
-	public void setPrice(BigDecimal price) {
+	public void setPrice(String price) {
 		this.price = price;
 	}
 	
-	public int getStock() {
+	public String getStock() {
 		return stock;
 	}
 	
-	public void setStock(int stock) {
+	public void setStock(String stock) {
 		this.stock = stock;
 	}
 	
@@ -85,12 +78,12 @@ public class InventoryProductHelper {
 		product.setCategory(productService.getCategory(categoryName));
 		product.setName(name);
 		product.setDescription(description);
-		product.setPrice(price);
+		product.setPrice(new BigDecimal(price));
 				
 		InventoryProduct inventoryProduct = new InventoryProduct();
 		
 		inventoryProduct.setProduct(product);
-		inventoryProduct.setStock(stock);
+		inventoryProduct.setStock(Integer.parseInt(stock));
 		
 		return inventoryProduct;
 	}
@@ -103,9 +96,9 @@ public class InventoryProductHelper {
 		product.setCategory(productService.getCategory(categoryName));
 		product.setName(name);
 		product.setDescription(description);
-		product.setPrice(price);
+		product.setPrice(new BigDecimal(price));
 
-		InventoryProduct inventoryProduct = new InventoryProduct(product, stock);
+		InventoryProduct inventoryProduct = new InventoryProduct(product, Integer.parseInt(stock));
 		
 		return inventoryProduct;
 	}

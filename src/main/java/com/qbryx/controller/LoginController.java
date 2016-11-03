@@ -17,7 +17,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.qbryx.domain.User;
 import com.qbryx.exception.FailedLoginException;
-import com.qbryx.helper.InventoryProductHelper;
 import com.qbryx.service.CustomerService;
 import com.qbryx.service.ProductService;
 import com.qbryx.service.UserService;
