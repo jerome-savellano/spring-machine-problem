@@ -33,7 +33,7 @@
 				<c:if test="${productCreated}">
 					<div class="alert alert-success fade in">
 						<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-						<strong>Success!</strong> Product has been created!
+						<strong>Success!</strong> Product has been updated!
 					</div>
 				</c:if>
 				<form action="updateProduct" method="post">
@@ -65,8 +65,13 @@
 							name="stock" class="form-control" value="${product.getStock()}"
 							required />
 					</div>
-					<button type="submit" class="btn btn-primary">Update
-						product</button>
+					<div class="form-inline">
+						<button type="submit" class="form-group btn btn-success">Update
+							product</button>
+						<a
+							href="${pageContext.request.contextPath}/${user.getUserType().getType()}"
+							class="form-group btn btn-secondary"> Back to Home</a>
+					</div>
 				</form>
 			</div>
 		</div>

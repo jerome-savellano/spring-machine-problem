@@ -2,23 +2,33 @@ package com.qbryx.helper;
 
 import java.math.BigDecimal;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 import com.qbryx.domain.InventoryProduct;
 import com.qbryx.domain.Product;
 import com.qbryx.service.ProductService;
+import com.qbryx.util.ValidatePrice;
+import com.qbryx.util.ValidateStock;
+import com.qbryx.util.ValidateUpc;
 
 public class InventoryProductHelper {
 	
+	@NotEmpty(message="Your product must have a name.")
 	private String name;
-
+	
+	@ValidateUpc
 	private String upc;
 	
+	@NotEmpty(message="Please select a category")
 	private String categoryName;
 	
 	private String description;
 	
-	private String price;
-
-	private String stock;
+	@ValidatePrice
+	private BigDecimal price;
+	
+	@ValidateStock
+	private Integer stock;
 
 	public InventoryProductHelper(){}
 	
@@ -54,19 +64,19 @@ public class InventoryProductHelper {
 		this.description = description;
 	}
 	
-	public String getPrice() {
+	public BigDecimal getPrice() {
 		return price;
 	}
 	
-	public void setPrice(String price) {
+	public void setPrice(BigDecimal price) {
 		this.price = price;
 	}
 	
-	public String getStock() {
+	public Integer getStock() {
 		return stock;
 	}
 	
-	public void setStock(String stock) {
+	public void setStock(Integer stock) {
 		this.stock = stock;
 	}
 	
@@ -78,12 +88,12 @@ public class InventoryProductHelper {
 		product.setCategory(productService.getCategory(categoryName));
 		product.setName(name);
 		product.setDescription(description);
-		product.setPrice(new BigDecimal(price));
+		product.setPrice(price);
 				
 		InventoryProduct inventoryProduct = new InventoryProduct();
 		
 		inventoryProduct.setProduct(product);
-		inventoryProduct.setStock(Integer.parseInt(stock));
+		inventoryProduct.setStock(stock);
 		
 		return inventoryProduct;
 	}
@@ -96,9 +106,9 @@ public class InventoryProductHelper {
 		product.setCategory(productService.getCategory(categoryName));
 		product.setName(name);
 		product.setDescription(description);
-		product.setPrice(new BigDecimal(price));
+		product.setPrice(price);
 
-		InventoryProduct inventoryProduct = new InventoryProduct(product, Integer.parseInt(stock));
+		InventoryProduct inventoryProduct = new InventoryProduct(product, stock);
 		
 		return inventoryProduct;
 	}

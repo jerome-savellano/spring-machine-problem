@@ -3,7 +3,6 @@ package com.qbryx.controller;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,7 +17,6 @@ import com.qbryx.exception.ProductNotFoundException;
 import com.qbryx.helper.InventoryProductHelper;
 import com.qbryx.service.ManagerService;
 import com.qbryx.service.ProductService;
-import com.qbryx.util.ProductValidator;
 
 @Controller
 @RequestMapping("/manager")
@@ -29,9 +27,6 @@ public class ManagementController {
 
 	@Resource(name = "productService")
 	private ProductService productService;
-
-	@Autowired
-	private ProductValidator productValidator;
 
 	@RequestMapping()
 	public String management(Model model) {
@@ -107,8 +102,6 @@ public class ManagementController {
 
 		model.addAttribute("activeTab", 3);
 
-		productValidator.validate(inventoryProductHelper, bindingResult);
-
 		if (bindingResult.hasErrors()) {
 			return "create_product";
 		}
@@ -118,13 +111,12 @@ public class ManagementController {
 		try {
 
 			managerService.add(inventoryProduct);
-			model.addAttribute("successCreateMessage", "Product successfully created!");
-
+			model.addAttribute("successMessage", "Product successfully created!");
 		} catch (DuplicateProductException e) {
 
-			String upc = inventoryProductHelper.getUpc();
-
-			model.addAttribute("errorMessage", "Product with UPC " + upc + " already exists.");
+			model.addAttribute("errorMessage",
+					"Product with UPC <strong>" + inventoryProduct.getProduct().getUpc() + "</strong> already exists.");
+			return "create_product";
 		}
 
 		model.addAttribute("inventoryProductHelper", new InventoryProductHelper());
@@ -151,7 +143,7 @@ public class ManagementController {
 		try {
 			product = managerService.findProductByUpc(upc);
 		} catch (ProductNotFoundException e) {
-			
+
 		}
 
 		model.addAttribute("product", product);

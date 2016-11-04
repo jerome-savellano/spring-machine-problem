@@ -18,6 +18,12 @@
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
 	integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
 	crossorigin="anonymous"></script>
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Create product</title>
 </head>
@@ -29,20 +35,34 @@
 					Create product <a href="${pageContext.request.contextPath}/logout"
 						class="btn btn-warning btn-xs">Logout</a>
 				</h2>
+				<c:if test="${not empty successMessage}">
+					<div class="alert alert-success fade in">
+						<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+						<strong>Success!</strong> ${successMessage}
+					</div>
+				</c:if>
+				<c:if test="${not empty errorMessage}">
+					<div class="alert alert-danger fade in">
+						<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+						<strong>Creation failed!</strong> ${errorMessage}
+					</div>
+				</c:if>
 				<form:form
 					action="${pageContext.request.contextPath}/${user.getUserType().getType()}/createProduct"
 					method="post" modelAttribute="inventoryProductHelper">
 					<spring:bind path="name">
 						<div class="form-group ${status.error ? 'has-error' : ''}">
 							<label for="Name">Name </label>
-							<form:input path="name" cssClass="form-control" />
+							<form:input path="name" class="form-control"
+								placeHolder="Enter name" />
 							<form:errors path="name" cssClass="text-danger" />
 						</div>
 					</spring:bind>
 					<spring:bind path="upc">
 						<div class="form-group ${status.error ? 'has-error' : ''}">
 							<label for="UPC">UPC </label>
-							<form:input path="upc" cssClass="form-control" />
+							<form:input path="upc" class="form-control"
+								placeHolder="Enter UPC. Must contain numbers only and should be 12 characters long" />
 							<form:errors path="upc" cssClass="text-danger" />
 						</div>
 					</spring:bind>
@@ -58,22 +78,27 @@
 							<form:errors path="categoryName" cssClass="text-danger"></form:errors>
 						</div>
 					</spring:bind>
-					<div class="form-group">
-						<label for="description">Description</label>
-						<form:textarea cssClass="form-control" rows="5" path="description"></form:textarea>
-					</div>
+					<spring:bind path="description">
+						<div class="form-group">
+							<label for="description">Description</label>
+							<form:textarea path="description" class="form-control" rows="5"
+								placeHolder="Enter description"></form:textarea>
+						</div>
+					</spring:bind>
 					<spring:bind path="price">
 						<div class="form-group ${status.error ? 'has-error' : ''}">
 							<label for="price">Price</label>
-							<%-- <form:input path="price" cssClass="form-control" /> --%>
-							<input class="form-control" />
+							<form:input path="price" type="number" step=".01"
+								class="form-control"
+								placeHolder="Enter price. Must be greater than 0 and contain 2 decimal places max." />
 							<form:errors path="price" cssClass="text-danger"></form:errors>
 						</div>
 					</spring:bind>
 					<spring:bind path="stock">
 						<div class="form-group ${status.error ? 'has-error' : ''}">
 							<label for="stock">Stock</label>
-							<form:input path="stock" cssClass="form-control" />
+							<form:input path="stock" type="number" class="form-control"
+								placeHolder="Enter stock. Stock can be any value between 10 and 100." />
 							<form:errors path="stock" cssClass="text-danger"></form:errors>
 						</div>
 					</spring:bind>

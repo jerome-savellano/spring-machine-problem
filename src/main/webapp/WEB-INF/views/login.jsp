@@ -62,7 +62,7 @@ html, body, .container-table {
 								value="${username}" required> --%>
 								<form:input path="username" cssClass="form-control"
 									required="required" />
-								<form:errors path="username"/>
+								<form:errors path="username" cssClass="text-danger"/>
 							</div>
 						</spring:bind>
 						<spring:bind path="password">
@@ -70,7 +70,7 @@ html, body, .container-table {
 								<label for="pwd" style="color: white;">Password</label>
 								<form:input type="password" path="password"
 									cssClass="form-control" required="required" />
-								<form:errors path="password"/>
+								<form:errors path="password" cssClass="text-danger"/>
 							</div>
 						</spring:bind>
 						<button type="submit" class="btn btn-default">Submit</button>
